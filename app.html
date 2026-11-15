@@ -365,6 +365,57 @@ a.inline { color: var(--accent); }
 .goals button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 10px; text-align: left; font-size: 0.86rem; font-weight: 600; display: flex; flex-direction: column; gap: 1px; }
 .goals button small { font-weight: 500; color: var(--muted); font-size: 0.76rem; }
 .goals button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 7px 9px; }
+/* Start list (variant B) */
+.startlist { display: flex; flex-direction: column; gap: 8px; }
+.startlist button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; }
+.startlist button:hover { border-color: var(--ink); }
+.startlist button.star { border: 2px solid var(--ink); padding: 13px 15px; }
+.startlist .sic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
+.startlist .star .sic { background: var(--g1); color: #121212; }
+.startlist span.t { display: flex; flex-direction: column; min-width: 0; }
+.startlist b { font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; }
+.startlist small { color: var(--muted); font-size: 0.82rem; }
+.startlist .arr { color: var(--muted); font-size: 1.3rem; line-height: 1; }
+/* Tailored budget questionnaire */
+.wiz { max-width: 560px; width: 100%; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.wiz-top { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+.wiz-top .wback { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; font-size: 1rem; }
+.wiz-top .wskip { margin-left: auto; border: none; background: none; color: var(--ink); text-decoration: underline; font-size: 0.85rem; }
+.wprog { display: flex; gap: 5px; }
+.wprog i { flex: 1; height: 5px; border-radius: 3px; background: var(--line); }
+.wprog i.on { background: var(--ink); }
+.wq { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -0.03em; line-height: 1.15; margin: 0; text-wrap: balance; }
+.wsub { margin: -8px 0 0; color: var(--muted); font-size: 0.9rem; }
+.wopts { display: flex; flex-direction: column; gap: 8px; }
+.wopts button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; }
+.wopts button:hover { border-color: var(--ink); }
+.wopts button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 11px 13px; }
+.wopts .sic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
+.wopts button[aria-pressed="true"] .sic { background: var(--g1); color: #121212; }
+.wopts span.t { display: flex; flex-direction: column; }
+.wopts b { font-size: 0.95rem; }
+.wopts small { color: var(--muted); font-size: 0.8rem; }
+.wchips { display: flex; flex-wrap: wrap; gap: 8px; }
+.wchips button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; }
+.wchips button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.wfields { display: flex; flex-direction: column; gap: 10px; }
+.wfield { display: flex; flex-direction: column; gap: 4px; }
+.wfield label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+.wfield input { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); color: var(--ink); font: inherit; min-width: 0; }
+.wfield input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.wrow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.wcalc { background: var(--sunk); border-radius: 12px; padding: 11px 13px; font-size: 0.88rem; }
+.wcalc b { font-family: var(--font-display); }
+.wactions { display: flex; flex-direction: column; gap: 8px; }
+.wactions .btn { padding: 12px 16px; font-size: 0.95rem; text-align: center; }
+.wres { border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.wres ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; }
+.wres li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 9px; align-items: center; }
+.wres li i { width: 10px; height: 10px; border-radius: 3px; display: block; }
+.wres li b { font-variant-numeric: tabular-nums; }
+.wres li.sub { color: var(--muted); font-size: 0.82rem; padding-left: 19px; grid-template-columns: minmax(0, 1fr) auto; }
+.wwhy { background: var(--sunk); border-radius: 12px; padding: 11px 13px; font-size: 0.88rem; color: var(--muted); }
+.wwhy b { color: var(--ink); }
 .proposal { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--g1); border-radius: var(--radius); padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
 .proposal div { flex: 1; display: flex; flex-direction: column; gap: 3px; font-size: 0.9rem; }
 .proposal b { font-family: var(--font-display); }
@@ -506,10 +557,10 @@ const GROUPS = [
   { id: "imprevu", label: "Imprévus", color: "var(--g6)" }
 ];
 const GOALS = [
-  { id: "epargne", label: "Favoriser l'épargne", hint: "Environ la moitié du reste à l'épargne", prio: "Épargne" },
-  { id: "equilibre", label: "Équilibré", hint: "Proche de la règle 50/30/20", prio: "Épargne" },
-  { id: "plaisir", label: "Me faire plaisir", hint: "Plus de place pour les sorties", prio: "Sorties & restaurants" },
-  { id: "projet", label: "Financer un projet", hint: "Une grosse part pour un projet", prio: "Projet" }
+  { id: "epargne", label: "Mettre de côté", hint: "Favoriser l'épargne", prio: "Épargne", ic: "€" },
+  { id: "equilibre", label: "Garder l'équilibre", hint: "Un peu de tout", prio: "Épargne", ic: "≈" },
+  { id: "plaisir", label: "Me faire plaisir", hint: "Plus pour les sorties", prio: "Sorties & restaurants", ic: "☺" },
+  { id: "projet", label: "Financer un projet", hint: "Voyage, achat, permis…", prio: "Épargne", ic: "◎" }
 ];
 // Typical envelopes used by the proposal, with each goal's share of what is left after recurring expenses.
 const TYPICAL = [
@@ -535,28 +586,74 @@ function historyAvg(name) {
   const vals = ids.map(id => (months[id].envelopes || []).find(x => (x.name || "").trim().toLowerCase() === name.toLowerCase())).filter(e => e && e.amount > 0).map(e => e.amount);
   return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
 }
-function buildProposal(income, goalId) {
-  const goal = GOALS.find(g => g.id === goalId) || GOALS[0];
+const EXC = [
+  { k: "Cadeaux", group: "plaisir" }, { k: "Voyage", group: "projets" }, { k: "Rentrée", group: "courant" }, { k: "Santé", group: "courant" },
+  { k: "Voiture", group: "fixe" }, { k: "Mariage", group: "plaisir" }, { k: "Impôts", group: "fixe" }, { k: "Autre", group: "courant" }
+];
+const monthsBetween = (fromId, toId) => { const [a, b] = fromId.split("-").map(Number), [c, d] = toId.split("-").map(Number); return (c - a) * 12 + (d - b); };
+function projectMonthly(pj) {
+  if (!pj || !pj.amount || !pj.date) return 0;
+  const left = Math.max(0, parse(pj.amount) - parse(pj.saved));
+  const n = Math.max(1, monthsBetween(current, pj.date) + 1);
+  return Math.ceil(left / n / 10) * 10;
+}
+// answers: { need, project:{name,amount,date,saved}, exc:{Cadeaux:150,...}, safety:"ok"|"building"|"none", rhythm:"calm"|"normal"|"busy" }
+function buildTailored(income, a) {
+  const goal = GOALS.find(g => g.id === a.need) || GOALS[0];
   const fixed = recEnvelopes();
-  const rest = Math.max(0, Math.round((income - fixed.reduce((a, e) => a + e.amount, 0)) * 100) / 100);
-  const items = TYPICAL.filter(t => t.w[goal.id] > 0).map(t => ({ t, amount: 0 }));
+  const recSum = fixed.reduce((x, e) => x + e.amount, 0);
+  const exc = EXC.filter(x => a.exc && a.exc[x.k] != null).map(x => ({ id: uid(), name: x.k, group: x.group, bank: lastBankFor(x.k), amount: parse(a.exc[x.k]) }));
+  const excSum = exc.reduce((x, e) => x + e.amount, 0);
+  let rest = Math.max(0, income - recSum - excSum);
+  let proj = null;
+  if (goal.id === "projet" && a.project && a.project.name) {
+    const m = Math.min(projectMonthly(a.project), Math.floor(rest * 0.6 / 10) * 10);
+    proj = { id: uid(), name: a.project.name.slice(0, 60), group: "projets", bank: lastBankFor(a.project.name), amount: m };
+    rest -= m;
+  }
+  const W = {};
+  TYPICAL.forEach(t => { W[t.name] = t.w[goal.id]; });
+  if (proj) W["Projet"] = 0;
+  if (a.rhythm === "calm") { W["Sorties & restaurants"] *= 0.7; W["Shopping"] *= 0.7; }
+  if (a.rhythm === "busy") { W["Sorties & restaurants"] *= 1.3; W["Shopping"] *= 1.3; }
+  if (a.safety === "ok") W["Imprévus"] *= 0.6;
+  if (a.safety === "none") W["Imprévus"] *= 1.2;
+  const items = TYPICAL.filter(t => W[t.name] > 0).map(t => ({ t, name: t.name, amount: 0 }));
   let left = rest;
-  // everyday spending follows the last months when there is history (capped so the goal still means something)
   items.forEach(it => {
     if (!it.t.history) return;
     const avg = historyAvg(it.t.name);
     if (avg > 0) { it.amount = Math.min(Math.ceil(avg / 10) * 10, Math.floor(rest * 0.45 / 10) * 10); it.fixed = true; left -= it.amount; }
   });
+  // no safety net yet: the first euros of savings go to it (at least 10 % of the pay when possible)
+  const sav = items.find(it => it.name === "Épargne");
+  if (a.safety === "none" && sav) {
+    sav.name = "Épargne de précaution";
+    const floor = Math.min(Math.floor(income * 0.10 / 10) * 10, Math.floor(left * 0.5 / 10) * 10);
+    sav.amount = floor; sav.fixed = true; sav.topUp = true; left -= floor;
+  }
   left = Math.max(0, left);
-  const free = items.filter(it => !it.fixed);
-  const wsum = free.reduce((a, it) => a + it.t.w[goal.id], 0) || 1;
-  free.forEach(it => { it.amount = Math.floor(left * it.t.w[goal.id] / wsum / 10) * 10; });
-  const used = items.reduce((a, it) => a + it.amount, 0);
+  const free = items.filter(it => !it.fixed || it.topUp);
+  const wsum = free.reduce((x, it) => x + W[it.t.name], 0) || 1;
+  free.forEach(it => { it.amount += Math.floor(left * W[it.t.name] / wsum / 10) * 10; });
+  const used = items.reduce((x, it) => x + it.amount, 0);
   const prio = items.find(it => it.t.name === goal.prio) || items[0];
   if (prio) prio.amount = Math.round((prio.amount + (rest - used)) * 100) / 100;
-  const envs = fixed.concat(items.map(it => ({ id: uid(), name: it.t.name, group: it.t.group, bank: lastBankFor(it.t.name), amount: Math.max(0, it.amount) })));
-  const saving = envs.filter(e => e.group === "epargne").reduce((a, e) => a + e.amount, 0);
-  return { envelopes: envs, info: { goal: goal.id, rec: income - rest > 0 ? Math.min(income, fixed.reduce((a, e) => a + e.amount, 0)) : 0, saving, over: fixed.reduce((a, e) => a + e.amount, 0) > income } };
+  const gen = items.map(it => ({ id: uid(), name: it.name, group: it.t.group, bank: lastBankFor(it.name), amount: Math.max(0, it.amount) }));
+  const envs = fixed.concat(exc, proj ? [proj] : [], gen);
+  const saving = envs.filter(e => e.group === "epargne").reduce((x, e) => x + e.amount, 0);
+  // short explanation built from the answers
+  const parts = [];
+  parts.push(goal.id === "epargne" ? "Tu veux mettre de côté : " + money(saving) + " vont à l'épargne (" + pctOf(saving, income) + " de ta paye)."
+    : goal.id === "plaisir" ? "Tu veux te faire plaisir : les sorties et le shopping ont plus de place, et " + money(saving) + " restent pour l'épargne."
+    : goal.id === "projet" && proj ? "Pour « " + proj.name + " », " + money(proj.amount) + " sont mis de côté ce mois-ci."
+    : "Une répartition équilibrée, avec " + money(saving) + " pour l'épargne (" + pctOf(saving, income) + " de ta paye).");
+  if (excSum) parts.push(money(excSum) + " sont réservés pour " + exc.map(e => e.name.toLowerCase()).join(", ") + ".");
+  if (a.safety === "none") parts.push("Ton épargne de précaution passe en priorité.");
+  if (a.safety === "ok") parts.push("Ton épargne de précaution est complète : moins d'imprévus à prévoir.");
+  if (a.rhythm === "busy") parts.push("Ton mois est chargé : les sorties sont revues à la hausse.");
+  if (a.rhythm === "calm") parts.push("Ton mois est calme : les sorties sont revues à la baisse.");
+  return { envelopes: envs, recSum, excSum, saving, over: recSum + excSum > income, why: parts.join(" ") };
 }
 const TEMPLATE = [
   ["Épargne", "epargne"], ["Investissement", "epargne"],
@@ -649,6 +746,7 @@ function render() {
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
   if (!profile) { mainEl.innerHTML = onboardingView(); return; }
   if (page === "rapports") { mainEl.innerHTML = reportsView(); return; }
+  if (!work && wiz) { mainEl.innerHTML = wizView(); return; }
   if (!work) { mainEl.innerHTML = createView(); sizeInput($("#newIncome")); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => sizeInput($("#newIncome"))); return; }
   mainEl.innerHTML = financesView();
   if (work.validated) {
@@ -681,16 +779,77 @@ function createView() {
   const rt = recTotal();
   return '<div class="card newmonth">' +
     '<h2>Préparer le budget de ' + esc(label(current).toLowerCase()) + '</h2>' +
-    '<p>Indique ta paye, puis choisis comment démarrer. Tu pourras tout ajuster ensuite.</p>' +
     '<div class="nm-income"><label class="eyebrow" for="newIncome">Montant de ta paye</label><div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
-    '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b> (' + recurring.length + ') · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
-    '<div class="ways">' +
-      '<div class="way star"><span class="tag">Proposition tamia</span><h3>Un budget prêt en un clic</h3><p>tamia retire tes dépenses récurrentes et répartit le reste selon ton objectif.</p>' +
-        '<div class="goals" role="group" aria-label="Objectif">' + GOALS.map(g => '<button type="button" data-act="goal-pick" data-goal="' + g.id + '" aria-pressed="' + (newGoal === g.id) + '">' + esc(g.label) + '<small>' + esc(g.hint) + '</small></button>').join("") + '</div>' +
-        '<button class="btn primary" data-act="create" data-from="goal">Voir la proposition</button></div>' +
-      (pm ? '<div class="way"><h3>Reprendre ' + esc(label(p).toLowerCase()) + '</h3><p>Les mêmes enveloppes et montants (' + (pm.envelopes || []).length + ' enveloppes), avec tes dépenses récurrentes à jour.</p><button class="btn" data-act="create" data-from="' + p + '">Reprendre ce mois</button></div>' : '') +
-      '<div class="way"><h3>Je crée moi-même mon budget</h3><p>' + (recurring.length ? 'Seules tes dépenses récurrentes sont ajoutées. Tu remplis le reste.' : 'Tu pars d\'une page vide et tu ajoutes tes enveloppes.') + '</p><button class="btn" data-act="create" data-from="manual">Commencer</button></div>' +
+    '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b>, ajoutées automatiquement · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
+    '<div class="startlist">' +
+      '<button type="button" class="star" data-act="wiz-start"><span class="sic">✦</span><span class="t"><b>Budget sur mesure</b><small>Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
+      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">↺</span><span class="t"><b>Reprendre ' + esc(label(p).toLowerCase()) + '</b><small>' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
+      '<button type="button" data-act="create" data-from="manual"><span class="sic">✎</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tu pars de tes dépenses récurrentes' : 'Tu pars d\'une page vide') + '</small></span><span class="arr">›</span></button>' +
     '</div></div>';
+}
+
+/* ---------- tailored budget questionnaire ---------- */
+let wiz = null;
+function lastQuiz() {
+  const ids = Object.keys(months).filter(id => id < current).sort().reverse();
+  for (const id of ids) if (months[id].quiz) return months[id].quiz;
+  return null;
+}
+function wizSteps() { return ["need"].concat(wiz.a.need === "projet" ? ["project"] : [], ["exc", "safety", "rhythm", "result"]); }
+function wizView() {
+  const steps = wizSteps(), i = steps.indexOf(wiz.step), a = wiz.a;
+  const qIndex = { need: 1, project: 1, exc: 2, safety: 3, rhythm: 4 }[wiz.step];
+  const top = '<div class="wiz-top"><button type="button" class="wback" data-act="wiz-back" aria-label="Retour">‹</button>' + (qIndex ? qIndex + ' sur 4' : 'Ta proposition') +
+    (wiz.step === "exc" ? '<button type="button" class="wskip" data-act="wiz-skip">Passer</button>' : '') + '</div>' +
+    (qIndex ? '<div class="wprog">' + [1, 2, 3, 4].map(n => '<i class="' + (n <= qIndex ? 'on' : '') + '"></i>').join("") + '</div>' : '');
+  const opt = (field, val, ic, title, sub) => '<button type="button" data-act="wiz-pick" data-field="' + field + '" data-val="' + val + '" aria-pressed="' + (a[field] === val) + '"><span class="sic">' + ic + '</span><span class="t"><b>' + title + '</b><small>' + sub + '</small></span></button>';
+  const next = (label, disabled) => '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next"' + (disabled ? ' disabled' : '') + '>' + label + '</button></div>';
+  let body = "";
+  if (wiz.step === "need") {
+    body = '<p class="wq">Qu\'est-ce qui compte le plus ce mois-ci ?</p><div class="wopts">' + GOALS.map(g => opt("need", g.id, g.ic, esc(g.label), esc(g.hint))).join("") + '</div>' + next("Continuer", !a.need);
+  } else if (wiz.step === "project") {
+    const pj = a.project || {};
+    const m = projectMonthly(pj);
+    body = '<p class="wq">Parle-moi de ton projet</p><div class="wfields">' +
+      '<div class="wfield"><label for="wpName">Projet</label><input id="wpName" data-wiz="project.name" value="' + esc(pj.name || "") + '" placeholder="Ex. Voyage au Japon" maxlength="60"></div>' +
+      '<div class="wrow"><div class="wfield"><label for="wpAmt">Montant</label><input id="wpAmt" data-wiz="project.amount" inputmode="decimal" value="' + esc(show(pj.amount)) + '" placeholder="0 €"></div>' +
+      '<div class="wfield"><label for="wpDate">Pour quand</label><input id="wpDate" type="month" data-wiz="project.date" value="' + esc(pj.date || "") + '" min="' + current + '"></div></div>' +
+      '<div class="wfield"><label for="wpSaved">Déjà mis de côté</label><input id="wpSaved" data-wiz="project.saved" inputmode="decimal" value="' + esc(show(pj.saved)) + '" placeholder="0 €"></div></div>' +
+      '<div class="wcalc" id="wcalc">' + (m ? 'Il faut mettre de côté <b>' + money(m) + ' par mois</b> pour y arriver.' : 'Indique le montant et la date pour savoir combien mettre de côté chaque mois.') + '</div>' + next("Continuer", false);
+  } else if (wiz.step === "exc") {
+    const ex = a.exc || {};
+    body = '<p class="wq">Des dépenses inhabituelles ce mois-ci ?</p><p class="wsub">Elles auront leur propre enveloppe.</p>' +
+      '<div class="wchips">' + EXC.map(x => '<button type="button" data-act="wiz-exc" data-k="' + x.k + '" aria-pressed="' + (ex[x.k] != null) + '">' + x.k + '</button>').join("") + '</div>' +
+      (Object.keys(ex).length ? '<div class="wfields">' + Object.keys(ex).map(k => '<div class="wfield"><label>' + esc(k) + ' · montant estimé</label><input data-wiz="exc.' + esc(k) + '" inputmode="decimal" value="' + esc(show(ex[k])) + '" placeholder="0 €"></div>').join("") + '</div>' : '') +
+      '<div class="wactions">' + (Object.keys(ex).length ? '' : '<button type="button" class="btn" data-act="wiz-skip">Non, rien de spécial</button>') + '<button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>';
+  } else if (wiz.step === "safety") {
+    body = '<p class="wq">As-tu une épargne de précaution ?</p><p class="wsub">De quoi faire face à un coup dur, en général 3 mois de dépenses.</p><div class="wopts">' +
+      opt("safety", "ok", "✓", "Oui, elle est complète", "Moins d'imprévus à prévoir") + opt("safety", "building", "…", "Je la construis", "tamia en tient compte") + opt("safety", "none", "!", "Pas encore", "tamia la met en priorité") + '</div>' + next("Continuer", !a.safety);
+  } else if (wiz.step === "rhythm") {
+    body = '<p class="wq">À quoi ressemble ton mois ?</p><div class="wopts">' +
+      opt("rhythm", "calm", "◌", "Plutôt calme", "Peu de sorties prévues") + opt("rhythm", "normal", "◐", "Normal", "Comme d'habitude") + opt("rhythm", "busy", "●", "Bien rempli", "Fêtes, sorties, week-ends") + '</div>' + next("Voir ma proposition", !a.rhythm);
+  } else {
+    const r = buildTailored(wiz.income, a);
+    wiz.result = r;
+    const byGroup = GROUPS.map(g => ({ g, envs: r.envelopes.filter(e => groupOf(e.group).id === g.id && !e.rid) })).filter(x => x.envs.length);
+    const t = totals({ income: wiz.income, envelopes: r.envelopes });
+    body = '<p class="wq">Voici ton budget de ' + esc(label(current).toLowerCase()) + '</p>' +
+      '<div class="wres"><div class="bar thick">' + barHtml(t) + '</div><ul>' +
+      (r.recSum ? '<li><i style="background:var(--line)"></i>Dépenses récurrentes<b>' + money(r.recSum) + '</b></li>' : '') +
+      byGroup.map(x => x.envs.map(e => '<li><i style="background:' + x.g.color + '"></i>' + esc(e.name) + '<b>' + money(e.amount) + '</b></li>').join("")).join("") +
+      '</ul></div>' +
+      '<div class="wwhy"><b>Pourquoi ?</b> ' + esc(r.why) + '</div>' +
+      (r.over ? '<div class="msg err">Tes dépenses récurrentes et exceptionnelles dépassent ta paye. Vérifie les montants.</div>' : '') +
+      '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-use">Utiliser ce budget</button><button type="button" class="btn" data-act="wiz-restart">Modifier mes réponses</button></div>';
+  }
+  return '<div class="card wiz">' + top + body + '</div>';
+}
+function wizGo(delta) {
+  const steps = wizSteps(), i = steps.indexOf(wiz.step) + delta;
+  if (i < 0) { wiz = null; render(); return; }
+  wiz.step = steps[Math.min(i, steps.length - 1)];
+  render();
+  window.scrollTo(0, 0);
 }
 
 function financesView() {
@@ -698,8 +857,8 @@ function financesView() {
   const locked = !!work.validated;
   const when = work.validatedAt ? new Date(work.validatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "";
   const g = work.goal && !locked && !work.goalHidden ? GOALS.find(x => x.id === work.goal) : null;
-  const banner = g ? '<div class="proposal"><div><b>Proposition « ' + esc(g.label) + ' »</b>' +
-    '<span>' + (work.goalRec ? money(work.goalRec) + ' de dépenses récurrentes, puis ' : '') + money(work.goalSaving || 0) + ' vers l\'épargne et l\'investissement' + (work.income ? ' (' + pctOf(work.goalSaving || 0, work.income) + ' de ta paye)' : '') + '. Ajuste les montants si besoin, puis valide.</span>' +
+  const banner = g ? '<div class="proposal"><div><b>Ton budget sur mesure · ' + esc(g.label) + '</b>' +
+    '<span>' + (work.goalWhy ? esc(work.goalWhy) + ' ' : '') + 'Ajuste les montants si besoin, puis valide.</span>' +
     (work.goalOver ? '<span style="color:var(--bad)">Tes dépenses récurrentes dépassent ta paye : vérifie-les dans Réglages.</span>' : '') +
     '</div><button class="btn" data-act="goal-hide">Masquer</button></div>' : '';
   let html = '<div class="' + (locked ? 'locked' : '') + '" style="display:flex;flex-direction:column;gap:16px">' + banner +
@@ -975,6 +1134,7 @@ function flush() {
 }
 function goTo(id) {
   if (saveTimer) flush();
+  wiz = null; newIncomeDraft = null;
   current = id; dirty = false; confirmDelete = false;
   work = months[id] ? clone(months[id]) : null;
   render();
@@ -1271,6 +1431,12 @@ $("#importFile").addEventListener("change", e => {
 
 mainEl.addEventListener("input", e => {
   const t = e.target;
+  if (t.dataset.wiz && wiz) {
+    const [grp, key] = t.dataset.wiz.split(".");
+    if (grp === "project") { wiz.a.project = Object.assign({}, wiz.a.project, { [key]: key === "amount" || key === "saved" ? parse(t.value) : t.value }); const c = $("#wcalc"); const m = projectMonthly(wiz.a.project); if (c) c.innerHTML = m ? 'Il faut mettre de côté <b>' + money(m) + ' par mois</b> pour y arriver.' : 'Indique le montant et la date pour savoir combien mettre de côté chaque mois.'; }
+    if (grp === "exc") wiz.a.exc[key] = parse(t.value);
+    return;
+  }
   if (t.id === "newIncome") { sizeInput(t); return; }
   if (!work || work.validated || page !== "finances") return;
   if (t.id === "income") { work.income = parse(t.value); sizeIncome(); changed(); }
@@ -1367,17 +1533,34 @@ mainEl.addEventListener("click", e => {
   }
   if (work && work.validated && act !== "create") return;
   if (act === "sheet-open") { const env = findEnv(b); if (env) openSheet(clone(env), false); return; }
-  if (act === "goal-pick") { newGoal = b.dataset.goal; newGoalTouched = true; const ni = $("#newIncome"); if (ni) newIncomeDraft = parse(ni.value); render(); return; }
+  if (act === "wiz-start") {
+    const ni = $("#newIncome"); const income = ni ? parse(ni.value) : 0;
+    newIncomeDraft = income;
+    const lq = lastQuiz() || {};
+    wiz = { step: "need", income, a: { need: lq.need || "", project: lq.project ? Object.assign({}, lq.project) : {}, exc: {}, safety: lq.safety || "", rhythm: lq.rhythm || "" } };
+    render(); window.scrollTo(0, 0); return;
+  }
+  if (act === "wiz-back") { wizGo(-1); return; }
+  if (act === "wiz-next") { wizGo(1); return; }
+  if (act === "wiz-skip") { wiz.a.exc = {}; wizGo(1); return; }
+  if (act === "wiz-restart") { wiz.step = "need"; render(); return; }
+  if (act === "wiz-pick") { wiz.a[b.dataset.field] = b.dataset.val; render(); return; }
+  if (act === "wiz-exc") { const k = b.dataset.k; if (wiz.a.exc[k] != null) delete wiz.a.exc[k]; else wiz.a.exc[k] = 0; render(); const inp = mainEl.querySelector('[data-wiz="exc.' + k + '"]'); if (inp) inp.focus(); return; }
+  if (act === "wiz-use") {
+    const r = wiz.result || buildTailored(wiz.income, wiz.a);
+    const quiz = { need: wiz.a.need, safety: wiz.a.safety, rhythm: wiz.a.rhythm };
+    if (wiz.a.need === "projet" && wiz.a.project && wiz.a.project.name) quiz.project = { name: wiz.a.project.name, amount: parse(wiz.a.project.amount), date: wiz.a.project.date || "", saved: parse(wiz.a.project.saved) };
+    work = { income: wiz.income, envelopes: r.envelopes, note: "", validated: false, goal: wiz.a.need, goalWhy: r.why, goalOver: r.over, quiz, createdAt: new Date().toISOString() };
+    wiz = null; newIncomeDraft = null;
+    changed(false); render(); flush(); window.scrollTo(0, 0);
+    return;
+  }
   if (act === "goal-hide") { work.goalHidden = true; changed(false); render(); return; }
   if (act === "create") {
     const from = b.dataset.from;
     const ni = $("#newIncome");
     const income = ni ? parse(ni.value) : 0;
-    if (from === "goal") {
-      const pr = buildProposal(income, newGoal);
-      work = { income, envelopes: pr.envelopes, note: "", validated: false, goal: pr.info.goal, goalRec: pr.info.rec, goalSaving: pr.info.saving, goalOver: pr.info.over };
-      setDoc(userRef(), { lastGoal: newGoal, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
-    } else if (from === "manual") {
+    if (from === "manual") {
       work = { income, envelopes: recEnvelopes(), note: "", validated: false };
     } else {
       const src = months[from];
