@@ -411,9 +411,14 @@ a.inline { color: var(--accent); }
 .startlist { display: flex; flex-direction: column; gap: 8px; }
 .startlist button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; }
 .startlist button:hover { border-color: var(--ink); }
-.startlist button.star { border: 2px solid var(--ink); padding: 13px 15px; }
+.startlist button.star { background: #121212; border-color: #121212; color: #f2f2ef; }
+.startlist button.star:hover { background: #262624; border-color: #262624; }
+.startlist button.star small { color: #b9b9b2; }
+.emo { width: 26px; height: 26px; display: block; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .startlist button.star { background: #0a0a0a; border-color: #3a3a37; } }
+:root[data-theme="dark"] .startlist button.star { background: #0a0a0a; border-color: #3a3a37; }
 .startlist .sic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
-.startlist .star .sic { background: var(--g1); color: #121212; }
+.startlist .star .sic { background: #2a2a28; }
 .startlist span.t { display: flex; flex-direction: column; min-width: 0; }
 .startlist b { font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; }
 .startlist small { color: var(--muted); font-size: 0.82rem; }
@@ -433,7 +438,7 @@ a.inline { color: var(--accent); }
 .wopts button:hover { border-color: var(--ink); }
 .wopts button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 11px 13px; }
 .wopts .sic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
-.wopts button[aria-pressed="true"] .sic { background: var(--g1); color: #121212; }
+.wopts button[aria-pressed="true"] .sic { background: rgba(240,164,50,.25); }
 .wopts span.t { display: flex; flex-direction: column; }
 .wopts b { font-size: 0.95rem; }
 .wopts small { color: var(--muted); font-size: 0.8rem; }
@@ -655,10 +660,10 @@ const GROUPS = [
   { id: "imprevu", label: "Imprévus", color: "var(--g6)" }
 ];
 const GOALS = [
-  { id: "epargne", label: "Mettre de côté", hint: "Favoriser l'épargne", prio: "Épargne", ic: "€" },
-  { id: "equilibre", label: "Garder l'équilibre", hint: "Un peu de tout", prio: "Épargne", ic: "≈" },
-  { id: "plaisir", label: "Me faire plaisir", hint: "Plus pour les sorties", prio: "Sorties & restaurants", ic: "☺" },
-  { id: "projet", label: "Financer un projet", hint: "Voyage, achat, permis…", prio: "Épargne", ic: "◎" }
+  { id: "epargne", label: "Mettre de côté", hint: "Favoriser l'épargne", prio: "Épargne", ic: "moneybag" },
+  { id: "equilibre", label: "Garder l'équilibre", hint: "Un peu de tout", prio: "Épargne", ic: "scale" },
+  { id: "plaisir", label: "Me faire plaisir", hint: "Plus pour les sorties", prio: "Sorties & restaurants", ic: "party" },
+  { id: "projet", label: "Financer un projet", hint: "Voyage, achat, permis…", prio: "Épargne", ic: "target" }
 ];
 // Typical envelopes used by the proposal, with each goal's share of what is left after recurring expenses.
 const TYPICAL = [
@@ -890,6 +895,8 @@ function onboardingView() {
     '<p style="font-size:.82rem">Tu pourras modifier cette liste à tout moment dans Réglages.</p></div>';
 }
 
+const EMO = n => '<img class="emo" src="emoji/' + n + '.png" alt="" width="26" height="26" decoding="async">';
+const monthName = id => { const [y, m] = id.split("-").map(Number); return new Date(y, m - 1, 1).toLocaleDateString("fr-FR", { month: "long" }); };
 function createView() {
   const p = prevMonthId();
   const pm = p && months[p];
@@ -900,9 +907,9 @@ function createView() {
     '<div class="nm-income"><label class="eyebrow" for="newIncome">Montant de ta paye</label><div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
     '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b>, ajoutées automatiquement · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
     '<div class="startlist">' +
-      '<button type="button" class="star" data-act="wiz-start"><span class="sic">✦</span><span class="t"><b>Budget sur mesure</b><small>Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
-      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">↺</span><span class="t"><b>Reprendre le mois précédent</b><small>' + esc(label(p)) + ' · ' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
-      '<button type="button" data-act="create" data-from="manual"><span class="sic">✎</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tes dépenses récurrentes et les enveloppes de base, à remplir' : 'Les enveloppes de base, à remplir') + '</small></span><span class="arr">›</span></button>' +
+      '<button type="button" data-act="create" data-from="manual"><span class="sic">' + EMO('pencil') + '</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tes dépenses récurrentes et les enveloppes de base, à remplir' : 'Les enveloppes de base, à remplir') + '</small></span><span class="arr">›</span></button>' +
+      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">' + EMO('clipboard') + '</span><span class="t"><b>Copier ' + esc(monthName(p)) + '</b><small>' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
+      '<button type="button" class="star" data-act="wiz-start"><span class="sic">' + EMO('sparkles') + '</span><span class="t"><b>Budget sur mesure</b><small>Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
     '</div></div>';
 }
 
@@ -920,7 +927,7 @@ function wizView() {
   const top = '<div class="wiz-top"><button type="button" class="wback" data-act="wiz-back" aria-label="Retour">‹</button>' + (qIndex ? qIndex + ' sur 4' : 'Ta proposition') +
     (wiz.step === "exc" ? '<button type="button" class="wskip" data-act="wiz-skip">Passer</button>' : '') + '</div>' +
     (qIndex ? '<div class="wprog">' + [1, 2, 3, 4].map(n => '<i class="' + (n <= qIndex ? 'on' : '') + '"></i>').join("") + '</div>' : '');
-  const opt = (field, val, ic, title, sub) => '<button type="button" data-act="wiz-pick" data-field="' + field + '" data-val="' + val + '" aria-pressed="' + (a[field] === val) + '"><span class="sic">' + ic + '</span><span class="t"><b>' + title + '</b><small>' + sub + '</small></span></button>';
+  const opt = (field, val, ic, title, sub) => '<button type="button" data-act="wiz-pick" data-field="' + field + '" data-val="' + val + '" aria-pressed="' + (a[field] === val) + '"><span class="sic">' + EMO(ic) + '</span><span class="t"><b>' + title + '</b><small>' + sub + '</small></span></button>';
   const next = (label, disabled) => '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next"' + (disabled ? ' disabled' : '') + '>' + label + '</button></div>';
   let body = "";
   if (wiz.step === "need") {
@@ -942,10 +949,10 @@ function wizView() {
       '<div class="wactions">' + (Object.keys(ex).length ? '' : '<button type="button" class="btn" data-act="wiz-skip">Non, rien de spécial</button>') + '<button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>';
   } else if (wiz.step === "safety") {
     body = '<p class="wq">As-tu une épargne de précaution ?</p><p class="wsub">De quoi faire face à un coup dur, en général 3 mois de dépenses.</p><div class="wopts">' +
-      opt("safety", "ok", "✓", "Oui, elle est complète", "Moins d'imprévus à prévoir") + opt("safety", "building", "…", "Je la construis", "tamia en tient compte") + opt("safety", "none", "!", "Pas encore", "tamia la met en priorité") + '</div>' + next("Continuer", !a.safety);
+      opt("safety", "ok", "check", "Oui, elle est complète", "Moins d'imprévus à prévoir") + opt("safety", "building", "brick", "Je la construis", "tamia en tient compte") + opt("safety", "none", "warning", "Pas encore", "tamia la met en priorité") + '</div>' + next("Continuer", !a.safety);
   } else if (wiz.step === "rhythm") {
     body = '<p class="wq">À quoi ressemble ton mois ?</p><div class="wopts">' +
-      opt("rhythm", "calm", "◌", "Plutôt calme", "Peu de sorties prévues") + opt("rhythm", "normal", "◐", "Normal", "Comme d'habitude") + opt("rhythm", "busy", "●", "Bien rempli", "Fêtes, sorties, week-ends") + '</div>' + next("Voir ma proposition", !a.rhythm);
+      opt("rhythm", "calm", "couch", "Plutôt calme", "Peu de sorties prévues") + opt("rhythm", "normal", "coffee", "Normal", "Comme d'habitude") + opt("rhythm", "busy", "popper", "Bien rempli", "Fêtes, sorties, week-ends") + '</div>' + next("Voir ma proposition", !a.rhythm);
   } else {
     const r = buildTailored(wiz.income, a);
     wiz.result = r;
