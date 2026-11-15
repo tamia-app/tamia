@@ -204,6 +204,44 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   .strip { padding: 14px 16px; }
   .strip-row { gap: 10px 22px; }
 }
+/* Mobile: tap-to-edit rows, bottom sheet, compact top bar */
+.row.mrow { cursor: pointer; }
+.mrow .nm { font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrow .nm.empty { color: var(--muted); font-style: italic; }
+.mrow .mbadge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--muted); white-space: nowrap; justify-self: end; }
+.mrow .mbadge.none { font-style: italic; }
+.mrow .mbadge .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.mrow .mval { font-weight: 700; min-width: 3.8rem; text-align: right; font-variant-numeric: tabular-nums; }
+.mrow:active { background: var(--sunk); }
+.mini { position: fixed; top: 0; left: 0; right: 0; z-index: 20; background: var(--bg); padding-top: calc(env(safe-area-inset-top, 0px) + 8px); padding-bottom: 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); box-shadow: 0 6px 16px -14px rgba(0,0,0,.5); }
+.mini-in { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; }
+.mini-in .cell .eyebrow { font-size: 0.6rem; }
+.mini-in .val { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.mini-in .bar { flex: 1; height: 7px; }
+.mini-in .btn { padding: 7px 11px; font-size: 0.8rem; white-space: nowrap; }
+.mini-in .status { padding: 5px 10px; font-size: 0.76rem; }
+@media (min-width: 641px) { .mini { display: none !important; } }
+.sheet-wrap { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; justify-content: flex-end; }
+.sheet-wrap .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.42); }
+.sheet { position: relative; background: var(--surface); border-radius: 20px 20px 0 0; padding: 10px max(18px, env(safe-area-inset-left, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 14px; max-height: 92%; overflow-y: auto; }
+.sheet .grab { width: 38px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
+.sheet .field select { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); color: var(--ink); font: inherit; }
+.sh-amt { display: flex; align-items: baseline; gap: 6px; border-bottom: 2px solid var(--ink); align-self: flex-start; }
+.sheet .sh-amt input { border: none; border-radius: 0; background: none; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 2.2rem; letter-spacing: -0.03em; width: 7ch; padding: 0; outline: none; }
+.sh-amt span { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--muted); }
+.sh-banks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.sh-banks button { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 11px 12px; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 8px; text-align: left; min-width: 0; }
+.sh-banks button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-banks button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 10px 11px; }
+.sh-banks .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.sh-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sh-foot .btnrow { margin-left: auto; }
+.sh-del { border: none; background: none; color: var(--bad); font-weight: 600; font-size: 0.9rem; padding: 6px 0; }
+.sh-del[hidden] + .btnrow { margin-left: auto; }
+@media (max-width: 640px) {
+  .strip { position: static; }
+  .row.mrow { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: none; column-gap: 10px; align-items: center; padding: 12px 14px; }
+}
 .notes { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
 .notes textarea { width: 100%; min-height: 70px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; background: var(--sunk); color: var(--ink); font: inherit; padding: 10px 12px; }
 .notes textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }
@@ -362,6 +400,18 @@ a.inline { color: var(--accent); }
   <div class="notice" id="notice" hidden></div>
   <main id="main"><div class="card loading">Chargement de tes budgets…</div></main>
   <input type="file" id="importFile" class="hidden-file" accept="application/json,.json">
+  <div class="mini" id="mini" hidden><div class="mini-in" id="miniIn"></div></div>
+  <div class="sheet-wrap" id="sheet" hidden>
+    <div class="scrim" id="shScrim"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Modifier l'enveloppe">
+      <span class="grab"></span>
+      <div class="field"><label for="shName">Intitulé</label><input id="shName" maxlength="60" placeholder="Ex. Loyer" autocomplete="off"></div>
+      <div class="field"><label for="shAmt">Montant</label><div class="sh-amt"><input id="shAmt" inputmode="decimal" autocomplete="off" placeholder="0"><span>€</span></div></div>
+      <div class="field" id="shBankField"><label>Banque</label><div class="sh-banks" id="shBanks"></div></div>
+      <div class="field"><label for="shGroup">Catégorie</label><select id="shGroup"></select></div>
+      <div class="sh-foot"><button type="button" class="sh-del" id="shDel">Supprimer</button><div class="btnrow"><button type="button" class="btn" id="shCancel">Annuler</button><button type="button" class="btn primary" id="shSave">Enregistrer</button></div></div>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -470,6 +520,8 @@ function barHtml(t) {
 /* ---------- rendering ---------- */
 function render() {
   if (!user) return;
+  $("#mini").hidden = true;
+  if (miniObs) { miniObs.disconnect(); miniObs = null; }
   $("#monthLabel").textContent = label(current);
   $("#today").hidden = current === thisMonth;
   $("#monthBar").style.visibility = page === "reglages" ? "hidden" : "";
@@ -488,6 +540,7 @@ function render() {
   sizeIncome();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeIncome);
   renderLive();
+  watchStrip();
 }
 
 function onboardingView() {
@@ -554,7 +607,16 @@ function bankControl(e, locked) {
   return '<div class="bank"><select class="banksel" aria-label="Banque"><option value="">Sans banque</option>' + list.map(b => '<option value="' + esc(b.id) + '"' + (known && e.bank === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>').join("") + '</select></div>';
 }
 
+const mobileMQ = window.matchMedia("(max-width: 640px)");
+const isMobile = () => mobileMQ.matches;
+function mobileRowView(e) {
+  const b = bankList().find(x => x.id === e.bank);
+  const badge = !banks.length ? '<span></span>' : b ? '<span class="mbadge"><i class="dot" style="background:' + b.color + '"></i>' + esc(b.name) + '</span>' : '<span class="mbadge none">Sans banque</span>';
+  return '<div class="row mrow" data-id="' + esc(e.id) + '" data-act="sheet-open" role="button" tabindex="0" aria-label="Modifier ' + esc(e.name || "l'enveloppe") + '">' +
+    '<span class="nm' + (e.name ? '' : ' empty') + '">' + esc(e.name || "Sans nom") + '</span>' + badge + '<span class="mval">' + money(e.amount) + '</span></div>';
+}
 function rowView(e, p, locked) {
+  if (!locked && isMobile()) return mobileRowView(e);
   const opts = GROUPS.map(g => '<option value="' + g.id + '"' + (g.id === groupOf(e.group).id ? ' selected' : '') + '>' + esc(g.label) + '</option>').join("");
   const hasBank = banks.some(b => b.id === e.bank);
   return '<div class="row' + (hasBank || !banks.length ? '' : ' nobank') + '" data-id="' + esc(e.id) + '">' +
@@ -579,6 +641,21 @@ function sizeInput(el) {
   } catch (e) { el.style.width = (v.length + 0.2) + "ch"; }
 }
 
+let miniObs = null;
+function renderMini(t, rest, st) {
+  const box = $("#miniIn");
+  if (!box || !work) return;
+  box.innerHTML = '<div class="cell remain" data-state="' + st + '"><span class="eyebrow">' + (st === "bad" ? "Dépassement" : "Reste") + '</span><span class="val">' + money(Math.abs(rest)) + '</span></div>' +
+    '<div class="bar">' + barHtml(t) + '</div>' +
+    (work.validated ? '<span class="status">' + CHECK + 'Validé</span>' : '<button class="btn primary" data-act="validate">Valider</button>');
+}
+function watchStrip() {
+  if (miniObs) { miniObs.disconnect(); miniObs = null; }
+  const strip = mainEl.querySelector(".strip"), mini = $("#mini");
+  if (!strip || page !== "finances") { mini.hidden = true; return; }
+  miniObs = new IntersectionObserver(entries => { mini.hidden = entries[0].isIntersecting; }, { threshold: 0 });
+  miniObs.observe(strip);
+}
 function renderLive() {
   if (!work || page !== "finances" || !$("#sAlloc")) return;
   const t = totals(work);
@@ -589,6 +666,7 @@ function renderLive() {
   $("#sRemainLbl").textContent = st === "bad" ? "Dépassement" : "Reste à répartir";
   $("#sRemainCell").dataset.state = st;
   $("#sBar").innerHTML = barHtml(t);
+  renderMini(t, rest, st);
   if (banks.length) $("#sBanks").innerHTML = bankList().map(b => '<span><i class="dot" style="background:' + b.color + '"></i>' + esc(b.name) + ' <b>' + money(t.bank[b.id]) + '</b></span>').join("") +
     (t.bank.none > 0 ? '<span><i class="dot" style="background:var(--line)"></i>Sans banque <b>' + money(t.bank.none) + '</b></span>' : '');
   GROUPS.forEach(g => { const el = document.querySelector('[data-gtot="' + g.id + '"]'); if (el) el.textContent = money(t.by[g.id]); });
@@ -854,6 +932,61 @@ $("#emailForm").addEventListener("submit", e => {
   p.catch(authError).finally(() => { btn.disabled = false; });
 });
 
+/* ---------- mobile envelope sheet ---------- */
+let sheetEnv = null, sheetIsNew = false, sheetBank = "";
+function renderSheetBanks() {
+  const list = bankList();
+  $("#shBankField").hidden = !list.length;
+  $("#shBanks").innerHTML = list.map(b => '<button type="button" data-bank="' + esc(b.id) + '" aria-pressed="' + (sheetBank === b.id) + '"><i class="dot" style="background:' + b.color + '"></i><span>' + esc(b.name) + '</span></button>').join("") +
+    '<button type="button" data-bank="" aria-pressed="' + (!list.some(b => b.id === sheetBank)) + '"><i class="dot" style="background:var(--line)"></i><span>Sans banque</span></button>';
+}
+function openSheet(env, isNew) {
+  if (!work || work.validated) return;
+  sheetEnv = env; sheetIsNew = isNew; sheetBank = env.bank || "";
+  $("#shName").value = env.name || "";
+  $("#shAmt").value = show(env.amount);
+  $("#shGroup").innerHTML = GROUPS.map(g => '<option value="' + g.id + '"' + (g.id === groupOf(env.group).id ? ' selected' : '') + '>' + esc(g.label) + '</option>').join("");
+  renderSheetBanks();
+  $("#shDel").hidden = isNew;
+  $("#sheet").hidden = false;
+  document.body.style.overflow = "hidden";
+  setTimeout(() => { const f = isNew ? $("#shName") : $("#shAmt"); f.focus(); if (!isNew) f.select(); }, 60);
+}
+function closeSheet() {
+  $("#sheet").hidden = true;
+  document.body.style.overflow = "";
+  sheetEnv = null;
+}
+function saveSheet() {
+  if (!sheetEnv || !work) return closeSheet();
+  const upd = { id: sheetEnv.id, name: $("#shName").value.trim(), group: $("#shGroup").value, bank: sheetBank, amount: parse($("#shAmt").value) };
+  if (sheetIsNew) work.envelopes.push(upd);
+  else work.envelopes = work.envelopes.map(x => x.id === upd.id ? upd : x);
+  closeSheet(); changed(false); render();
+}
+$("#shBanks").addEventListener("click", e => { const b = e.target.closest("button[data-bank]"); if (!b) return; sheetBank = b.dataset.bank; renderSheetBanks(); });
+$("#shSave").addEventListener("click", saveSheet);
+$("#shCancel").addEventListener("click", closeSheet);
+$("#shScrim").addEventListener("click", closeSheet);
+$("#shDel").addEventListener("click", () => {
+  if (!sheetEnv || !work) return;
+  const id = sheetEnv.id;
+  work.envelopes = work.envelopes.filter(x => x.id !== id);
+  closeSheet(); changed(false); render();
+});
+$("#sheet").addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSheet();
+  if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); saveSheet(); }
+});
+$("#mini").addEventListener("click", e => {
+  const b = e.target.closest('[data-act="validate"]'); if (!b || !work) return;
+  if (saveTimer) clearTimeout(saveTimer);
+  work.validated = true; work.validatedAt = new Date().toISOString();
+  changed(false); flush(); render(); setSync("Budget validé");
+});
+const onMQ = () => { if (page === "finances" && work) render(); };
+if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
+
 /* ---------- routing ---------- */
 function route() {
   const h = (location.hash || "").replace("#", "");
@@ -975,6 +1108,7 @@ mainEl.addEventListener("submit", e => {
 mainEl.addEventListener("keydown", e => {
   if (e.key !== "Enter") return;
   const t = e.target;
+  if (t.classList && t.classList.contains("mrow")) { const env = findEnv(t); if (env) openSheet(clone(env), false); return; }
   if (t.id === "income" || t.classList.contains("amt") || t.classList.contains("name")) {
     e.preventDefault();
     const fields = Array.from(mainEl.querySelectorAll("#income, input.amt"));
@@ -1019,6 +1153,7 @@ mainEl.addEventListener("click", e => {
     return;
   }
   if (work && work.validated && act !== "create") return;
+  if (act === "sheet-open") { const env = findEnv(b); if (env) openSheet(clone(env), false); return; }
   if (act === "create") {
     const from = b.dataset.from;
     if (from === "template") work = { income: 0, envelopes: TEMPLATE.map(([name, group]) => ({ id: uid(), name, group, bank: "", amount: 0 })), note: "", validated: false };
@@ -1026,6 +1161,8 @@ mainEl.addEventListener("click", e => {
     work.createdAt = new Date().toISOString();
     changed(false); render(); flush();
     const inc = $("#income"); if (inc) { inc.focus(); inc.select(); }
+  } else if (act === "add" && isMobile()) {
+    openSheet({ id: uid(), name: "", group: b.dataset.group, bank: "", amount: 0 }, true);
   } else if (act === "add") {
     const env = { id: uid(), name: "", group: b.dataset.group, bank: "", amount: 0 };
     work.envelopes.push(env); changed(false); render();
