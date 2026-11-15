@@ -61,7 +61,7 @@ a { color: var(--accent); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; }
 .brand { display: flex; align-items: center; gap: 0.18em; font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.05em; line-height: 1; color: var(--ink); text-decoration: none; }
 /* logo sized and nudged so its ink matches the cap-to-baseline height of "tamia" */
-.brand svg { width: 1.11em; height: 1.11em; flex: none; transform: translateY(-0.065em); }
+.brand svg { width: 1.32em; height: 1.32em; flex: none; margin-right: -0.04em; transform: translateY(-0.03em); }
 .logo .fur { fill: #f0a432; }
 .logo .dk { fill: var(--ink); }
 .logo .lt { fill: var(--lt, var(--bg)); }
