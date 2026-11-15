@@ -1344,6 +1344,7 @@ mainEl.addEventListener("click", e => {
     return;
   }
   // settings
+  if (act === "rec-del") { saveRecurring(recurring.filter(x => x.id !== b.dataset.rid)).then(render); return; }
   if (act === "bank-del") { saveBanks(banks.filter(x => x.id !== b.dataset.bank)).then(render); return; }
   if (act === "logout") { if (saveTimer) flush(); saving.finally(() => signOut(auth)); return; }
   if (act === "export") { exportData(); return; }
