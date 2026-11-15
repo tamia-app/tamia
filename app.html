@@ -171,6 +171,23 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .strip-top .strip-row { flex: 1; min-width: 0; }
 .actions { display: flex; gap: 8px; align-items: center; flex: none; }
 @media (max-width: 640px) { .strip-top { flex-direction: column-reverse; } .actions { align-self: flex-end; } }
+/* Budget strip in ink, with local tokens so every value stays readable */
+.strip { background: var(--band); border-color: var(--band-line); color: var(--ink);
+  --ink: #f2f2ef; --muted: #a3a39c; --line: #3a3a37; --sunk: #2a2a28; --surface: #1f1f1e; --accent: #f2f2ef;
+  --ok: #5fcf98; --warn: #f0b75a; --bad: #ff8a80; --b1: #f2f2ef; --b3: #6f94d1;
+  --g2: #6f94d1; --g3: #7cc0e6; --g4: #5fb67f; --g5: #f07c68; --g6: #b08a68; --g7: #b49cf0; }
+.strip-top { position: relative; }
+.vwrap { position: relative; flex: none; }
+.vbadge { width: 32px; height: 32px; border-radius: 50%; border: none; background: #5fcf98; color: #0d3b26; display: grid; place-items: center; padding: 0; }
+.vbadge svg { width: 17px; height: 17px; stroke-width: 2.4; }
+.vbadge:hover, .vbadge[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(95,207,152,.3); }
+.vtip { position: absolute; right: 0; top: calc(100% + 8px); z-index: 6; white-space: nowrap; background: #f2f2ef; color: #121212; font-size: 0.82rem; font-weight: 600; border-radius: 10px; padding: 8px 11px; box-shadow: 0 12px 28px -12px rgba(0,0,0,.5); }
+.validbox { display: inline-flex; }
+.validbox .btn { border-radius: 99px; padding: 8px 16px; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+.validbox .btn.primary { background: #121212; border-color: #121212; color: #f2f2ef; }
+.validbox .vb-edit { background: var(--surface); color: var(--ink); border-color: var(--line); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .validbox .btn.primary { background: #f2f2ef; border-color: #f2f2ef; color: #121212; } }
+:root[data-theme="dark"] .validbox .btn.primary { background: #f2f2ef; border-color: #f2f2ef; color: #121212; }
 .status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 600; color: var(--ok); background: var(--ok-soft); border-radius: 99px; padding: 6px 12px; white-space: nowrap; }
 .status svg { width: 14px; height: 14px; }
 .locked .add, .locked .del, .locked .danger-zone, .locked .empty-group, .locked [data-act="round"] { display: none; }
@@ -617,6 +634,7 @@ a.inline { color: var(--accent); }
           <div class="mfoot"><span id="todayLbl"></span><button type="button" class="linkbtn" id="todayBtn">Revenir au mois en cours</button></div>
         </div>
       </div>
+      <span id="validBox" class="validbox" hidden></span>
     </div>
   </div>
   <div class="notice" id="notice" hidden></div>
@@ -924,6 +942,29 @@ function renderKeepFocus() {
   }
 }
 
+function renderValidBox() {
+  const box = $("#validBox");
+  const show = page === "finances" && loaded && profileLoaded && !!profile && !!work;
+  box.hidden = !show;
+  if (!show) { box.innerHTML = ""; return; }
+  box.innerHTML = work.validated
+    ? '<button type="button" class="btn vb-edit" data-act="unlock">Modifier</button>'
+    : '<button type="button" class="btn primary vb-go" data-act="validate">Valider le budget</button>';
+}
+function validateBudget() {
+  if (saveTimer) clearTimeout(saveTimer);
+  work.validated = true; work.validatedAt = new Date().toISOString();
+  changed(false); flush(); render(); setSync("Budget validé");
+}
+function unlockBudget() {
+  work.validated = false; delete work.validatedAt;
+  changed(false); flush(); render();
+  const inc = $("#income"); if (inc) inc.focus();
+}
+$("#validBox").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b || !work) return;
+  if (b.dataset.act === "validate") validateBudget(); else if (b.dataset.act === "unlock") unlockBudget();
+});
 function render() {
   if (!user) return;
   $("#mini").hidden = true;
@@ -932,6 +973,7 @@ function render() {
   $("#monthDot").className = "mst " + monthState(current);
   if (!$("#monthPop").hidden) renderMonthGrid();
   $(".mpick").hidden = page === "reglages";
+  renderValidBox();
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
@@ -1076,7 +1118,7 @@ function wizGo(delta) {
 function financesView() {
   const p = prevMonthId();
   const locked = !!work.validated;
-  const when = work.validatedAt ? new Date(work.validatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "";
+  const when = work.validatedAt ? new Date(work.validatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "";
   const g = work.goal && !locked && !work.goalHidden ? GOALS.find(x => x.id === work.goal) : null;
   const banner = g ? '<div class="proposal"><div><b>Ton budget sur mesure · ' + esc(g.label) + '</b>' +
     '<span>' + (work.goalWhy ? esc(work.goalWhy) + ' ' : '') + 'Ajuste les montants si besoin, puis valide.</span>' +
@@ -1087,9 +1129,8 @@ function financesView() {
       '<div class="cell"><label for="income" class="eyebrow">Montant à répartir</label><div class="income-field"><input id="income" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(work.income)) + '"><span>€</span></div></div>' +
       '<div class="cell"><span class="eyebrow">Réparti</span><span class="val num" id="sAlloc"></span></div>' +
       '<div class="cell remain" id="sRemainCell"><span class="eyebrow" id="sRemainLbl">Reste à répartir</span><span class="val num" id="sRemain"></span></div>' +
-      '</div><div class="actions">' + (locked
-        ? '<span class="status">' + CHECK + 'Budget validé' + (when ? ' le ' + esc(when) : '') + '</span><button class="btn" data-act="unlock">Modifier</button>'
-        : '<button class="btn primary" data-act="validate">Valider le budget</button>') + '</div>' +
+      '</div>' + (locked ? '<div class="vwrap"><button type="button" class="vbadge" data-act="vinfo" aria-expanded="false" aria-controls="vtip" aria-label="Budget validé : voir la date">' + CHECK + '</button>' +
+        '<span class="vtip" id="vtip" role="status" hidden>Budget validé' + (when ? ' le ' + esc(when) : '') + '</span></div>' : '') +
     '</div><div class="bar" id="sBar" role="img" aria-label="Part de la paye déjà répartie, par catégorie"></div><div class="banks" id="sBanks"' + (banks.length ? '' : ' hidden') + '></div></div>' +
     '<div class="groups">';
   GROUPS.forEach(g => {
@@ -1886,26 +1927,16 @@ mainEl.addEventListener("click", e => {
   if (act === "acct-del-no") { confirmAccountDelete = false; render(); return; }
   if (act === "acct-del-yes") { b.disabled = true; b.textContent = "Suppression…"; deleteAccount(); return; }
   // finances
-  if (act === "validate") {
-    if (saveTimer) clearTimeout(saveTimer);
-    work.validated = true; work.validatedAt = new Date().toISOString();
-    changed(false); flush(); render(); setSync("Budget validé");
-    return;
-  }
-  if (act === "unlock") {
-    work.validated = false; delete work.validatedAt;
-    changed(false); flush(); render();
-    const inc = $("#income"); if (inc) inc.focus();
-    return;
-  }
+  if (act === "validate") { validateBudget(); return; }
+  if (act === "unlock") { unlockBudget(); return; }
+  if (act === "vinfo") { const open = b.getAttribute("aria-expanded") !== "true"; b.setAttribute("aria-expanded", String(open)); const tip = $("#vtip"); if (tip) tip.hidden = !open; return; }
   if (work && work.validated && act !== "create") return;
   if (act === "sheet-open") { const env = findEnv(b); if (env) openSheet(clone(env), false); return; }
   if (act === "wiz-start") {
     const ni = $("#newIncome"); const income = ni ? parse(ni.value) : 0;
     newIncomeDraft = income;
-    const lq = lastQuiz() || {};
-    wiz = { step: "need", income, a: { need: "", project: lq.project ? Object.assign({}, lq.project) : {}, exc: {}, safety: "", rhythm: "",
-      home: "", kids: "", share: "", meals: "", tickets: "", ticketsAmt: lq.ticketsAmt || 0, transport: "" } };
+    wiz = { step: "need", income, a: { need: "", project: {}, exc: {}, safety: "", rhythm: "",
+      home: "", kids: "", share: "", meals: "", tickets: "", ticketsAmt: 0, transport: "" } };
     render(); window.scrollTo(0, 0); return;
   }
   if (act === "wiz-back") { wizGo(-1); return; }
@@ -1924,9 +1955,7 @@ mainEl.addEventListener("click", e => {
   if (act === "wiz-exc") { const k = b.dataset.k; if (wiz.a.exc[k] != null) delete wiz.a.exc[k]; else wiz.a.exc[k] = 0; render(); const inp = mainEl.querySelector('[data-wiz="exc.' + k + '"]'); if (inp) inp.focus(); return; }
   if (act === "wiz-use") {
     const r = wiz.result || buildTailored(wiz.income, wiz.a);
-    const quiz = { need: wiz.a.need, safety: wiz.a.safety, rhythm: wiz.a.rhythm, home: wiz.a.home, kids: wiz.a.kids || 0, share: wiz.a.share || "", meals: wiz.a.meals, tickets: wiz.a.tickets || "", ticketsAmt: wiz.a.tickets === "yes" ? parse(wiz.a.ticketsAmt) : 0, transport: wiz.a.transport };
-    if (wiz.a.need === "projet" && wiz.a.project && wiz.a.project.name) quiz.project = { name: wiz.a.project.name, amount: parse(wiz.a.project.amount), date: wiz.a.project.date || "", saved: parse(wiz.a.project.saved) };
-    work = { income: wiz.income, envelopes: r.envelopes, note: "", validated: false, goal: wiz.a.need, goalWhy: r.why, goalOver: r.over, quiz, createdAt: new Date().toISOString() };
+    work = { income: wiz.income, envelopes: r.envelopes, note: "", validated: false, goal: wiz.a.need, goalWhy: r.why, goalOver: r.over, createdAt: new Date().toISOString() };
     wiz = null; newIncomeDraft = null;
     changed(false); render(); flush(); window.scrollTo(0, 0);
     return;
