@@ -435,7 +435,7 @@ a.inline { color: var(--accent); }
 .wsub { margin: -8px 0 0; color: var(--muted); font-size: 0.9rem; }
 .wopts { display: flex; flex-direction: column; gap: 8px; }
 .wopts button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; }
-.wopts button:hover { border-color: var(--ink); }
+@media (hover: hover) { .wopts button:hover { border-color: var(--ink); } .wiz.fresh .wopts button:hover:not([aria-pressed="true"]) { border-color: var(--line); } }
 .wopts button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 11px 13px; }
 .wopts .sic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
 .wopts button[aria-pressed="true"] .sic { background: rgba(240,164,50,.25); }
@@ -761,6 +761,13 @@ function buildTailored(income, a) {
   if (!hasTransport && a.transport === "metro") needs.push({ name: "Transports", group: "fixe", amount: 80 });
   const outBase = r10(meal.out * (a.rhythm === "calm" ? 0.7 : a.rhythm === "busy" ? 1.4 : 1));
   needs.push({ name: "Sorties & restaurants", group: "plaisir", amount: outBase, flex: true });
+  const card = a.tickets === "yes" ? parse(a.ticketsAmt) : 0;
+  let cardFood = 0, cardOut = 0;
+  if (card) {
+    const c = needs.find(n => n.name === "Courses"), o = needs.find(n => n.name === "Sorties & restaurants");
+    cardFood = Math.min(card, Math.floor(c.amount * 0.7)); c.amount = r10(c.amount - cardFood);
+    cardOut = Math.min(card - cardFood, o.amount); o.amount = r10(o.amount - cardOut);
+  }
   // 2. a tight month: needs are scaled down to fit in 90 % of what's left
   let needSum = needs.reduce((x, n) => x + n.amount, 0);
   const tight = needSum > rest * 0.9;
@@ -801,6 +808,7 @@ function buildTailored(income, a) {
     : (home === "couple" ? "En couple" : "En famille avec " + kids + (kids > 2 ? " enfants ou plus" : kids > 1 ? " enfants" : " enfant")) +
       (share === 1 ? ", en payant tout" : share === 0.5 ? ", à moitié-moitié" : share > 0.5 ? ", en payant la plus grande partie" : ", en payant une petite partie");
   parts.push(who + " : " + money(amt("Courses")) + " de courses" + (kids ? " et " + money(amt("Enfants")) + " pour les enfants" : "") + ".");
+  if (card) parts.push("Ta carte restaurant (" + money(card) + " par mois) paye une partie des courses" + (cardOut ? " et des repas dehors" : "") + " : c'est déduit des enveloppes.");
   if (a.meals === "out") parts.push("Tu manges souvent dehors : les restaurants ont une vraie place.");
   if (a.meals === "cook") parts.push("Tu cuisines presque tout : plus de courses, moins de restaurants.");
   if (!hasTransport && a.transport === "car") parts.push("150 € pour le carburant et l'entretien de la voiture.");
@@ -982,7 +990,7 @@ function lastQuiz() {
 }
 function wizSteps() {
   const a = wiz.a;
-  return ["need"].concat(a.need === "projet" ? ["project"] : [], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "transport", "exc", "safety", "rhythm", "result"]);
+  return ["need"].concat(a.need === "projet" ? ["project"] : [], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "tickets"], a.tickets === "yes" ? ["ticketsAmt"] : [], ["transport", "exc", "safety", "rhythm", "result"]);
 }
 function wizView() {
   const steps = wizSteps(), a = wiz.a;
@@ -1016,6 +1024,13 @@ function wizView() {
   } else if (wiz.step === "meals") {
     body = q("Pour manger, tu…", "Ça répartit le budget entre courses et restaurants.",
       opt("meals", "cook", "cooking", "Cuisines presque tout", "Peu de restaurants") + opt("meals", "mix", "sandwich", "Fais un peu des deux", "Quelques restos ou livraisons") + opt("meals", "out", "scooter", "Manges souvent dehors", "Restos, livraisons, cantine"));
+  } else if (wiz.step === "tickets") {
+    body = q("As-tu une carte restaurant ?", "Titres-restaurant, Swile, Edenred, Up… Ce qu'elle paye n'a pas à sortir de ta paye.",
+      opt("tickets", "yes", "fork", "Oui", "Je l'utilise pour les courses ou le midi") + opt("tickets", "no", "cross", "Non", ""));
+  } else if (wiz.step === "ticketsAmt") {
+    body = '<p class="wq">Combien reçois-tu par mois sur ta carte ?</p><p class="wsub">Souvent entre 150 et 200 €. Regarde le montant crédité chaque mois.</p>' +
+      '<div class="wfields"><div class="wfield"><label for="wtAmt">Montant par mois</label><input id="wtAmt" data-wiz="tickets.amount" inputmode="decimal" value="' + esc(show(a.ticketsAmt)) + '" placeholder="0 €"></div></div>' +
+      '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>';
   } else if (wiz.step === "transport") {
     body = q("Pour te déplacer au quotidien ?", "Si tes transports sont déjà dans tes dépenses récurrentes, ils ne seront pas comptés deux fois.",
       opt("transport", "car", "car", "En voiture", "Carburant, entretien, parking") + opt("transport", "metro", "metro", "En transports en commun", "Bus, métro, train") + opt("transport", "bike", "bike", "À vélo ou à pied", "Presque rien à prévoir"));
@@ -1028,7 +1043,7 @@ function wizView() {
       (keys.length ? '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>' : '');
   } else if (wiz.step === "safety") {
     body = q("As-tu une épargne de précaution ?", "De quoi faire face à un coup dur, en général 3 mois de dépenses.",
-      opt("safety", "ok", "check", "Oui, elle est complète", "Moins d'imprévus à prévoir") + opt("safety", "building", "brick", "Je la construis", "tamia en tient compte") + opt("safety", "none", "warning", "Pas encore", "tamia la met en priorité"));
+      opt("safety", "ok", "check", "Oui, elle est complète", "Moins d'imprévus à anticiper") + opt("safety", "building", "brick", "Je la construis", "tamia en tient compte") + opt("safety", "none", "warning", "Pas encore", "tamia la met en priorité"));
   } else if (wiz.step === "rhythm") {
     body = q("À quoi ressemble ton mois ?", "Ça fait varier les sorties et le shopping.",
       opt("rhythm", "calm", "couch", "Plutôt calme", "Moins de sorties, plus d'épargne") + opt("rhythm", "normal", "coffee", "Normal", "Comme d'habitude") + opt("rhythm", "busy", "popper", "Bien rempli", "Fêtes, sorties, week-ends"));
@@ -1053,6 +1068,8 @@ function wizGo(delta) {
   if (i < 0) { wiz = null; render(); return; }
   wiz.step = steps[Math.min(i, steps.length - 1)];
   render();
+  const w = mainEl.querySelector(".wiz");
+  if (w) { w.classList.add("fresh"); w.addEventListener("pointermove", () => w.classList.remove("fresh"), { once: true }); }
   window.scrollTo(0, 0);
 }
 
@@ -1776,6 +1793,7 @@ mainEl.addEventListener("input", e => {
     const [grp, key] = t.dataset.wiz.split(".");
     if (grp === "project") { wiz.a.project = Object.assign({}, wiz.a.project, { [key]: key === "amount" || key === "saved" ? parse(t.value) : t.value }); const c = $("#wcalc"); const m = projectMonthly(wiz.a.project); if (c) c.innerHTML = m ? 'Il faut mettre de côté <b>' + money(m) + ' par mois</b> pour y arriver.' : 'Indique le montant et la date pour savoir combien mettre de côté chaque mois.'; }
     if (grp === "exc") wiz.a.exc[key] = parse(t.value);
+    if (grp === "tickets") wiz.a.ticketsAmt = parse(t.value);
     return;
   }
   if (t.id === "newIncome") { sizeInput(t); return; }
@@ -1886,8 +1904,8 @@ mainEl.addEventListener("click", e => {
     const ni = $("#newIncome"); const income = ni ? parse(ni.value) : 0;
     newIncomeDraft = income;
     const lq = lastQuiz() || {};
-    wiz = { step: "need", income, a: { need: lq.need || "", project: lq.project ? Object.assign({}, lq.project) : {}, exc: {}, safety: lq.safety || "", rhythm: lq.rhythm || "",
-      home: lq.home || "", kids: lq.kids || "", share: lq.share || "", meals: lq.meals || "", transport: lq.transport || "" } };
+    wiz = { step: "need", income, a: { need: "", project: lq.project ? Object.assign({}, lq.project) : {}, exc: {}, safety: "", rhythm: "",
+      home: "", kids: "", share: "", meals: "", tickets: "", ticketsAmt: lq.ticketsAmt || 0, transport: "" } };
     render(); window.scrollTo(0, 0); return;
   }
   if (act === "wiz-back") { wizGo(-1); return; }
@@ -1906,7 +1924,7 @@ mainEl.addEventListener("click", e => {
   if (act === "wiz-exc") { const k = b.dataset.k; if (wiz.a.exc[k] != null) delete wiz.a.exc[k]; else wiz.a.exc[k] = 0; render(); const inp = mainEl.querySelector('[data-wiz="exc.' + k + '"]'); if (inp) inp.focus(); return; }
   if (act === "wiz-use") {
     const r = wiz.result || buildTailored(wiz.income, wiz.a);
-    const quiz = { need: wiz.a.need, safety: wiz.a.safety, rhythm: wiz.a.rhythm, home: wiz.a.home, kids: wiz.a.kids || 0, share: wiz.a.share || "", meals: wiz.a.meals, transport: wiz.a.transport };
+    const quiz = { need: wiz.a.need, safety: wiz.a.safety, rhythm: wiz.a.rhythm, home: wiz.a.home, kids: wiz.a.kids || 0, share: wiz.a.share || "", meals: wiz.a.meals, tickets: wiz.a.tickets || "", ticketsAmt: wiz.a.tickets === "yes" ? parse(wiz.a.ticketsAmt) : 0, transport: wiz.a.transport };
     if (wiz.a.need === "projet" && wiz.a.project && wiz.a.project.name) quiz.project = { name: wiz.a.project.name, amount: parse(wiz.a.project.amount), date: wiz.a.project.date || "", saved: parse(wiz.a.project.saved) };
     work = { income: wiz.income, envelopes: r.envelopes, note: "", validated: false, goal: wiz.a.need, goalWhy: r.why, goalOver: r.over, quiz, createdAt: new Date().toISOString() };
     wiz = null; newIncomeDraft = null;
