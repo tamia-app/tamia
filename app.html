@@ -116,8 +116,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-left: auto; }
 /* Account button (initial) + menu */
 .acct { position: relative; }
-.acct-btn { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-weight: 700; font-size: 1rem; display: grid; place-items: center; }
-.acct-btn:hover, .acct-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px var(--line); }
+.acct-btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 8px 12px 8px 14px; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+.acct-btn:hover, .acct-btn[aria-expanded="true"] { border-color: var(--ink); }
+.acct-btn .pchev { width: 12px; height: 12px; color: var(--muted); transition: transform .15s; }
+.acct-btn[aria-expanded="true"] .pchev { transform: rotate(180deg); }
 .acct-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; width: 270px; max-width: calc(100vw - 32px); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); padding: 6px; display: flex; flex-direction: column; }
 .acct-who { padding: 10px 10px 8px; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
 .acct-who b { font-family: var(--font-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -467,6 +469,9 @@ a.inline { color: var(--accent); }
 .recnew { align-self: flex-start; border: 1px dashed var(--line); background: var(--surface); border-radius: 10px; padding: 8px 12px; font-size: 0.86rem; font-weight: 600; color: var(--ink); }
 .recnew:hover { border-color: var(--ink); }
 .recnew.other { margin-top: 4px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.panel-head .btn { flex: none; white-space: nowrap; }
+.recempty { margin: 0; font-size: 0.86rem; color: var(--muted); }
 .recgroup { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
 .recgroup + .recgroup { border-top: 1px solid var(--line); padding-top: 14px; }
 .recgroup-head { display: flex; align-items: center; gap: 8px; }
@@ -577,7 +582,7 @@ a.inline { color: var(--accent); }
       </div>
     </div>
     <div class="acct">
-      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Mon compte"><span id="acctInitial">?</span></button>
+      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" >Mon compte<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="acct-pop" id="acctPop" role="menu" hidden></div>
     </div>
   </header>
@@ -1181,7 +1186,7 @@ function recGroupsView() {
     const sub = list.reduce((a, r) => a + parse(r.amount), 0);
     return '<div class="recgroup"><div class="recgroup-head"><i class="sw" style="background:' + g.color + '"></i><b>' + esc(g.label) + '</b><span>' + (list.length ? money(sub) : '') + '</span></div>' +
       (list.length ? '<div class="reclist">' + list.map(r => recItemView(r)).join("") + '</div>' : '') +
-      (REC_DEFAULT_GROUPS.includes(id) ? '<button type="button" class="recnew" data-act="rec-new" data-group="' + id + '">+ Créer une dépense récurrente</button>' : '') +
+      (list.length ? '' : '<p class="recempty">Rien pour l\'instant.</p>') +
       '</div>';
   }).join("");
 }
@@ -1251,14 +1256,13 @@ function settingsView() {
   const provider = (user.providerData[0] && user.providerData[0].providerId) === "google.com" ? "Compte Google" : "E-mail et mot de passe";
   return '<div class="settings">' +
     (settingsMsg ? '<div class="msg ok">' + esc(settingsMsg) + '</div>' : '') +
+    '<div class="card panel"><div class="panel-head"><h2>Mes dépenses récurrentes</h2><button type="button" class="btn" data-act="rec-new" data-group="fixe">+ Ajouter</button></div><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
+      recGroupsView() +
+      (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') + '</div>' +
     '<div class="card panel"><h2>Mes banques</h2><p>Associe une banque à chaque enveloppe pour savoir combien virer sur chacune.</p>' +
       (bl.length ? '<ul class="banklist">' + bl.map(b => '<li><i class="dot" style="background:' + b.color + '"></i><input value="' + esc(b.name) + '" data-bank-name="' + esc(b.id) + '" aria-label="Nom de la banque" maxlength="40"><button class="btn danger" data-act="bank-del" data-bank="' + esc(b.id) + '">Retirer</button></li>').join("") + '</ul>' : '<p>Aucune banque pour l\'instant.</p>') +
       '<form class="inline-form" id="bankForm"><input id="bankNew" placeholder="Ajouter une banque" aria-label="Nom de la nouvelle banque" maxlength="40"><button class="btn" type="submit">Ajouter</button></form>' +
       '<p style="font-size:.8rem">Si tu retires une banque, les enveloppes qui l\'utilisaient passent en « Sans banque ».</p></div>' +
-    '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
-      recGroupsView() +
-      (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') +
-      '<button type="button" class="recnew other" data-act="rec-new" data-group="courant">+ Créer un autre type de dépense</button></div>' +
     '<div class="card panel"><h2>Importer une sauvegarde</h2><p>Récupère des budgets enregistrés dans un fichier de sauvegarde tamia.</p>' +
       '<div class="btnrow"><button class="btn" data-act="import">Choisir un fichier</button></div></div>' +
     '<div class="muted-links"><a href="./">Accueil</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a></div>' +
@@ -1344,7 +1348,6 @@ onAuthStateChanged(auth, u => {
   $("#authView").hidden = !!u;
   $("#appView").hidden = !u;
   if (!u) { setAuthMode("login"); return; }
-  $("#acctInitial").textContent = ((u.displayName || u.email || "?").trim().charAt(0) || "?").toUpperCase();
   openAcct(false);
   startListeners();
   render();
