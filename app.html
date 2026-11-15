@@ -83,7 +83,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .notice { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 14px; font-size: 0.88rem; }
 
 /* Header */
-.top { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; }
 /* Ink header band: full-bleed behind the header, with local tokens so tabs, badge and buttons read on ink */
 :root { --band: #121212; --band-line: transparent; --ui-ink: var(--ink); --ui-muted: var(--muted); --ui-line: var(--line); --ui-surface: var(--surface); --ui-sunk: var(--sunk); --ui-bg: var(--bg); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band: #0a0a0a; --band-line: #2c2c2a; } }
@@ -92,7 +92,6 @@ body { overflow-x: clip; }
 .top { position: relative; isolation: isolate; margin-top: -20px; padding-block: 14px; color: var(--ink);
   --ink: #f2f2ef; --muted: #a3a39c; --line: #3a3a37; --surface: #262624; --sunk: #222220; --bg: #1b1b1a; }
 .top::before { content: ""; position: absolute; z-index: -1; top: calc(-1 * env(safe-area-inset-top, 0px)); bottom: 0; left: calc(50% - 50vw); right: calc(50% - 50vw); background: var(--band); border-bottom: 1px solid var(--band-line); }
-.top .tabs a[aria-current="page"] { background: #f2f2ef; color: #121212; }
 .mpop, .acct-pop { --ink: var(--ui-ink); --muted: var(--ui-muted); --line: var(--ui-line); --surface: var(--ui-surface); --sunk: var(--ui-sunk); --bg: var(--ui-bg); color: var(--ink); }
 .left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: -0.05em; line-height: 1; display: flex; align-items: center; gap: 0.18em; }
@@ -143,14 +142,10 @@ body { overflow-x: clip; }
 .acct-pop .acct-note { font-size: 0.8rem; color: var(--muted); padding: 8px 10px; }
 .acct-pop .acct-confirm { padding: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; }
 .acct-pop .acct-confirm .btnrow { justify-content: flex-end; }
-@media (max-width: 640px) {
-  .top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-  .left { display: contents; }
-  .top .brand { grid-column: 1; grid-row: 1; }
-  .acct { grid-column: 2; grid-row: 1; }
-  .top .tabs { grid-column: 1 / -1; justify-self: start; }
-  .right { grid-column: 1 / -1; justify-content: flex-start; margin-left: 0; }
-}
+/* Row under the ink header: page tabs on the left, month selector on the right */
+.subnav { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; margin-top: -4px; }
+.subnav .right { margin-left: auto; }
+@media (max-width: 480px) { .subnav .right { margin-left: 0; } }
 .sync { font-size: 0.78rem; color: var(--muted); text-align: right; min-width: 5.5em; }
 @media (max-width: 520px) { .sync { display: none; } }
 
@@ -576,12 +571,18 @@ a.inline { color: var(--accent); }
   <header class="top">
     <div class="left">
       <div class="brand"><a href="./"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="37" rx="24" ry="22" fill="#7a5232"/><circle cx="32" cy="32" r="24" fill="#f0a432"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#7a5232" stroke-width="2.2" stroke-dasharray="2.2 2.7"/><g transform="translate(0 2)"><path fill="#121212" d="M29 17h6v17c0 2.5 1.4 3.5 3.4 3.5 1.4 0 2.6-.5 3.6-1v5.5c-1.4.7-3.2 1-5 1-5 0-8-3-8-8Z"/><rect x="23" y="23" width="17" height="4.5" rx="2.25" fill="#121212"/></g></svg> tamia</a></div>
-      <nav class="tabs" aria-label="Pages">
-        <a href="#finances" id="tab-finances">Finances</a>
-        <a href="#rapports" id="tab-rapports">Rapports</a>
-        <a href="#reglages" id="tab-reglages">Réglages</a>
-      </nav>
     </div>
+    <div class="acct">
+      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" >Mon compte<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="acct-pop" id="acctPop" role="menu" hidden></div>
+    </div>
+  </header>
+  <div class="subnav">
+    <nav class="tabs" aria-label="Pages">
+      <a href="#finances" id="tab-finances">Finances</a>
+      <a href="#rapports" id="tab-rapports">Rapports</a>
+      <a href="#reglages" id="tab-reglages">Réglages</a>
+    </nav>
     <div class="right" id="monthBar">
       <span class="sync" id="sync" aria-live="polite"></span>
       <div class="mpick">
@@ -593,11 +594,7 @@ a.inline { color: var(--accent); }
         </div>
       </div>
     </div>
-    <div class="acct">
-      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" >Mon compte<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <div class="acct-pop" id="acctPop" role="menu" hidden></div>
-    </div>
-  </header>
+  </div>
   <div class="notice" id="notice" hidden></div>
   <main id="main"><div class="card loading">Chargement de tes budgets…</div></main>
   <input type="file" id="importFile" class="hidden-file" accept="application/json,.json">
