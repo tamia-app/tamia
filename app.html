@@ -84,6 +84,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* Header */
 .top { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; }
+/* Ink header band: full-bleed behind the header, with local tokens so tabs, badge and buttons read on ink */
+:root { --band: #121212; --band-line: transparent; --ui-ink: var(--ink); --ui-muted: var(--muted); --ui-line: var(--line); --ui-surface: var(--surface); --ui-sunk: var(--sunk); --ui-bg: var(--bg); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band: #0a0a0a; --band-line: #2c2c2a; } }
+:root[data-theme="dark"] { --band: #0a0a0a; --band-line: #2c2c2a; }
+body { overflow-x: clip; }
+.top { position: relative; isolation: isolate; margin-top: -20px; padding-block: 14px; color: var(--ink);
+  --ink: #f2f2ef; --muted: #a3a39c; --line: #3a3a37; --surface: #262624; --sunk: #222220; --bg: #1b1b1a; }
+.top::before { content: ""; position: absolute; z-index: -1; top: calc(-1 * env(safe-area-inset-top, 0px)); bottom: 0; left: calc(50% - 50vw); right: calc(50% - 50vw); background: var(--band); border-bottom: 1px solid var(--band-line); }
+.top .tabs a[aria-current="page"] { background: #f2f2ef; color: #121212; }
+.mpop, .acct-pop { --ink: var(--ui-ink); --muted: var(--ui-muted); --line: var(--ui-line); --surface: var(--ui-surface); --sunk: var(--ui-sunk); --bg: var(--ui-bg); color: var(--ink); }
 .left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: -0.05em; line-height: 1; display: flex; align-items: center; gap: 0.18em; }
 /* logo sized and nudged so its ink matches the cap-to-baseline height of "tamia" */
@@ -118,7 +128,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-left: auto; }
 /* Account button (initial) + menu */
 .acct { position: relative; }
-.acct-btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 8px 12px 8px 14px; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+.acct-btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 5px 11px 5px 13px; font-weight: 600; font-size: 0.86rem; white-space: nowrap; }
 .acct-btn:hover, .acct-btn[aria-expanded="true"] { border-color: var(--ink); }
 .acct-btn .pchev { width: 12px; height: 12px; color: var(--muted); transition: transform .15s; }
 .acct-btn[aria-expanded="true"] .pchev { transform: rotate(180deg); }
