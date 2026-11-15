@@ -90,14 +90,31 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tabs a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 6px 12px; border-radius: 8px; }
 .tabs a:hover { color: var(--ink); }
 .tabs a[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-.monthnav { display: flex; align-items: center; gap: 2px; }
-.monthnav h1 { font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; margin: 0; min-width: 8.6em; text-align: center; }
-.iconbtn { width: 28px; height: 28px; border-radius: 7px; border: none; background: none; color: var(--muted); display: grid; place-items: center; padding: 0; }
-.iconbtn svg { width: 16px; height: 16px; }
-.iconbtn:hover { background: var(--sunk); color: var(--ink); }
+.mpick { position: relative; }
+.mbadge-btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 7px 12px 7px 11px; font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
+.mbadge-btn:hover, .mbadge-btn[aria-expanded="true"] { border-color: var(--ink); }
+.mbadge-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px var(--sunk); }
+.mchev { width: 12px; height: 12px; color: var(--muted); transition: transform .15s; }
+.mbadge-btn[aria-expanded="true"] .mchev { transform: rotate(180deg); }
+.mst { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; border: 1.5px solid var(--line); }
+.mst.ok { background: var(--ok); border-color: var(--ok); }
+.mst.dr { background: var(--g1); border-color: var(--g1); }
+.mpop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; width: 300px; max-width: calc(100vw - 32px); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.myr { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+.myr button { border: none; background: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
+.myr button:hover { background: var(--sunk); color: var(--ink); }
+.myr svg { width: 15px; height: 15px; }
+.mgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.mgrid button { border: 1px solid transparent; background: var(--bg); border-radius: 10px; padding: 9px 4px 7px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 0.86rem; font-weight: 600; }
+.mgrid button:hover { border-color: var(--line); }
+.mgrid button.empty { color: var(--muted); font-weight: 500; }
+.mgrid button.today { border-color: var(--ink); }
+.mgrid button.cur { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.mgrid button.cur .mst:not(.ok):not(.dr) { border-color: var(--muted); }
+.mfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 9px; }
+.mfoot .linkbtn { font-size: 0.8rem; font-weight: 600; text-decoration: underline; }
 .right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 .sync { font-size: 0.78rem; color: var(--muted); text-align: right; min-width: 5.5em; }
-.today { font-size: 0.78rem; border: none; background: none; color: var(--accent); padding: 2px 4px; }
 @media (max-width: 520px) { .sync { display: none; } }
 
 /* Budget strip (Finances) */
@@ -391,12 +408,14 @@ a.inline { color: var(--accent); }
     </div>
     <div class="right" id="monthBar">
       <span class="sync" id="sync" aria-live="polite"></span>
-      <button class="today" id="today" hidden>Mois en cours</button>
-      <nav class="monthnav" aria-label="Choisir le mois">
-        <button class="iconbtn" id="prev" aria-label="Mois précédent"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></button>
-        <h1 id="monthLabel">…</h1>
-        <button class="iconbtn" id="next" aria-label="Mois suivant"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></button>
-      </nav>
+      <div class="mpick">
+        <button class="mbadge-btn" id="monthBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="monthPop"><i class="mst" id="monthDot"></i><span id="monthLabel">…</span><svg class="mchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mpop" id="monthPop" role="dialog" aria-label="Choisir le mois" hidden>
+          <div class="myr"><button type="button" id="yrPrev" aria-label="Année précédente"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="yrLabel"></span><button type="button" id="yrNext" aria-label="Année suivante"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <div class="mgrid" id="monthGrid"></div>
+          <div class="mfoot"><span id="todayLbl"></span><button type="button" class="linkbtn" id="todayBtn">Revenir au mois en cours</button></div>
+        </div>
+      </div>
     </div>
   </header>
   <div class="notice" id="notice" hidden></div>
@@ -525,7 +544,8 @@ function render() {
   $("#mini").hidden = true;
   if (miniObs) { miniObs.disconnect(); miniObs = null; }
   $("#monthLabel").textContent = label(current);
-  $("#today").hidden = current === thisMonth;
+  $("#monthDot").className = "mst " + monthState(current);
+  if (!$("#monthPop").hidden) renderMonthGrid();
   $("#monthBar").style.visibility = page === "reglages" ? "hidden" : "";
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
@@ -1075,9 +1095,41 @@ async function deleteAccount() {
 
 /* ---------- events ---------- */
 const findEnv = el => { const row = el.closest(".row"); return row && work && work.envelopes.find(e => e.id === row.dataset.id); };
-$("#prev").addEventListener("click", () => goTo(shift(current, -1)));
-$("#next").addEventListener("click", () => goTo(shift(current, 1)));
-$("#today").addEventListener("click", () => goTo(thisMonth));
+/* month picker (badge + 12-month grid) */
+const MONTHS_SHORT = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+let pickYear = Number(thisMonth.slice(0, 4));
+function monthState(id) { const m = months[id]; return !m ? "" : m.validated ? "ok" : "dr"; }
+function renderMonthGrid() {
+  $("#yrLabel").textContent = pickYear;
+  $("#monthGrid").innerHTML = MONTHS_SHORT.map((n, i) => {
+    const id = pickYear + "-" + String(i + 1).padStart(2, "0");
+    const st = monthState(id);
+    const cls = [id === current ? "cur" : "", id === thisMonth ? "today" : "", st ? "" : "empty"].join(" ").trim();
+    const what = st === "ok" ? "budget validé" : st === "dr" ? "brouillon" : "pas encore de budget";
+    return '<button type="button" data-month="' + id + '" class="' + cls + '" aria-label="' + esc(label(id)) + ', ' + what + '"' + (id === current ? ' aria-current="date"' : '') + '>' + n + '<i class="mst ' + st + '"></i></button>';
+  }).join("");
+  $("#todayLbl").textContent = "Aujourd'hui : " + label(thisMonth).toLowerCase();
+  $("#todayBtn").hidden = current === thisMonth;
+}
+function openMonthPop(open) {
+  $("#monthPop").hidden = !open;
+  $("#monthBtn").setAttribute("aria-expanded", String(open));
+  if (open) {
+    pickYear = Number(current.slice(0, 4)); renderMonthGrid();
+    // open toward the side with room: right-aligned under the badge, or left-aligned when the badge sits at the left (phones)
+    const r = $("#monthBtn").getBoundingClientRect(), pop = $("#monthPop"), w = Math.min(300, window.innerWidth - 32);
+    const leftAlign = r.right - w < 16;
+    pop.style.left = leftAlign ? "0" : "auto";
+    pop.style.right = leftAlign ? "auto" : "0";
+  }
+}
+$("#monthBtn").addEventListener("click", e => { e.stopPropagation(); openMonthPop($("#monthPop").hidden); });
+$("#yrPrev").addEventListener("click", () => { pickYear--; renderMonthGrid(); });
+$("#yrNext").addEventListener("click", () => { pickYear++; renderMonthGrid(); });
+$("#monthGrid").addEventListener("click", e => { const b = e.target.closest("button[data-month]"); if (!b) return; openMonthPop(false); goTo(b.dataset.month); });
+$("#todayBtn").addEventListener("click", () => { openMonthPop(false); goTo(thisMonth); });
+document.addEventListener("click", e => { if (!$("#monthPop").hidden && !e.target.closest(".mpick")) openMonthPop(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#monthPop").hidden) { openMonthPop(false); $("#monthBtn").focus(); } });
 $("#importFile").addEventListener("change", e => {
   const f = e.target.files && e.target.files[0];
   if (!f) return;
