@@ -345,6 +345,47 @@ a.inline { color: var(--accent); }
 .legal-note { font-size: 0.76rem; color: var(--muted); text-align: center; max-width: 400px; }
 .legal-note a, .muted-links a { color: var(--muted); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+/* New month: income + three ways to start */
+.newmonth { padding: 24px; display: flex; flex-direction: column; gap: 18px; max-width: 760px; }
+.newmonth h2 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.newmonth > p { margin: 0; color: var(--muted); }
+.nm-income { display: flex; flex-direction: column; gap: 4px; }
+.nm-income .income-field { font-size: 1.9rem; }
+.nm-income input { font-family: var(--font-display); font-weight: 700; font-size: 1.9rem; letter-spacing: -0.01em; border: none; background: none; color: var(--ink); width: 6ch; padding: 0; outline: none; }
+.nm-rec { font-size: 0.85rem; color: var(--muted); }
+.nm-rec b { color: var(--ink); }
+.ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .ways { grid-template-columns: minmax(0, 1fr); } }
+.way { border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: var(--surface); min-width: 0; }
+.way.star { border: 2px solid var(--ink); padding: 15px; }
+.way h3 { margin: 0; font-family: var(--font-display); font-size: 1.02rem; letter-spacing: -0.01em; }
+.way p { margin: 0; font-size: 0.86rem; color: var(--muted); flex: 1; }
+.way .tag { align-self: flex-start; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: var(--g1); color: #121212; border-radius: 99px; padding: 2px 8px; }
+.goals { display: flex; flex-direction: column; gap: 6px; }
+.goals button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 10px; text-align: left; font-size: 0.86rem; font-weight: 600; display: flex; flex-direction: column; gap: 1px; }
+.goals button small { font-weight: 500; color: var(--muted); font-size: 0.76rem; }
+.goals button[aria-pressed="true"] { border: 2px solid var(--ink); padding: 7px 9px; }
+.proposal { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--g1); border-radius: var(--radius); padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+.proposal div { flex: 1; display: flex; flex-direction: column; gap: 3px; font-size: 0.9rem; }
+.proposal b { font-family: var(--font-display); }
+.proposal span { color: var(--muted); }
+.est-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 0 5px; }
+/* Settings: recurring expenses */
+.reclist { display: flex; flex-direction: column; gap: 8px; }
+.recrow { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.recrow input[type="text"], .recrow input.recamt, .recrow select { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: var(--sunk); color: var(--ink); font: inherit; font-size: 0.88rem; min-width: 0; width: 100%; }
+.recrow input.recamt { text-align: right; font-variant-numeric: tabular-nums; }
+.recrow input:focus, .recrow select:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.recrow label { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.recrow label input { accent-color: var(--ink); }
+.rechead { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 8px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.rectotal { display: flex; justify-content: space-between; font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 10px; }
+.rectotal b { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  .rechead { display: none; }
+  .recrow { grid-template-columns: minmax(0, 1fr) 6rem; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+  .recrow .recname { grid-column: 1 / -1; }
+}
 .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 12px; font-size: 0.85rem; }
 .chip:hover { border-color: var(--accent); }
 .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
@@ -464,6 +505,59 @@ const GROUPS = [
   { id: "projets", label: "Projets personnels", color: "var(--g7)" },
   { id: "imprevu", label: "Imprévus", color: "var(--g6)" }
 ];
+const GOALS = [
+  { id: "epargne", label: "Favoriser l'épargne", hint: "Environ la moitié du reste à l'épargne", prio: "Épargne" },
+  { id: "equilibre", label: "Équilibré", hint: "Proche de la règle 50/30/20", prio: "Épargne" },
+  { id: "plaisir", label: "Me faire plaisir", hint: "Plus de place pour les sorties", prio: "Sorties & restaurants" },
+  { id: "projet", label: "Financer un projet", hint: "Une grosse part pour un projet", prio: "Projet" }
+];
+// Typical envelopes used by the proposal, with each goal's share of what is left after recurring expenses.
+const TYPICAL = [
+  { name: "Épargne", group: "epargne", w: { epargne: 0.40, equilibre: 0.20, plaisir: 0.10, projet: 0.12 } },
+  { name: "Investissement", group: "epargne", w: { epargne: 0.10, equilibre: 0.05, plaisir: 0, projet: 0 } },
+  { name: "Courses", group: "courant", w: { epargne: 0.22, equilibre: 0.28, plaisir: 0.28, projet: 0.26 }, history: true },
+  { name: "Dépenses du quotidien", group: "courant", w: { epargne: 0.05, equilibre: 0.07, plaisir: 0.07, projet: 0.06 }, history: true },
+  { name: "Sorties & restaurants", group: "plaisir", w: { epargne: 0.08, equilibre: 0.14, plaisir: 0.24, projet: 0.08 } },
+  { name: "Shopping", group: "plaisir", w: { epargne: 0.04, equilibre: 0.08, plaisir: 0.14, projet: 0.04 } },
+  { name: "Projet", group: "projets", w: { epargne: 0.03, equilibre: 0.08, plaisir: 0.07, projet: 0.34 } },
+  { name: "Imprévus", group: "imprevu", w: { epargne: 0.08, equilibre: 0.10, plaisir: 0.10, projet: 0.10 } }
+];
+let newGoalTouched = false;
+const recEnvelopes = () => recurring.filter(r => r.name || r.amount).map(r => ({ id: uid(), rid: r.id, name: r.name || "", group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank || "", amount: parse(r.amount), est: !!r.est }));
+const recTotal = () => recurring.reduce((a, r) => a + parse(r.amount), 0);
+function lastBankFor(name) {
+  const ids = Object.keys(months).filter(id => id < current).sort().reverse();
+  for (const id of ids) { const e = (months[id].envelopes || []).find(x => (x.name || "").trim().toLowerCase() === name.toLowerCase()); if (e && e.bank) return e.bank; }
+  return "";
+}
+function historyAvg(name) {
+  const ids = Object.keys(months).filter(id => id < current).sort().slice(-3);
+  const vals = ids.map(id => (months[id].envelopes || []).find(x => (x.name || "").trim().toLowerCase() === name.toLowerCase())).filter(e => e && e.amount > 0).map(e => e.amount);
+  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+}
+function buildProposal(income, goalId) {
+  const goal = GOALS.find(g => g.id === goalId) || GOALS[0];
+  const fixed = recEnvelopes();
+  const rest = Math.max(0, Math.round((income - fixed.reduce((a, e) => a + e.amount, 0)) * 100) / 100);
+  const items = TYPICAL.filter(t => t.w[goal.id] > 0).map(t => ({ t, amount: 0 }));
+  let left = rest;
+  // everyday spending follows the last months when there is history (capped so the goal still means something)
+  items.forEach(it => {
+    if (!it.t.history) return;
+    const avg = historyAvg(it.t.name);
+    if (avg > 0) { it.amount = Math.min(Math.ceil(avg / 10) * 10, Math.floor(rest * 0.45 / 10) * 10); it.fixed = true; left -= it.amount; }
+  });
+  left = Math.max(0, left);
+  const free = items.filter(it => !it.fixed);
+  const wsum = free.reduce((a, it) => a + it.t.w[goal.id], 0) || 1;
+  free.forEach(it => { it.amount = Math.floor(left * it.t.w[goal.id] / wsum / 10) * 10; });
+  const used = items.reduce((a, it) => a + it.amount, 0);
+  const prio = items.find(it => it.t.name === goal.prio) || items[0];
+  if (prio) prio.amount = Math.round((prio.amount + (rest - used)) * 100) / 100;
+  const envs = fixed.concat(items.map(it => ({ id: uid(), name: it.t.name, group: it.t.group, bank: lastBankFor(it.t.name), amount: Math.max(0, it.amount) })));
+  const saving = envs.filter(e => e.group === "epargne").reduce((a, e) => a + e.amount, 0);
+  return { envelopes: envs, info: { goal: goal.id, rec: income - rest > 0 ? Math.min(income, fixed.reduce((a, e) => a + e.amount, 0)) : 0, saving, over: fixed.reduce((a, e) => a + e.amount, 0) > income } };
+}
 const TEMPLATE = [
   ["Épargne", "epargne"], ["Investissement", "epargne"],
   ["Loyer", "fixe"], ["Factures", "fixe"], ["Transport", "fixe"],
@@ -498,6 +592,9 @@ const thisMonth = monthId(new Date());
 let user = null;
 let profile = null, profileLoaded = false;
 let banks = [];
+let recurring = [];
+let newGoal = "epargne";
+let newIncomeDraft = null;
 let page = "finances";
 let months = {};
 let current = thisMonth;
@@ -552,7 +649,7 @@ function render() {
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
   if (!profile) { mainEl.innerHTML = onboardingView(); return; }
   if (page === "rapports") { mainEl.innerHTML = reportsView(); return; }
-  if (!work) { mainEl.innerHTML = createView(); return; }
+  if (!work) { mainEl.innerHTML = createView(); sizeInput($("#newIncome")); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => sizeInput($("#newIncome"))); return; }
   mainEl.innerHTML = financesView();
   if (work.validated) {
     mainEl.querySelectorAll("input, textarea").forEach(el => { el.readOnly = true; });
@@ -580,12 +677,19 @@ function onboardingView() {
 function createView() {
   const p = prevMonthId();
   const pm = p && months[p];
-  return '<div class="card create">' +
-    '<h2>Pas encore de budget pour ' + esc(label(current).toLowerCase()) + '</h2>' +
-    '<p>Dès que ta paye tombe, crée le budget du mois puis répartis-le dans tes enveloppes.</p>' +
-    '<div class="choices">' +
-    (pm ? '<button class="btn primary" data-act="create" data-from="' + p + '">Repartir de ' + esc(label(p).toLowerCase()) + ' (' + money(pm.income) + ', ' + (pm.envelopes || []).length + ' enveloppes)</button>' : '') +
-    '<button class="btn' + (pm ? '' : ' primary') + '" data-act="create" data-from="template">Partir des enveloppes de base</button>' +
+  const inc = newIncomeDraft != null ? newIncomeDraft : (pm ? pm.income || 0 : 0);
+  const rt = recTotal();
+  return '<div class="card newmonth">' +
+    '<h2>Préparer le budget de ' + esc(label(current).toLowerCase()) + '</h2>' +
+    '<p>Indique ta paye, puis choisis comment démarrer. Tu pourras tout ajuster ensuite.</p>' +
+    '<div class="nm-income"><label class="eyebrow" for="newIncome">Montant de ta paye</label><div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
+    '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b> (' + recurring.length + ') · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
+    '<div class="ways">' +
+      '<div class="way star"><span class="tag">Proposition tamia</span><h3>Un budget prêt en un clic</h3><p>tamia retire tes dépenses récurrentes et répartit le reste selon ton objectif.</p>' +
+        '<div class="goals" role="group" aria-label="Objectif">' + GOALS.map(g => '<button type="button" data-act="goal-pick" data-goal="' + g.id + '" aria-pressed="' + (newGoal === g.id) + '">' + esc(g.label) + '<small>' + esc(g.hint) + '</small></button>').join("") + '</div>' +
+        '<button class="btn primary" data-act="create" data-from="goal">Voir la proposition</button></div>' +
+      (pm ? '<div class="way"><h3>Reprendre ' + esc(label(p).toLowerCase()) + '</h3><p>Les mêmes enveloppes et montants (' + (pm.envelopes || []).length + ' enveloppes), avec tes dépenses récurrentes à jour.</p><button class="btn" data-act="create" data-from="' + p + '">Reprendre ce mois</button></div>' : '') +
+      '<div class="way"><h3>Je crée moi-même mon budget</h3><p>' + (recurring.length ? 'Seules tes dépenses récurrentes sont ajoutées. Tu remplis le reste.' : 'Tu pars d\'une page vide et tu ajoutes tes enveloppes.') + '</p><button class="btn" data-act="create" data-from="manual">Commencer</button></div>' +
     '</div></div>';
 }
 
@@ -593,7 +697,12 @@ function financesView() {
   const p = prevMonthId();
   const locked = !!work.validated;
   const when = work.validatedAt ? new Date(work.validatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "";
-  let html = '<div class="' + (locked ? 'locked' : '') + '" style="display:flex;flex-direction:column;gap:16px">' +
+  const g = work.goal && !locked && !work.goalHidden ? GOALS.find(x => x.id === work.goal) : null;
+  const banner = g ? '<div class="proposal"><div><b>Proposition « ' + esc(g.label) + ' »</b>' +
+    '<span>' + (work.goalRec ? money(work.goalRec) + ' de dépenses récurrentes, puis ' : '') + money(work.goalSaving || 0) + ' vers l\'épargne et l\'investissement' + (work.income ? ' (' + pctOf(work.goalSaving || 0, work.income) + ' de ta paye)' : '') + '. Ajuste les montants si besoin, puis valide.</span>' +
+    (work.goalOver ? '<span style="color:var(--bad)">Tes dépenses récurrentes dépassent ta paye : vérifie-les dans Réglages.</span>' : '') +
+    '</div><button class="btn" data-act="goal-hide">Masquer</button></div>' : '';
+  let html = '<div class="' + (locked ? 'locked' : '') + '" style="display:flex;flex-direction:column;gap:16px">' + banner +
     '<div class="card strip"><div class="strip-top"><div class="strip-row">' +
       '<div class="cell"><label for="income" class="eyebrow">Montant à répartir</label><div class="income-field"><input id="income" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(work.income)) + '"><span>€</span></div></div>' +
       '<div class="cell"><span class="eyebrow">Réparti</span><span class="val num" id="sAlloc"></span></div>' +
@@ -643,7 +752,7 @@ function rowView(e, p, locked) {
   const hasBank = banks.some(b => b.id === e.bank);
   return '<div class="row' + (hasBank || !banks.length ? '' : ' nobank') + '" data-id="' + esc(e.id) + '">' +
     '<div class="who"><input class="name" value="' + esc(e.name) + '" placeholder="Intitulé" aria-label="Intitulé de l\'enveloppe" maxlength="60">' +
-    '<div class="meta"><select class="grp" aria-label="Catégorie">' + opts + '</select>' + (p ? '<span class="delta" data-delta></span>' : '') + '<button class="del" data-act="remove" aria-label="Supprimer l\'enveloppe">Supprimer</button></div></div>' +
+    '<div class="meta"><select class="grp" aria-label="Catégorie">' + opts + '</select>' + (e.est ? '<span class="est-tag">estimé</span>' : '') + (p ? '<span class="delta" data-delta></span>' : '') + '<button class="del" data-act="remove" aria-label="Supprimer l\'enveloppe">Supprimer</button></div></div>' +
     (banks.length ? bankControl(e, locked) : '<span></span>') +
     '<div class="amount"><input class="amt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(e.amount)) + '" aria-label="Montant"><span>€</span></div>' +
     '</div>';
@@ -799,6 +908,22 @@ function chartSvg(ids) {
     '<span><i class="mk"></i>Paye</span></div>';
 }
 
+function recRowView(r) {
+  const gOpts = GROUPS.map(g => '<option value="' + g.id + '"' + ((r.group || "fixe") === g.id ? ' selected' : '') + '>' + esc(g.label) + '</option>').join("");
+  const bOpts = '<option value="">Sans banque</option>' + bankList().map(b => '<option value="' + esc(b.id) + '"' + (r.bank === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>').join("");
+  return '<div class="recrow" data-rid="' + esc(r.id) + '">' +
+    '<input type="text" class="recname" data-rec="name" value="' + esc(r.name || "") + '" placeholder="Intitulé" aria-label="Intitulé" maxlength="60">' +
+    '<input class="recamt" data-rec="amount" inputmode="decimal" value="' + esc(show(r.amount)) + '" placeholder="0 €" aria-label="Montant">' +
+    '<select data-rec="group" aria-label="Catégorie">' + gOpts + '</select>' +
+    (banks.length ? '<select data-rec="bank" aria-label="Banque">' + bOpts + '</select>' : '<span></span>') +
+    '<label><input type="checkbox" data-rec="est"' + (r.est ? ' checked' : '') + '> Estimé</label>' +
+    '<button type="button" class="btn danger" data-act="rec-del" data-rid="' + esc(r.id) + '">Retirer</button></div>';
+}
+function saveRecurring(next) {
+  recurring = next;
+  return setDoc(userRef(), { recurring: next, onboarded: true, updatedAt: new Date().toISOString() }, { merge: true })
+    .catch(err => notice("Impossible d'enregistrer tes dépenses récurrentes (" + (err && err.code) + ")."));
+}
 function settingsView() {
   const bl = bankList();
   const provider = (user.providerData[0] && user.providerData[0].providerId) === "google.com" ? "Compte Google" : "E-mail et mot de passe";
@@ -808,6 +933,10 @@ function settingsView() {
       (bl.length ? '<ul class="banklist">' + bl.map(b => '<li><i class="dot" style="background:' + b.color + '"></i><input value="' + esc(b.name) + '" data-bank-name="' + esc(b.id) + '" aria-label="Nom de la banque" maxlength="40"><button class="btn danger" data-act="bank-del" data-bank="' + esc(b.id) + '">Retirer</button></li>').join("") + '</ul>' : '<p>Aucune banque pour l\'instant.</p>') +
       '<form class="inline-form" id="bankForm"><input id="bankNew" placeholder="Ajouter une banque" aria-label="Nom de la nouvelle banque" maxlength="40"><button class="btn" type="submit">Ajouter</button></form>' +
       '<p style="font-size:.8rem">Si tu retires une banque, les enveloppes qui l\'utilisaient passent en « Sans banque ».</p></div>' +
+    '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois : loyer, abonnements, transport… Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
+      (recurring.length ? '<div class="rechead"><span>Intitulé</span><span>Montant</span><span>Catégorie</span><span>Banque</span><span></span><span></span></div><div class="reclist">' + recurring.map(r => recRowView(r)).join("") + '</div>' +
+        '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '<p>Aucune dépense récurrente pour l\'instant.</p>') +
+      '<form class="inline-form" id="recForm"><input id="recNew" placeholder="Ajouter une dépense (ex. Loyer)" aria-label="Nom de la dépense récurrente" maxlength="60"><button class="btn" type="submit">Ajouter</button></form></div>' +
     '<div class="card panel"><h2>Mon compte</h2><div class="account">' +
       (user.photoURL ? '<img src="' + esc(user.photoURL) + '" alt="" referrerpolicy="no-referrer">' : '') +
       '<div class="who2"><b>' + esc(user.displayName || user.email || "") + '</b><span>' + esc(user.email || "") + ' · ' + provider + '</span></div>' +
@@ -875,6 +1004,8 @@ function startListeners() {
   unsubs.push(onSnapshot(userRef(), snap => {
     profile = snap.exists() ? snap.data() : null;
     banks = (profile && Array.isArray(profile.banks)) ? profile.banks.filter(b => b && b.id && b.name) : [];
+    recurring = (profile && Array.isArray(profile.recurring)) ? profile.recurring.filter(r => r && r.id) : [];
+    if (profile && profile.lastGoal && GOALS.some(g => g.id === profile.lastGoal) && !newGoalTouched) newGoal = profile.lastGoal;
     const first = !profileLoaded;
     profileLoaded = true;
     if (first || !dirty) render();
@@ -1032,7 +1163,7 @@ window.addEventListener("hashchange", route);
 
 /* ---------- export / import / delete ---------- */
 function exportData() {
-  const data = { app: "tamia", version: 1, exportedAt: new Date().toISOString(), banks, months };
+  const data = { app: "tamia", version: 1, exportedAt: new Date().toISOString(), banks, recurring, months };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -1064,7 +1195,8 @@ async function importData(text) {
     n++;
   });
   if (!n) { notice("Aucun budget trouvé dans ce fichier."); return; }
-  batch.set(userRef(), { banks: nextBanks, onboarded: true, updatedAt: new Date().toISOString() }, { merge: true });
+  const extra = Array.isArray(data.recurring) && !recurring.length ? { recurring: data.recurring.slice(0, 100).map(r => ({ id: String(r.id || uid()).slice(0, 20), name: String(r.name || "").slice(0, 60), amount: parse(r.amount), group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank ? String(r.bank).slice(0, 40) : "", est: !!r.est })) } : {};
+  batch.set(userRef(), Object.assign({ banks: nextBanks, onboarded: true, updatedAt: new Date().toISOString() }, extra), { merge: true });
   try {
     await batch.commit();
     banks = nextBanks;
@@ -1139,6 +1271,7 @@ $("#importFile").addEventListener("change", e => {
 
 mainEl.addEventListener("input", e => {
   const t = e.target;
+  if (t.id === "newIncome") { sizeInput(t); return; }
   if (!work || work.validated || page !== "finances") return;
   if (t.id === "income") { work.income = parse(t.value); sizeIncome(); changed(); }
   else if (t.id === "note") { work.note = t.value; changed(false); }
@@ -1147,6 +1280,13 @@ mainEl.addEventListener("input", e => {
 });
 mainEl.addEventListener("change", e => {
   const t = e.target;
+  if (t.dataset.rec) {
+    const rid = t.closest(".recrow").dataset.rid, f = t.dataset.rec;
+    const val = f === "amount" ? parse(t.value) : f === "est" ? t.checked : f === "name" ? t.value.trim() : t.value;
+    saveRecurring(recurring.map(r => r.id === rid ? Object.assign({}, r, { [f]: val }) : r)).then(() => { if (f === "amount") render(); });
+    return;
+  }
+  if (t.id === "newIncome") { newIncomeDraft = parse(t.value); return; }
   if (t.dataset.bankName) {
     const name = t.value.trim();
     if (!name) { render(); return; }
@@ -1164,6 +1304,13 @@ mainEl.addEventListener("submit", e => {
     if (v && !obSel.includes(v)) obSel.push(v);
     render();
     const inp = $("#obCustom"); if (inp) inp.focus();
+  } else if (e.target.id === "recForm") {
+    const v = $("#recNew").value.trim();
+    if (!v) return;
+    saveRecurring(recurring.concat([{ id: uid(), name: v, amount: 0, group: "fixe", bank: "", est: false }])).then(() => {
+      settingsMsg = ""; render();
+      const rows = mainEl.querySelectorAll(".recrow .recamt"); if (rows.length) rows[rows.length - 1].focus();
+    });
   } else if (e.target.id === "bankForm") {
     const v = $("#bankNew").value.trim();
     if (!v) return;
@@ -1219,10 +1366,26 @@ mainEl.addEventListener("click", e => {
   }
   if (work && work.validated && act !== "create") return;
   if (act === "sheet-open") { const env = findEnv(b); if (env) openSheet(clone(env), false); return; }
+  if (act === "goal-pick") { newGoal = b.dataset.goal; newGoalTouched = true; const ni = $("#newIncome"); if (ni) newIncomeDraft = parse(ni.value); render(); return; }
+  if (act === "goal-hide") { work.goalHidden = true; changed(false); render(); return; }
   if (act === "create") {
     const from = b.dataset.from;
-    if (from === "template") work = { income: 0, envelopes: TEMPLATE.map(([name, group]) => ({ id: uid(), name, group, bank: "", amount: 0 })), note: "", validated: false };
-    else { const src = months[from]; work = { income: src.income || 0, envelopes: (src.envelopes || []).map(x => ({ id: uid(), name: x.name || "", group: x.group, bank: x.bank || "", amount: x.amount || 0 })), note: "", validated: false }; }
+    const ni = $("#newIncome");
+    const income = ni ? parse(ni.value) : 0;
+    if (from === "goal") {
+      const pr = buildProposal(income, newGoal);
+      work = { income, envelopes: pr.envelopes, note: "", validated: false, goal: pr.info.goal, goalRec: pr.info.rec, goalSaving: pr.info.saving, goalOver: pr.info.over };
+      setDoc(userRef(), { lastGoal: newGoal, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+    } else if (from === "manual") {
+      work = { income, envelopes: recEnvelopes(), note: "", validated: false };
+    } else {
+      const src = months[from];
+      const recNames = recurring.map(r => (r.name || "").trim().toLowerCase());
+      const kept = (src.envelopes || []).filter(x => !x.rid && !recNames.includes((x.name || "").trim().toLowerCase()))
+        .map(x => ({ id: uid(), name: x.name || "", group: x.group, bank: x.bank || "", amount: x.amount || 0 }));
+      work = { income, envelopes: recEnvelopes().concat(kept), note: "", validated: false };
+    }
+    newIncomeDraft = null;
     work.createdAt = new Date().toISOString();
     changed(false); render(); flush();
     const inc = $("#income"); if (inc) { inc.focus(); inc.select(); }
