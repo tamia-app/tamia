@@ -449,12 +449,17 @@ a.inline { color: var(--accent); }
 .psel.wpick .t { display: flex; flex-direction: column; overflow: visible; }
 .psel.wpick .pchev { width: 14px; height: 14px; }
 .wopts .pmenu { width: 100%; max-width: none; }
-.wexc { border: 2px solid var(--ink); background: var(--surface); border-radius: 14px; padding: 9px 11px 9px 13px; display: grid; grid-template-columns: 34px minmax(0, 1fr) 7.5rem 32px; gap: 10px; align-items: center; }
+.wexc { border: 2px solid var(--ink); background: var(--surface); border-radius: 14px; padding: 9px 6px 9px 13px; display: grid; grid-template-columns: 34px minmax(0, 1fr) 7.5rem 30px; gap: 10px; align-items: center; }
 .wexc .sic { background: rgba(240,164,50,.25); }
 .wexc label { font-weight: 700; font-size: 0.95rem; }
 .wexc input { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--sunk); color: var(--ink); font: inherit; min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .wexc input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
-.wexc .wx-del { width: 32px; height: 32px; border-radius: 50%; border: none; background: none; font-size: 1.2rem; color: var(--muted); }
+.wexc .wx-del { width: 30px; height: 30px; border-radius: 50%; border: none; background: none; color: var(--muted); display: grid; place-items: center; padding: 0; align-self: center; }
+.wexc .wx-del svg { width: 14px; height: 14px; display: block; }
+/* exceptional-expense menu: wrapped pills instead of a list */
+.pmenu.pills { flex-direction: row; flex-wrap: wrap; gap: 8px; padding: 12px; }
+.pmenu.pills button { border: 1px solid var(--line); border-radius: 99px; padding: 8px 14px; font-weight: 600; font-size: 0.88rem; }
+.pmenu.pills button:hover, .pmenu.pills button:focus-visible { border-color: var(--ink); background: var(--surface); }
 .wexc .wx-del:hover { background: var(--sunk); color: var(--ink); }
 .wchips { display: flex; flex-wrap: wrap; gap: 8px; }
 .wchips button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; }
@@ -694,8 +699,8 @@ function historyAvg(name) {
   return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
 }
 const EXC = [
-  { k: "Cadeaux", group: "plaisir" }, { k: "Voyage", group: "projets" }, { k: "Rentrée", group: "courant" }, { k: "Santé", group: "courant" },
-  { k: "Voiture", group: "fixe" }, { k: "Mariage", group: "plaisir" }, { k: "Impôts", group: "fixe" }, { k: "Autre", group: "courant" }
+  { k: "Cadeaux", group: "plaisir", ic: "gift" }, { k: "Voyage", group: "projets", ic: "plane" }, { k: "Rentrée", group: "courant", ic: "backpack" }, { k: "Santé", group: "courant", ic: "pill" },
+  { k: "Voiture", group: "fixe", ic: "car" }, { k: "Mariage", group: "plaisir", ic: "ring" }, { k: "Impôts", group: "fixe", ic: "receipt" }, { k: "Autre", group: "courant", ic: "pushpin" }
 ];
 const monthsBetween = (fromId, toId) => { const [a, b] = fromId.split("-").map(Number), [c, d] = toId.split("-").map(Number); return (c - a) * 12 + (d - b); };
 function projectMonthly(pj) {
@@ -1017,7 +1022,7 @@ function wizView() {
   } else if (wiz.step === "exc") {
     const ex = a.exc || {}, keys = Object.keys(ex);
     body = '<p class="wq">Des dépenses inhabituelles ce mois-ci ?</p><p class="wsub">Chacune aura sa propre enveloppe.</p><div class="wopts">' +
-      keys.map(k => '<div class="wexc"><span class="sic">' + EMO("gift") + '</span><label for="wx-' + esc(k) + '">' + esc(k) + '</label><input id="wx-' + esc(k) + '" data-wiz="exc.' + esc(k) + '" inputmode="decimal" value="' + esc(show(ex[k])) + '" placeholder="0 €"><button type="button" class="wx-del" data-act="wiz-exc" data-k="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '">×</button></div>').join("") +
+      keys.map(k => '<div class="wexc"><span class="sic">' + EMO((EXC.find(x => x.k === k) || {}).ic || "pushpin") + '</span><label for="wx-' + esc(k) + '">' + esc(k) + '</label><input id="wx-' + esc(k) + '" data-wiz="exc.' + esc(k) + '" inputmode="decimal" value="' + esc(show(ex[k])) + '" placeholder="0 €"><button type="button" class="wx-del" data-act="wiz-exc" data-k="' + esc(k) + '" aria-label="Retirer ' + esc(k) + '"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>').join("") +
       '<div class="psel-wrap"><button type="button" class="psel wpick" data-psel="exc" aria-haspopup="listbox" aria-expanded="false"><span class="sic">' + EMO("calendar") + '</span><span class="t"><b>' + (keys.length ? 'Ajouter une autre dépense' : 'Choisir une dépense') + '</b><small>Cadeaux, voyage, impôts, voiture…</small></span>' + PCHEV + '</button></div>' +
       (keys.length ? '' : opt("excNone", "1", "check", "Rien de spécial", "Un mois comme les autres")) + '</div>' +
       (keys.length ? '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>' : '');
@@ -1305,12 +1310,12 @@ function closePmenus() {
 function openPmenu(btn) {
   const kind = btn.dataset.psel, val = btn.dataset.val || "";
   const items = kind === "exc"
-    ? EXC.filter(x => !(wiz && wiz.a.exc && wiz.a.exc[x.k] != null)).map(x => ({ v: x.k, label: x.k, mark: '<i class="sq" style="background:' + groupOf(x.group).color + '"></i>' }))
+    ? EXC.filter(x => !(wiz && wiz.a.exc && wiz.a.exc[x.k] != null)).map(x => ({ v: x.k, label: x.k, mark: "" }))
     : kind === "recbank"
     ? bankList().map(b => ({ v: b.id, label: b.name, mark: '<i class="dot" style="background:' + b.color + '"></i>' })).concat([{ sep: true }, { v: "", label: "Sans banque", mark: '<i class="dot none"></i>' }])
     : GROUPS.filter(g => !REC_DEFAULT_GROUPS.includes(g.id)).map(g => ({ v: g.id, label: g.label, mark: '<i class="sq" style="background:' + g.color + '"></i>' }));
   const m = document.createElement("div");
-  m.className = "pmenu"; m.setAttribute("role", "listbox");
+  m.className = "pmenu" + (kind === "exc" ? " pills" : ""); m.setAttribute("role", "listbox");
   m.innerHTML = items.map(it => it.sep ? '<span class="sep"></span>' : '<button type="button" role="option" data-v="' + esc(it.v) + '" aria-selected="' + (it.v === val) + '">' + it.mark + esc(it.label) + '</button>').join("");
   btn.parentElement.appendChild(m);
   btn.setAttribute("aria-expanded", "true");
