@@ -59,7 +59,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-body); 
 a { color: var(--accent); }
 .wrap { max-width: 1080px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; }
-.brand { display: flex; align-items: center; gap: 0.3em; font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.05em; line-height: 1; color: var(--ink); text-decoration: none; }
+.brand { display: flex; align-items: center; gap: 0.18em; font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.05em; line-height: 1; color: var(--ink); text-decoration: none; }
 /* logo sized and nudged so its ink matches the cap-to-baseline height of "tamia" */
 .brand svg { width: 1.11em; height: 1.11em; flex: none; transform: translateY(-0.065em); }
 .logo .fur { fill: #f0a432; }
