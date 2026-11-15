@@ -177,9 +177,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   --ok: #5fcf98; --warn: #f0b75a; --bad: #ff8a80; --b1: #f2f2ef; --b3: #6f94d1;
   --g2: #6f94d1; --g3: #7cc0e6; --g4: #5fb67f; --g5: #f07c68; --g6: #b08a68; --g7: #b49cf0; }
 .strip-top { position: relative; }
-.vwrap { position: relative; flex: none; }
-.vbadge { width: 32px; height: 32px; border-radius: 50%; border: none; background: #5fcf98; color: #0d3b26; display: grid; place-items: center; padding: 0; }
-.vbadge svg { width: 17px; height: 17px; stroke-width: 2.4; }
+.vwrap { position: absolute; top: -6px; right: -8px; }
+.vbadge { width: 24px; height: 24px; border-radius: 50%; border: none; background: #5fcf98; color: #0d3b26; display: grid; place-items: center; padding: 0; }
+.vbadge svg { width: 13px; height: 13px; stroke-width: 2.6; }
 .vbadge:hover, .vbadge[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(95,207,152,.3); }
 .vtip { position: absolute; right: 0; top: calc(100% + 8px); z-index: 6; white-space: nowrap; background: #f2f2ef; color: #121212; font-size: 0.82rem; font-weight: 600; border-radius: 10px; padding: 8px 11px; box-shadow: 0 12px 28px -12px rgba(0,0,0,.5); }
 .validbox { display: inline-flex; }
@@ -746,7 +746,9 @@ const SPLIT = { // how what's left after the needs is split, per goal
   projet: { "Épargne": 25, "Investissement": 0, "Sorties & restaurants": 10, "Shopping": 5, "Projet": 45, "Imprévus": 15 }
 };
 const FLEX_GROUP = { "Épargne": "epargne", "Investissement": "epargne", "Sorties & restaurants": "plaisir", "Shopping": "plaisir", "Projet": "projets", "Imprévus": "imprevu" };
-const TRANSPORT_RE = /transport|navigo|pass|essence|carburant|voiture|auto|train|bus|m[ée]tro|tram|sncf|v[ée]lo|leasing|lld|loa/i;
+// Only what really covers the day-to-day trips counts: car insurance or a car loan don't pay for fuel.
+const FUEL_RE = /essence|carburant|gasoil|gazole|diesel|recharge|p[ée]age/i;
+const TRANSIT_RE = /transport|navigo|\bpass\b|\bbus\b|m[ée]tro|\btram|sncf|\btrain\b|\bter\b|\bratp\b|\btcl\b|\brtm\b|tisséo|tbm/i;
 const r10 = n => Math.max(0, Math.floor(n / 10) * 10);
 function householdShare(a) { return a.home === "couple" || a.home === "family" ? (SHARES[a.share] || 0.5) : 1; }
 function buildTailored(income, a) {
@@ -774,7 +776,8 @@ function buildTailored(income, a) {
   const daily = home === "parents" ? 25 : home === "coloc" ? 35 : home === "single" ? 40 : (70 + 30 * kids) * share;
   needs.push({ name: "Dépenses du quotidien", group: "courant", amount: r10(daily) });
   if (kids) needs.push({ name: "Enfants", group: "courant", amount: r10(90 * kids * share) });
-  const hasTransport = recurring.some(r => TRANSPORT_RE.test(r.name || ""));
+  const covers = re => recurring.some(r => re.test(r.name || "") && parse(r.amount) > 0);
+  const hasTransport = a.transport === "car" ? covers(FUEL_RE) : a.transport === "metro" ? covers(TRANSIT_RE) : false;
   if (!hasTransport && a.transport === "car") needs.push({ name: "Carburant & entretien", group: "courant", amount: 150 });
   if (!hasTransport && a.transport === "metro") needs.push({ name: "Transports", group: "fixe", amount: 80 });
   const outBase = r10(meal.out * (a.rhythm === "calm" ? 0.7 : a.rhythm === "busy" ? 1.4 : 1));
@@ -831,7 +834,7 @@ function buildTailored(income, a) {
   if (a.meals === "cook") parts.push("Tu cuisines presque tout : plus de courses, moins de restaurants.");
   if (!hasTransport && a.transport === "car") parts.push("150 € pour le carburant et l'entretien de la voiture.");
   if (!hasTransport && a.transport === "metro") parts.push("80 € pour les transports en commun. Ajoute ton abonnement aux dépenses récurrentes pour être précis.");
-  if (hasTransport && a.transport !== "bike") parts.push("Tes transports sont déjà dans tes dépenses récurrentes.");
+  if (hasTransport) parts.push(a.transport === "car" ? "Ton carburant est déjà dans tes dépenses récurrentes." : "Ton abonnement de transport est déjà dans tes dépenses récurrentes.");
   parts.push(goal.id === "epargne" ? "Tu veux mettre de côté : " + money(saving) + " vont à l'épargne (" + pctOf(saving, income) + " de ta paye)."
     : goal.id === "plaisir" ? "Tu veux te faire plaisir : les sorties et le shopping ont plus de place, et " + money(saving) + " restent pour l'épargne."
     : goal.id === "projet" && proj ? "Pour « " + proj.name + " », " + money(proj.amount) + " sont mis de côté ce mois-ci."
@@ -1068,7 +1071,7 @@ function wizView() {
       opt("meals", "cook", "cooking", "Cuisines presque tout", "Peu de restaurants") + opt("meals", "mix", "sandwich", "Fais un peu des deux", "Quelques restos ou livraisons") + opt("meals", "out", "scooter", "Manges souvent dehors", "Restos, livraisons, cantine"));
   } else if (wiz.step === "tickets") {
     body = q("As-tu une carte restaurant ?", "Titres-restaurant, Swile, Edenred, Up… Ce qu'elle paye n'a pas à sortir de ta paye.",
-      opt("tickets", "yes", "fork", "Oui", "Je l'utilise pour les courses ou le midi") + opt("tickets", "no", "cross", "Non", ""));
+      opt("tickets", "yes", "fork", "Oui", "Je l'utilise pour les courses ou le midi") + opt("tickets", "no", "coin", "Non", "Tout passe par ma paye"));
   } else if (wiz.step === "ticketsAmt") {
     body = '<p class="wq">Combien reçois-tu par mois sur ta carte ?</p><p class="wsub">Souvent entre 150 et 200 €. Regarde le montant crédité chaque mois.</p>' +
       '<div class="wfields"><div class="wfield"><label for="wtAmt">Montant par mois</label><input id="wtAmt" data-wiz="tickets.amount" inputmode="decimal" value="' + esc(show(a.ticketsAmt)) + '" placeholder="0 €"></div></div>' +
