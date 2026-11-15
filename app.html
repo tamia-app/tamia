@@ -810,8 +810,8 @@ function createView() {
     '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b>, ajoutées automatiquement · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
     '<div class="startlist">' +
       '<button type="button" class="star" data-act="wiz-start"><span class="sic">✦</span><span class="t"><b>Budget sur mesure</b><small>Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
-      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">↺</span><span class="t"><b>Reprendre ' + esc(label(p).toLowerCase()) + '</b><small>' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
-      '<button type="button" data-act="create" data-from="manual"><span class="sic">✎</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tu pars de tes dépenses récurrentes' : 'Tu pars d\'une page vide') + '</small></span><span class="arr">›</span></button>' +
+      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">↺</span><span class="t"><b>Reprendre le mois précédent</b><small>' + esc(label(p)) + ' · ' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
+      '<button type="button" data-act="create" data-from="manual"><span class="sic">✎</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tes dépenses récurrentes et les enveloppes de base, à remplir' : 'Les enveloppes de base, à remplir') + '</small></span><span class="arr">›</span></button>' +
     '</div></div>';
 }
 
@@ -1606,7 +1606,13 @@ mainEl.addEventListener("click", e => {
     const ni = $("#newIncome");
     const income = ni ? parse(ni.value) : 0;
     if (from === "manual") {
-      work = { income, envelopes: recEnvelopes(), note: "", validated: false };
+      // recurring expenses + the base envelopes (skipping fixed costs/subscriptions already covered by recurring ones, and duplicates)
+      const rec = recEnvelopes();
+      const names = rec.map(e => e.name.trim().toLowerCase());
+      const covered = g => (g === "fixe" || g === "abonnement") && rec.some(e => e.group === g);
+      const base = TEMPLATE.filter(([name, group]) => !covered(group) && !names.includes(name.toLowerCase()))
+        .map(([name, group]) => ({ id: uid(), name, group, bank: lastBankFor(name), amount: 0 }));
+      work = { income, envelopes: rec.concat(base), note: "", validated: false };
     } else {
       const src = months[from];
       const recNames = recurring.map(r => (r.name || "").trim().toLowerCase());
