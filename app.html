@@ -3,69 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Tamia</title>
-<meta name="description" content="Tamia, ton petit agent de poche pour planifier ton budget du mois par enveloppes.">
-<meta name="theme-color" content="#c0702e">
+<title>tamia</title>
+<meta name="description" content="tamia, ton petit agent de poche pour planifier ton budget du mois par enveloppes.">
+<meta name="theme-color" content="#121212">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
 html, body { height: 100%; }
 body { margin: 0; -webkit-font-smoothing: antialiased; }
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 [hidden] { display: none !important; }
-/* Tamia app. Layout: header with page tabs + compact month selector; Finances = horizontal budget strip then full-width envelope groups, each envelope tied to a bank; Rapports = breakdown, ranking, 12-month chart, history. */
+/* tamia app. Layout: header with page tabs + compact month selector; Finances = horizontal budget strip then full-width envelope groups, each envelope tied to a bank; Rapports = breakdown, ranking, 12-month chart, history. */
 :root {
-  --bg: #f3f5f8;
+  --bg: #f2f2ef;
   --surface: #ffffff;
-  --sunk: #eef1f5;
-  --ink: #151a23;
-  --muted: #5c6575;
-  --line: #dfe3ea;
-  --accent: #2c4fd4;
-  --accent-soft: #e5ebfc;
+  --sunk: #ebebe7;
+  --ink: #121212;
+  --muted: #5f5f5a;
+  --line: #e3e3de;
+  --accent: #121212;
+  --accent-soft: #ebebe7;
   --ok: #1d7f55;
   --ok-soft: #dff2e8;
-  --warn: #9a6512;
+  --warn: #a8650f;
   --warn-soft: #fbefd9;
   --bad: #b8382f;
   --bad-soft: #fbe3e1;
-  --g1: #0f8577;
-  --g2: #4a58cf;
-  --g3: #2b8fc9;
-  --g4: #c98417;
-  --g5: #c4467a;
-  --g6: #7b6aa8;
-  --g7: #5f8a2a;
-  --b1: #3d4657;
-  --b2: #cc1f72;
-  --b3: #2f7dd1;
-  --b4: #c46f0c;
-  --b5: #6b4fbf;
-  --b6: #2b8a3e;
-  --brand: #c0702e;
-  --brand-dark: #7a4318;
-  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --g1: #f0a432;
+  --g2: #2e4e7e;
+  --g3: #5fa8d3;
+  --g4: #3f8f5f;
+  --g5: #e0644f;
+  --g6: #8a6a4f;
+  --g7: #9a7bd0;
+  --b1: #121212;
+  --b2: #f0a432;
+  --b3: #2e4e7e;
+  --b4: #e0644f;
+  --b5: #3f8f5f;
+  --b6: #9a7bd0;
+  --brand: #f0a432;
+  --brand-dark: #a8650f;
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --radius: 14px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1117; --surface: #161a22; --sunk: #1c212b; --ink: #e7eaf0; --muted: #98a1b0; --line: #272d38;
-    --accent: #8ea4ff; --accent-soft: #1f2843;
+    --bg: #121212; --surface: #1b1b1a; --sunk: #242422; --ink: #f2f2ef; --muted: #a3a39c; --line: #2c2c2a;
+    --accent: #f2f2ef; --accent-soft: #2a2a28;
     --ok: #5fcf98; --ok-soft: #15301f; --warn: #f0b75a; --warn-soft: #33270f; --bad: #ff8a80; --bad-soft: #3a1a18;
-    --g1: #3fc4b3; --g2: #8592ff; --g3: #5cb8ec; --g4: #f0b04a; --g5: #f07aa9; --g6: #ad9de0; --g7: #9bd05a; --b1: #c9d0dc; --b2: #ff6bad; --b3: #6fb0ff; --b4: #f5a44a; --b5: #b39dff; --b6: #6fd38a; --brand: #e3995a; --brand-dark: #f3c99d;
+    --g1: #f0a432; --g2: #6f94d1; --g3: #7cc0e6; --g4: #5fb67f; --g5: #f07c68; --g6: #b08a68; --g7: #b49cf0;
+    --b1: #f2f2ef; --b2: #f0a432; --b3: #6f94d1; --b4: #f07c68; --b5: #5fb67f; --b6: #b49cf0; --brand: #f0a432; --brand-dark: #f0a432;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1117; --surface: #161a22; --sunk: #1c212b; --ink: #e7eaf0; --muted: #98a1b0; --line: #272d38;
-  --accent: #8ea4ff; --accent-soft: #1f2843;
+  --bg: #121212; --surface: #1b1b1a; --sunk: #242422; --ink: #f2f2ef; --muted: #a3a39c; --line: #2c2c2a;
+  --accent: #f2f2ef; --accent-soft: #2a2a28;
   --ok: #5fcf98; --ok-soft: #15301f; --warn: #f0b75a; --warn-soft: #33270f; --bad: #ff8a80; --bad-soft: #3a1a18;
-  --g1: #3fc4b3; --g2: #8592ff; --g3: #5cb8ec; --g4: #f0b04a; --g5: #f07aa9; --g6: #ad9de0; --g7: #9bd05a; --b1: #c9d0dc; --b2: #ff6bad; --b3: #6fb0ff; --b4: #f5a44a; --b5: #b39dff; --b6: #6fd38a; --brand: #e3995a; --brand-dark: #f3c99d;
+  --g1: #f0a432; --g2: #6f94d1; --g3: #7cc0e6; --g4: #5fb67f; --g5: #f07c68; --g6: #b08a68; --g7: #b49cf0;
+  --b1: #f2f2ef; --b2: #f0a432; --b3: #6f94d1; --b4: #f07c68; --b5: #5fb67f; --b6: #b49cf0; --brand: #f0a432; --brand-dark: #f0a432;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -81,7 +83,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* Header */
 .top { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; }
 .left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
-.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.05em; display: flex; align-items: center; gap: 8px; }
 .brand svg { width: 22px; height: 22px; color: var(--accent); }
 .tabs { display: flex; gap: 2px; background: var(--sunk); border-radius: 10px; padding: 3px; }
 .tabs a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 6px 12px; border-radius: 8px; }
@@ -258,13 +260,13 @@ a.inline { color: var(--accent); }
 
 /* Brand, auth, onboarding and settings */
 .brand svg.logo { width: 24px; height: 24px; color: inherit; }
-.logo .cap { fill: var(--brand-dark); }
-.logo .nut { fill: var(--brand); }
-.logo .stem { stroke: var(--brand-dark); }
+.logo .fur { fill: #f0a432; }
+.logo .dk { fill: var(--ink); }
+.logo .lt { fill: var(--lt, var(--bg)); }
 .brand a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px; }
 .auth-wrap { min-height: 100%; display: flex; flex-direction: column; align-items: center; padding-block: 8vh 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 18px; }
-.auth { width: 100%; max-width: 400px; padding: 28px; display: flex; flex-direction: column; gap: 14px; }
-.auth .brand { font-size: 1.3rem; }
+.auth { --lt: var(--surface); width: 100%; max-width: 400px; padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+.auth .brand { font-size: 1.6rem; }
 .auth .brand svg.logo { width: 34px; height: 34px; }
 .auth h1 { font-family: var(--font-display); font-size: 1.5rem; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
 .auth p { margin: 0; color: var(--muted); font-size: 0.92rem; }
@@ -315,7 +317,7 @@ a.inline { color: var(--accent); }
 
 <div id="authView" class="auth-wrap" hidden>
   <div class="card auth">
-    <a class="brand" href="./" style="text-decoration:none;color:inherit"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path class="stem" d="M16 3.5v4" fill="none" stroke-width="2.6" stroke-linecap="round"/><path class="cap" d="M5 14.5C5 9.6 9.9 7 16 7s11 2.6 11 7.5V16H5z"/><path class="nut" d="M7 16h18c0 7.6-3.6 12.3-9 13.5C10.6 28.3 7 23.6 7 16z"/></svg> Tamia</a>
+    <a class="brand" href="./" style="text-decoration:none;color:inherit"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle class="fur" cx="45" cy="17.5" r="6.5"/><circle class="fur" cx="32" cy="36" r="20"/><path class="dk" d="M17 22.77A20 20 0 0 1 22 18.68V53.32A20 20 0 0 1 17 49.23Z"/><path class="lt" d="M23.5 17.9A20 20 0 0 1 27.5 16.51V55.49A20 20 0 0 1 23.5 54.1Z"/><path class="dk" d="M29 16.23A20 20 0 0 1 34 16.1V55.9A20 20 0 0 1 29 55.77Z"/><circle class="dk" cx="43" cy="33" r="2.6"/></svg> tamia</a>
     <h1 id="authTitle">Connecte-toi pour retrouver ton budget</h1>
     <p id="authSub">Tes enveloppes sont enregistrées sur ton compte et synchronisées sur tous tes appareils.</p>
     <button class="gbtn" id="googleBtn" type="button">
@@ -334,13 +336,13 @@ a.inline { color: var(--accent); }
       <button class="linkbtn" id="forgot" type="button">Mot de passe oublié ?</button>
     </div>
   </div>
-  <p class="legal-note">En continuant, tu acceptes nos <a href="mentions-legales.html">mentions légales</a> et notre <a href="confidentialite.html">politique de confidentialité</a>. Tamia ne revend aucune donnée et n'affiche aucune publicité.</p>
+  <p class="legal-note">En continuant, tu acceptes nos <a href="mentions-legales.html">mentions légales</a> et notre <a href="confidentialite.html">politique de confidentialité</a>. tamia ne revend aucune donnée et n'affiche aucune publicité.</p>
 </div>
 
 <div class="app" id="appView" hidden>
   <header class="top">
     <div class="left">
-      <div class="brand"><a href="./"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path class="stem" d="M16 3.5v4" fill="none" stroke-width="2.6" stroke-linecap="round"/><path class="cap" d="M5 14.5C5 9.6 9.9 7 16 7s11 2.6 11 7.5V16H5z"/><path class="nut" d="M7 16h18c0 7.6-3.6 12.3-9 13.5C10.6 28.3 7 23.6 7 16z"/></svg> Tamia</a></div>
+      <div class="brand"><a href="./"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle class="fur" cx="45" cy="17.5" r="6.5"/><circle class="fur" cx="32" cy="36" r="20"/><path class="dk" d="M17 22.77A20 20 0 0 1 22 18.68V53.32A20 20 0 0 1 17 49.23Z"/><path class="lt" d="M23.5 17.9A20 20 0 0 1 27.5 16.51V55.49A20 20 0 0 1 23.5 54.1Z"/><path class="dk" d="M29 16.23A20 20 0 0 1 34 16.1V55.9A20 20 0 0 1 29 55.77Z"/><circle class="dk" cx="43" cy="33" r="2.6"/></svg> tamia</a></div>
       <nav class="tabs" aria-label="Pages">
         <a href="#finances" id="tab-finances">Finances</a>
         <a href="#rapports" id="tab-rapports">Rapports</a>
@@ -491,7 +493,7 @@ function render() {
 function onboardingView() {
   const all = SUGGESTED_BANKS.concat(obSel.filter(n => !SUGGESTED_BANKS.includes(n)));
   return '<div class="card create" style="max-width:640px">' +
-    '<h2>Bienvenue sur Tamia</h2>' +
+    '<h2>Bienvenue sur tamia</h2>' +
     '<p>Sur quelles banques répartis-tu ton argent ? Tu pourras associer une banque à chaque enveloppe et voir combien virer sur chacune.</p>' +
     '<div class="chips">' + all.map(n => '<button type="button" class="chip" data-act="ob-toggle" data-name="' + esc(n) + '" aria-pressed="' + obSel.includes(n) + '">' + esc(n) + '</button>').join("") + '</div>' +
     '<form class="inline-form" id="obForm"><input id="obCustom" placeholder="Autre banque" aria-label="Nom d\'une autre banque" maxlength="40"><button class="btn" type="submit">Ajouter</button></form>' +
@@ -824,7 +826,7 @@ function setAuthMode(mode) {
   authMode = mode;
   authMsg("");
   const signup = mode === "signup", reset = mode === "reset";
-  $("#authTitle").textContent = signup ? "Crée ton compte Tamia" : reset ? "Mot de passe oublié" : "Connecte-toi pour retrouver ton budget";
+  $("#authTitle").textContent = signup ? "Crée ton compte tamia" : reset ? "Mot de passe oublié" : "Connecte-toi pour retrouver ton budget";
   $("#authSub").textContent = reset ? "Entre ton e-mail, on t'envoie un lien pour choisir un nouveau mot de passe." : signup ? "Gratuit, sans publicité. Tes budgets restent privés et synchronisés sur tous tes appareils." : "Tes enveloppes sont enregistrées sur ton compte et synchronisées sur tous tes appareils.";
   $("#pwdField").hidden = reset;
   $("#password").autocomplete = signup ? "new-password" : "current-password";

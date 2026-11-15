@@ -1,12 +1,12 @@
 {
-  "name": "Tamia",
-  "short_name": "Tamia",
+  "name": "tamia",
+  "short_name": "tamia",
   "description": "Ton petit agent de poche pour planifier ton budget du mois.",
   "start_url": "app.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f5f8",
-  "theme_color": "#c0702e",
+  "background_color": "#f2f2ef",
+  "theme_color": "#121212",
   "lang": "fr",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
