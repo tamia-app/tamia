@@ -423,7 +423,14 @@ a.inline { color: var(--accent); }
 .est-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 0 5px; }
 /* Settings: recurring expenses */
 .reclist { display: flex; flex-direction: column; gap: 8px; }
-.recrow { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.recgroup { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+.recgroup + .recgroup { border-top: 1px solid var(--line); padding-top: 14px; }
+.recgroup-head { display: flex; align-items: center; gap: 8px; }
+.recgroup-head b { font-family: var(--font-display); font-size: 0.98rem; flex: 1; }
+.recgroup-head span { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+.recadd input { background: var(--surface); border-style: dashed; }
+.recother select { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); color: var(--ink); font: inherit; }
+.recrow { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
 .recrow input[type="text"], .recrow input.recamt, .recrow select { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: var(--sunk); color: var(--ink); font: inherit; font-size: 0.88rem; min-width: 0; width: 100%; }
 .recrow input.recamt { text-align: right; font-variant-numeric: tabular-nums; }
 .recrow input:focus, .recrow select:focus { outline: none; border-color: var(--accent); background: var(--surface); }
@@ -733,6 +740,26 @@ function barHtml(t) {
 }
 
 /* ---------- rendering ---------- */
+// Re-render without losing the field being typed in (profile updates arrive while editing settings)
+function renderKeepFocus() {
+  const el = document.activeElement;
+  if (!el || !mainEl.contains(el) || !/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) { render(); return; }
+  const row = el.closest("[data-rid]"), form = el.closest("form");
+  const key = el.id ? "#" + CSS.escape(el.id)
+    : row && el.dataset.rec ? '[data-rid="' + CSS.escape(row.dataset.rid) + '"] [data-rec="' + el.dataset.rec + '"]'
+    : form && form.dataset.group ? 'form[data-group="' + form.dataset.group + '"] input'
+    : form && form.classList.contains("recother") ? "form.recother " + el.tagName.toLowerCase()
+    : el.dataset.bankName ? '[data-bank-name="' + CSS.escape(el.dataset.bankName) + '"]' : null;
+  const val = el.value, start = el.selectionStart, end = el.selectionEnd;
+  render();
+  const again = key && mainEl.querySelector(key);
+  if (again) {
+    if (again.tagName !== "SELECT" && again.type !== "checkbox") again.value = val;
+    again.focus();
+    try { if (start != null) again.setSelectionRange(start, end); } catch (e) {}
+  }
+}
+
 function render() {
   if (!user) return;
   $("#mini").hidden = true;
@@ -1067,13 +1094,26 @@ function chartSvg(ids) {
     '<span><i class="mk"></i>Paye</span></div>';
 }
 
+const REC_DEFAULT_GROUPS = ["epargne", "fixe", "abonnement"];
+const REC_PLACEHOLDER = { epargne: "Ex. Livret A", fixe: "Ex. Loyer", abonnement: "Ex. Spotify" };
+function recGroupsView() {
+  const ids = REC_DEFAULT_GROUPS.concat(GROUPS.map(g => g.id).filter(id => !REC_DEFAULT_GROUPS.includes(id) && recurring.some(r => (r.group || "fixe") === id)));
+  return ids.map(id => {
+    const g = GROUPS.find(x => x.id === id);
+    const list = recurring.filter(r => (r.group || "fixe") === id);
+    const sub = list.reduce((a, r) => a + parse(r.amount), 0);
+    return '<div class="recgroup"><div class="recgroup-head"><i class="sw" style="background:' + g.color + '"></i><b>' + esc(g.label) + '</b><span>' + (list.length ? money(sub) : '') + '</span></div>' +
+      (list.length ? '<div class="reclist">' + list.map(r => recRowView(r)).join("") + '</div>' : '') +
+      (REC_DEFAULT_GROUPS.includes(id) ? '<form class="inline-form recadd" data-group="' + id + '"><input placeholder="' + esc(REC_PLACEHOLDER[id] || "Nouvelle dépense") + '" aria-label="Ajouter dans ' + esc(g.label) + '" maxlength="60"><button class="btn" type="submit">Ajouter</button></form>' : '') +
+      '</div>';
+  }).join("");
+}
 function recRowView(r) {
   const gOpts = GROUPS.map(g => '<option value="' + g.id + '"' + ((r.group || "fixe") === g.id ? ' selected' : '') + '>' + esc(g.label) + '</option>').join("");
   const bOpts = '<option value="">Sans banque</option>' + bankList().map(b => '<option value="' + esc(b.id) + '"' + (r.bank === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>').join("");
   return '<div class="recrow" data-rid="' + esc(r.id) + '">' +
     '<input type="text" class="recname" data-rec="name" value="' + esc(r.name || "") + '" placeholder="Intitulé" aria-label="Intitulé" maxlength="60">' +
     '<input class="recamt" data-rec="amount" inputmode="decimal" value="' + esc(show(r.amount)) + '" placeholder="0 €" aria-label="Montant">' +
-    '<select data-rec="group" aria-label="Catégorie">' + gOpts + '</select>' +
     (banks.length ? '<select data-rec="bank" aria-label="Banque">' + bOpts + '</select>' : '<span></span>') +
     '<label><input type="checkbox" data-rec="est"' + (r.est ? ' checked' : '') + '> Estimé</label>' +
     '<button type="button" class="btn danger" data-act="rec-del" data-rid="' + esc(r.id) + '">Retirer</button></div>';
@@ -1092,16 +1132,18 @@ function settingsView() {
       (bl.length ? '<ul class="banklist">' + bl.map(b => '<li><i class="dot" style="background:' + b.color + '"></i><input value="' + esc(b.name) + '" data-bank-name="' + esc(b.id) + '" aria-label="Nom de la banque" maxlength="40"><button class="btn danger" data-act="bank-del" data-bank="' + esc(b.id) + '">Retirer</button></li>').join("") + '</ul>' : '<p>Aucune banque pour l\'instant.</p>') +
       '<form class="inline-form" id="bankForm"><input id="bankNew" placeholder="Ajouter une banque" aria-label="Nom de la nouvelle banque" maxlength="40"><button class="btn" type="submit">Ajouter</button></form>' +
       '<p style="font-size:.8rem">Si tu retires une banque, les enveloppes qui l\'utilisaient passent en « Sans banque ».</p></div>' +
-    '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois : loyer, abonnements, transport… Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
-      (recurring.length ? '<div class="rechead"><span>Intitulé</span><span>Montant</span><span>Catégorie</span><span>Banque</span><span></span><span></span></div><div class="reclist">' + recurring.map(r => recRowView(r)).join("") + '</div>' +
-        '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '<p>Aucune dépense récurrente pour l\'instant.</p>') +
-      '<form class="inline-form" id="recForm"><input id="recNew" placeholder="Ajouter une dépense (ex. Loyer)" aria-label="Nom de la dépense récurrente" maxlength="60"><button class="btn" type="submit">Ajouter</button></form></div>' +
+    '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
+      recGroupsView() +
+      (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') +
+      '<form class="inline-form recadd recother"><input placeholder="Autre dépense (ex. Mutuelle)" aria-label="Nom de la dépense" maxlength="60"><select aria-label="Catégorie">' +
+        GROUPS.filter(g => !REC_DEFAULT_GROUPS.includes(g.id)).map(g => '<option value="' + g.id + '">' + esc(g.label) + '</option>').join("") +
+      '</select><button class="btn" type="submit">Ajouter</button></form></div>' +
     '<div class="card panel"><h2>Mon compte</h2><div class="account">' +
       (user.photoURL ? '<img src="' + esc(user.photoURL) + '" alt="" referrerpolicy="no-referrer">' : '') +
       '<div class="who2"><b>' + esc(user.displayName || user.email || "") + '</b><span>' + esc(user.email || "") + ' · ' + provider + '</span></div>' +
       '<button class="btn" data-act="logout">Se déconnecter</button></div></div>' +
-    '<div class="card panel"><h2>Mes données</h2><p>Télécharge une copie de tous tes budgets, ou importe une sauvegarde.</p>' +
-      '<div class="btnrow"><button class="btn" data-act="export">Exporter mes données</button><button class="btn" data-act="import">Importer une sauvegarde</button></div></div>' +
+    '<div class="card panel"><h2>Importer une sauvegarde</h2><p>Récupère des budgets enregistrés dans un fichier de sauvegarde tamia.</p>' +
+      '<div class="btnrow"><button class="btn" data-act="import">Choisir un fichier</button></div></div>' +
     '<div class="card panel"><h2>Supprimer mon compte</h2><p>Tous tes budgets et ton compte seront supprimés définitivement.</p>' +
       '<div class="btnrow">' + (confirmAccountDelete
         ? '<span style="font-size:.88rem">Tout supprimer, sans retour possible ?</span><button class="btn danger" data-act="acct-del-yes">Oui, supprimer mon compte</button><button class="btn" data-act="acct-del-no">Annuler</button>'
@@ -1143,8 +1185,9 @@ function syncFromStore() {
   if (dirty) return;
   const remote = months[current] || null;
   if (work && remote && core(work) === core(remote)) { if (page === "rapports") render(); return; }
+  if (page === "reglages") { work = remote ? clone(remote) : null; return; }
   work = remote ? clone(remote) : null;
-  render();
+  renderKeepFocus();
 }
 function saveBanks(next) {
   banks = next;
@@ -1168,7 +1211,7 @@ function startListeners() {
     if (profile && profile.lastGoal && GOALS.some(g => g.id === profile.lastGoal) && !newGoalTouched) newGoal = profile.lastGoal;
     const first = !profileLoaded;
     profileLoaded = true;
-    if (first || !dirty) render();
+    if (first || !dirty) renderKeepFocus();
   }, err => notice("Impossible de charger ton profil (" + err.code + "). Recharge la page.")));
   unsubs.push(onSnapshot(monthsCol(), snap => {
     const next = {};
@@ -1470,12 +1513,14 @@ mainEl.addEventListener("submit", e => {
     if (v && !obSel.includes(v)) obSel.push(v);
     render();
     const inp = $("#obCustom"); if (inp) inp.focus();
-  } else if (e.target.id === "recForm") {
-    const v = $("#recNew").value.trim();
+  } else if (e.target.classList.contains("recadd")) {
+    const f = e.target, v = $("input", f).value.trim();
     if (!v) return;
-    saveRecurring(recurring.concat([{ id: uid(), name: v, amount: 0, group: "fixe", bank: "", est: false }])).then(() => {
+    const group = f.dataset.group || $("select", f).value;
+    const id = uid();
+    saveRecurring(recurring.concat([{ id, name: v, amount: 0, group, bank: "", est: false }])).then(() => {
       settingsMsg = ""; render();
-      const rows = mainEl.querySelectorAll(".recrow .recamt"); if (rows.length) rows[rows.length - 1].focus();
+      const amt = mainEl.querySelector('.recrow[data-rid="' + id + '"] .recamt'); if (amt) amt.focus();
     });
   } else if (e.target.id === "bankForm") {
     const v = $("#bankNew").value.trim();
