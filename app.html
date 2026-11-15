@@ -429,8 +429,23 @@ a.inline { color: var(--accent); }
 .recgroup-head b { font-family: var(--font-display); font-size: 0.98rem; flex: 1; }
 .recgroup-head span { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
 .recadd input { background: var(--surface); border-style: dashed; }
-.recother select { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); color: var(--ink); font: inherit; }
-.recrow { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.recrow { display: grid; grid-template-columns: minmax(0, 1.6fr) 6.5rem minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+/* Pill selector with a tamia menu (replaces native selects) */
+.psel-wrap { position: relative; min-width: 0; }
+.psel { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 12px; font-weight: 600; font-size: 0.86rem; max-width: 100%; white-space: nowrap; }
+.psel:hover, .psel[aria-expanded="true"] { border-color: var(--ink); }
+.psel span { overflow: hidden; text-overflow: ellipsis; }
+.psel .pchev { width: 12px; height: 12px; color: var(--muted); flex: none; transition: transform .15s; }
+.psel[aria-expanded="true"] .pchev { transform: rotate(180deg); }
+.psel .dot, .pmenu .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.psel .sq, .pmenu .sq { width: 9px; height: 9px; border-radius: 3px; display: inline-block; flex: none; }
+.dot.none { border: 1.5px dashed var(--muted); background: transparent !important; }
+.pmenu { position: absolute; left: 0; top: calc(100% + 6px); z-index: 25; min-width: 100%; width: max-content; max-width: min(280px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 16px 36px -16px rgba(0,0,0,.35); padding: 5px; display: flex; flex-direction: column; }
+.pmenu button { border: none; background: none; border-radius: 8px; padding: 9px 10px; display: flex; align-items: center; gap: 9px; text-align: left; font-size: 0.88rem; color: var(--ink); }
+.pmenu button:hover, .pmenu button:focus-visible { background: var(--bg); }
+.pmenu button[aria-selected="true"] { font-weight: 700; }
+.pmenu button[aria-selected="true"]::after { content: "✓"; margin-left: auto; padding-left: 14px; }
+.pmenu .sep { height: 1px; background: var(--line); margin: 4px 6px; }
 .recrow input[type="text"], .recrow input.recamt, .recrow select { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: var(--sunk); color: var(--ink); font: inherit; font-size: 0.88rem; min-width: 0; width: 100%; }
 .recrow input.recamt { text-align: right; font-variant-numeric: tabular-nums; }
 .recrow input:focus, .recrow select:focus { outline: none; border-color: var(--accent); background: var(--surface); }
@@ -441,8 +456,9 @@ a.inline { color: var(--accent); }
 .rectotal b { font-variant-numeric: tabular-nums; }
 @media (max-width: 760px) {
   .rechead { display: none; }
-  .recrow { grid-template-columns: minmax(0, 1fr) 6rem; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
-  .recrow .recname { grid-column: 1 / -1; }
+  .recrow { grid-template-columns: minmax(0, 1fr) 6.5rem; grid-template-areas: "name del" "bank amt"; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+  .recrow .recname { grid-area: name; } .recrow > .btn.danger { grid-area: del; justify-self: end; border: none; background: none; padding: 6px 2px; } .recrow .psel-wrap { grid-area: bank; } .recrow .recamt { grid-area: amt; }
+  .recother input { flex-basis: 100%; }
 }
 .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 12px; font-size: 0.85rem; }
 .chip:hover { border-color: var(--accent); }
@@ -938,7 +954,7 @@ function rowView(e, p, locked) {
   const hasBank = banks.some(b => b.id === e.bank);
   return '<div class="row' + (hasBank || !banks.length ? '' : ' nobank') + '" data-id="' + esc(e.id) + '">' +
     '<div class="who"><input class="name" value="' + esc(e.name) + '" placeholder="Intitulé" aria-label="Intitulé de l\'enveloppe" maxlength="60">' +
-    '<div class="meta"><select class="grp" aria-label="Catégorie">' + opts + '</select>' + (e.est ? '<span class="est-tag">estimé</span>' : '') + (p ? '<span class="delta" data-delta></span>' : '') + '<button class="del" data-act="remove" aria-label="Supprimer l\'enveloppe">Supprimer</button></div></div>' +
+    '<div class="meta"><select class="grp" aria-label="Catégorie">' + opts + '</select>' + (p ? '<span class="delta" data-delta></span>' : '') + '<button class="del" data-act="remove" aria-label="Supprimer l\'enveloppe">Supprimer</button></div></div>' +
     (banks.length ? bankControl(e, locked) : '<span></span>') +
     '<div class="amount"><input class="amt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(e.amount)) + '" aria-label="Montant"><span>€</span></div>' +
     '</div>';
@@ -1108,14 +1124,53 @@ function recGroupsView() {
       '</div>';
   }).join("");
 }
+const PCHEV = '<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function pselBank(bankId) {
+  const b = bankList().find(x => x.id === bankId);
+  return '<div class="psel-wrap"><button type="button" class="psel" data-psel="recbank" data-val="' + esc(b ? b.id : "") + '" aria-haspopup="listbox" aria-expanded="false" aria-label="Banque : ' + esc(b ? b.name : "Sans banque") + '">' +
+    '<i class="dot' + (b ? '' : ' none') + '"' + (b ? ' style="background:' + b.color + '"' : '') + '></i><span>' + esc(b ? b.name : "Sans banque") + '</span>' + PCHEV + '</button></div>';
+}
+function pselCat(groupId) {
+  const g = GROUPS.find(x => x.id === groupId);
+  return '<div class="psel-wrap"><button type="button" class="psel" data-psel="othercat" data-val="' + g.id + '" aria-haspopup="listbox" aria-expanded="false" aria-label="Catégorie : ' + esc(g.label) + '">' +
+    '<i class="sq" style="background:' + g.color + '"></i><span>' + esc(g.label) + '</span>' + PCHEV + '</button></div>';
+}
+function closePmenus() {
+  mainEl.querySelectorAll(".pmenu").forEach(m => m.remove());
+  mainEl.querySelectorAll('.psel[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded", "false"));
+}
+function openPmenu(btn) {
+  const kind = btn.dataset.psel, val = btn.dataset.val || "";
+  const items = kind === "recbank"
+    ? bankList().map(b => ({ v: b.id, label: b.name, mark: '<i class="dot" style="background:' + b.color + '"></i>' })).concat([{ sep: true }, { v: "", label: "Sans banque", mark: '<i class="dot none"></i>' }])
+    : GROUPS.filter(g => !REC_DEFAULT_GROUPS.includes(g.id)).map(g => ({ v: g.id, label: g.label, mark: '<i class="sq" style="background:' + g.color + '"></i>' }));
+  const m = document.createElement("div");
+  m.className = "pmenu"; m.setAttribute("role", "listbox");
+  m.innerHTML = items.map(it => it.sep ? '<span class="sep"></span>' : '<button type="button" role="option" data-v="' + esc(it.v) + '" aria-selected="' + (it.v === val) + '">' + it.mark + esc(it.label) + '</button>').join("");
+  btn.parentElement.appendChild(m);
+  btn.setAttribute("aria-expanded", "true");
+  const r = m.getBoundingClientRect();
+  if (r.right > window.innerWidth - 12) { m.style.left = "auto"; m.style.right = "0"; }
+  const sel = m.querySelector('[aria-selected="true"]') || m.querySelector("button"); if (sel) sel.focus();
+}
+function pickPmenu(btn, v) {
+  closePmenus();
+  if (btn.dataset.psel === "recbank") {
+    const rid = btn.closest(".recrow").dataset.rid;
+    saveRecurring(recurring.map(r => r.id === rid ? Object.assign({}, r, { bank: v }) : r)).then(render);
+  } else {
+    btn.parentElement.outerHTML = pselCat(v);
+  }
+}
+document.addEventListener("click", e => { if (!e.target.closest(".psel-wrap")) closePmenus(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && mainEl.querySelector(".pmenu")) { const b = mainEl.querySelector('.psel[aria-expanded="true"]'); closePmenus(); if (b) b.focus(); } });
 function recRowView(r) {
   const gOpts = GROUPS.map(g => '<option value="' + g.id + '"' + ((r.group || "fixe") === g.id ? ' selected' : '') + '>' + esc(g.label) + '</option>').join("");
   const bOpts = '<option value="">Sans banque</option>' + bankList().map(b => '<option value="' + esc(b.id) + '"' + (r.bank === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>').join("");
   return '<div class="recrow" data-rid="' + esc(r.id) + '">' +
     '<input type="text" class="recname" data-rec="name" value="' + esc(r.name || "") + '" placeholder="Intitulé" aria-label="Intitulé" maxlength="60">' +
     '<input class="recamt" data-rec="amount" inputmode="decimal" value="' + esc(show(r.amount)) + '" placeholder="0 €" aria-label="Montant">' +
-    (banks.length ? '<select data-rec="bank" aria-label="Banque">' + bOpts + '</select>' : '<span></span>') +
-    '<label><input type="checkbox" data-rec="est"' + (r.est ? ' checked' : '') + '> Estimé</label>' +
+    (banks.length ? pselBank(r.bank) : '<span></span>') +
     '<button type="button" class="btn danger" data-act="rec-del" data-rid="' + esc(r.id) + '">Retirer</button></div>';
 }
 function saveRecurring(next) {
@@ -1135,9 +1190,8 @@ function settingsView() {
     '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
       recGroupsView() +
       (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') +
-      '<form class="inline-form recadd recother"><input placeholder="Autre dépense (ex. Mutuelle)" aria-label="Nom de la dépense" maxlength="60"><select aria-label="Catégorie">' +
-        GROUPS.filter(g => !REC_DEFAULT_GROUPS.includes(g.id)).map(g => '<option value="' + g.id + '">' + esc(g.label) + '</option>').join("") +
-      '</select><button class="btn" type="submit">Ajouter</button></form></div>' +
+      '<form class="inline-form recadd recother"><input placeholder="Autre dépense (ex. Mutuelle)" aria-label="Nom de la dépense" maxlength="60">' + pselCat("courant") +
+      '<button class="btn" type="submit">Ajouter</button></form></div>' +
     '<div class="card panel"><h2>Mon compte</h2><div class="account">' +
       (user.photoURL ? '<img src="' + esc(user.photoURL) + '" alt="" referrerpolicy="no-referrer">' : '') +
       '<div class="who2"><b>' + esc(user.displayName || user.email || "") + '</b><span>' + esc(user.email || "") + ' · ' + provider + '</span></div>' +
@@ -1516,7 +1570,7 @@ mainEl.addEventListener("submit", e => {
   } else if (e.target.classList.contains("recadd")) {
     const f = e.target, v = $("input", f).value.trim();
     if (!v) return;
-    const group = f.dataset.group || $("select", f).value;
+    const group = f.dataset.group || ($(".psel", f) ? $(".psel", f).dataset.val : "courant");
     const id = uid();
     saveRecurring(recurring.concat([{ id, name: v, amount: 0, group, bank: "", est: false }])).then(() => {
       settingsMsg = ""; render();
@@ -1541,6 +1595,10 @@ mainEl.addEventListener("keydown", e => {
   }
 });
 mainEl.addEventListener("click", e => {
+  const popt = e.target.closest(".pmenu button[data-v]");
+  if (popt) { const btn = popt.closest(".psel-wrap").querySelector(".psel"); pickPmenu(btn, popt.dataset.v); return; }
+  const pbtn = e.target.closest(".psel");
+  if (pbtn) { const open = pbtn.getAttribute("aria-expanded") === "true"; closePmenus(); if (!open) openPmenu(pbtn); return; }
   const tr = e.target.closest("tr[data-month]");
   if (tr) { goTo(tr.dataset.month); location.hash = "finances"; return; }
   const b = e.target.closest("[data-act]");
