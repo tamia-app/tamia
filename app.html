@@ -81,7 +81,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .notice { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 14px; font-size: 0.88rem; }
 
 /* Header */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; }
+.top { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; }
 .left { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: -0.05em; line-height: 1; display: flex; align-items: center; gap: 0.18em; }
 /* logo sized and nudged so its ink matches the cap-to-baseline height of "tamia" */
@@ -113,7 +113,30 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .mgrid button.cur .mst:not(.ok):not(.dr) { border-color: var(--muted); }
 .mfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 9px; }
 .mfoot .linkbtn { font-size: 0.8rem; font-weight: 600; text-decoration: underline; }
-.right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-left: auto; }
+/* Account button (initial) + menu */
+.acct { position: relative; }
+.acct-btn { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-weight: 700; font-size: 1rem; display: grid; place-items: center; }
+.acct-btn:hover, .acct-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px var(--line); }
+.acct-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; width: 270px; max-width: calc(100vw - 32px); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); padding: 6px; display: flex; flex-direction: column; }
+.acct-who { padding: 10px 10px 8px; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.acct-who b { font-family: var(--font-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acct-who span { font-size: 0.8rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acct-pop > button { border: none; background: none; border-radius: 8px; padding: 10px; text-align: left; font-size: 0.9rem; color: var(--ink); }
+.acct-pop > button:hover { background: var(--bg); }
+.acct-pop > button.danger { color: var(--bad); }
+.acct-pop .sep { height: 1px; background: var(--line); margin: 4px 6px; }
+.acct-pop .acct-note { font-size: 0.8rem; color: var(--muted); padding: 8px 10px; }
+.acct-pop .acct-confirm { padding: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; }
+.acct-pop .acct-confirm .btnrow { justify-content: flex-end; }
+@media (max-width: 640px) {
+  .top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .left { display: contents; }
+  .top .brand { grid-column: 1; grid-row: 1; }
+  .acct { grid-column: 2; grid-row: 1; }
+  .top .tabs { grid-column: 1 / -1; justify-self: start; }
+  .right { grid-column: 1 / -1; justify-content: flex-start; margin-left: 0; }
+}
 .sync { font-size: 0.78rem; color: var(--muted); text-align: right; min-width: 5.5em; }
 @media (max-width: 520px) { .sync { display: none; } }
 
@@ -240,6 +263,16 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .mini-in .status { padding: 5px 10px; font-size: 0.76rem; }
 @media (min-width: 641px) { .mini { display: none !important; } }
 .sheet-wrap { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; justify-content: flex-end; }
+@media (min-width: 641px) {
+  .sheet-wrap { justify-content: center; align-items: center; padding: 24px; }
+  .sheet-wrap .sheet { width: 460px; max-width: 100%; border-radius: 20px; padding: 18px 22px 22px; }
+  .sheet-wrap .sheet .grab { display: none; }
+}
+.sheet h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; letter-spacing: -0.02em; }
+.sheet .field input[type="text"] { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); color: var(--ink); font: inherit; }
+.sheet .field input[type="text"]:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.sh-banks .sq { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.sh-err { color: var(--bad); font-size: 0.82rem; }
 .sheet-wrap .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.42); }
 .sheet { position: relative; background: var(--surface); border-radius: 20px 20px 0 0; padding: 10px max(18px, env(safe-area-inset-left, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 14px; max-height: 92%; overflow-y: auto; }
 .sheet .grab { width: 38px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
@@ -422,7 +455,18 @@ a.inline { color: var(--accent); }
 .proposal span { color: var(--muted); }
 .est-tag { font-size: 0.68rem; font-weight: 700; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 0 5px; }
 /* Settings: recurring expenses */
-.reclist { display: flex; flex-direction: column; gap: 8px; }
+.reclist { display: flex; flex-direction: column; }
+.recitem { border: none; border-top: 1px solid var(--line); background: none; padding: 11px 4px; display: grid; grid-template-columns: minmax(0, 1fr) auto auto 14px; gap: 12px; align-items: center; text-align: left; width: 100%; color: var(--ink); }
+.recitem:first-child { border-top: none; }
+.recitem:hover { background: var(--bg); }
+.recitem .rn { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recitem .rb { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.recitem .rb .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.recitem .ra { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 4rem; text-align: right; }
+.recitem .rc { color: var(--muted); }
+.recnew { align-self: flex-start; border: 1px dashed var(--line); background: var(--surface); border-radius: 10px; padding: 8px 12px; font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+.recnew:hover { border-color: var(--ink); }
+.recnew.other { margin-top: 4px; }
 .recgroup { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
 .recgroup + .recgroup { border-top: 1px solid var(--line); padding-top: 14px; }
 .recgroup-head { display: flex; align-items: center; gap: 8px; }
@@ -532,11 +576,28 @@ a.inline { color: var(--accent); }
         </div>
       </div>
     </div>
+    <div class="acct">
+      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Mon compte"><span id="acctInitial">?</span></button>
+      <div class="acct-pop" id="acctPop" role="menu" hidden></div>
+    </div>
   </header>
   <div class="notice" id="notice" hidden></div>
   <main id="main"><div class="card loading">Chargement de tes budgets…</div></main>
   <input type="file" id="importFile" class="hidden-file" accept="application/json,.json">
   <div class="mini" id="mini" hidden><div class="mini-in" id="miniIn"></div></div>
+  <div class="sheet-wrap" id="recSheet" hidden>
+    <div class="scrim" id="recScrim"></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="recTitle">
+      <span class="grab"></span>
+      <h3 id="recTitle">Nouvelle dépense récurrente</h3>
+      <div class="field"><label for="recAmt">Montant par mois</label><div class="sh-amt"><input id="recAmt" inputmode="decimal" autocomplete="off" placeholder="0"><span>€</span></div></div>
+      <div class="field"><label for="recName">Nom de la dépense</label><input type="text" id="recName" maxlength="60" placeholder="Ex. Loyer" autocomplete="off"></div>
+      <div class="field"><label>Catégorie</label><div class="sh-banks" id="recCats"></div></div>
+      <div class="field" id="recBankField"><label>Banque</label><div class="sh-banks" id="recBanks"></div></div>
+      <span class="sh-err" id="recErr" hidden>Donne un nom à cette dépense.</span>
+      <div class="sh-foot"><button type="button" class="sh-del" id="recDel">Supprimer</button><div class="btnrow"><button type="button" class="btn" id="recCancel">Annuler</button><button type="button" class="btn primary" id="recSave">Enregistrer</button></div></div>
+    </div>
+  </div>
   <div class="sheet-wrap" id="sheet" hidden>
     <div class="scrim" id="shScrim"></div>
     <div class="sheet" role="dialog" aria-modal="true" aria-label="Modifier l'enveloppe">
@@ -783,7 +844,7 @@ function render() {
   $("#monthLabel").textContent = label(current);
   $("#monthDot").className = "mst " + monthState(current);
   if (!$("#monthPop").hidden) renderMonthGrid();
-  $("#monthBar").style.visibility = page === "reglages" ? "hidden" : "";
+  $(".mpick").hidden = page === "reglages";
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
@@ -1119,10 +1180,17 @@ function recGroupsView() {
     const list = recurring.filter(r => (r.group || "fixe") === id);
     const sub = list.reduce((a, r) => a + parse(r.amount), 0);
     return '<div class="recgroup"><div class="recgroup-head"><i class="sw" style="background:' + g.color + '"></i><b>' + esc(g.label) + '</b><span>' + (list.length ? money(sub) : '') + '</span></div>' +
-      (list.length ? '<div class="reclist">' + list.map(r => recRowView(r)).join("") + '</div>' : '') +
-      (REC_DEFAULT_GROUPS.includes(id) ? '<form class="inline-form recadd" data-group="' + id + '"><input placeholder="' + esc(REC_PLACEHOLDER[id] || "Nouvelle dépense") + '" aria-label="Ajouter dans ' + esc(g.label) + '" maxlength="60"><button class="btn" type="submit">Ajouter</button></form>' : '') +
+      (list.length ? '<div class="reclist">' + list.map(r => recItemView(r)).join("") + '</div>' : '') +
+      (REC_DEFAULT_GROUPS.includes(id) ? '<button type="button" class="recnew" data-act="rec-new" data-group="' + id + '">+ Créer une dépense récurrente</button>' : '') +
       '</div>';
   }).join("");
+}
+function recItemView(r) {
+  const b = bankList().find(x => x.id === r.bank);
+  return '<button type="button" class="recitem" data-act="rec-open" data-rid="' + esc(r.id) + '" aria-label="Modifier ' + esc(r.name || "la dépense") + '">' +
+    '<span class="rn">' + esc(r.name || "Sans nom") + '</span>' +
+    (banks.length ? '<span class="rb">' + (b ? '<i class="dot" style="background:' + b.color + '"></i>' + esc(b.name) : 'Sans banque') + '</span>' : '<span></span>') +
+    '<span class="ra">' + money(parse(r.amount)) + '</span><span class="rc">›</span></button>';
 }
 const PCHEV = '<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function pselBank(bankId) {
@@ -1190,18 +1258,9 @@ function settingsView() {
     '<div class="card panel"><h2>Mes dépenses récurrentes</h2><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
       recGroupsView() +
       (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') +
-      '<form class="inline-form recadd recother"><input placeholder="Autre dépense (ex. Mutuelle)" aria-label="Nom de la dépense" maxlength="60">' + pselCat("courant") +
-      '<button class="btn" type="submit">Ajouter</button></form></div>' +
-    '<div class="card panel"><h2>Mon compte</h2><div class="account">' +
-      (user.photoURL ? '<img src="' + esc(user.photoURL) + '" alt="" referrerpolicy="no-referrer">' : '') +
-      '<div class="who2"><b>' + esc(user.displayName || user.email || "") + '</b><span>' + esc(user.email || "") + ' · ' + provider + '</span></div>' +
-      '<button class="btn" data-act="logout">Se déconnecter</button></div></div>' +
+      '<button type="button" class="recnew other" data-act="rec-new" data-group="courant">+ Créer un autre type de dépense</button></div>' +
     '<div class="card panel"><h2>Importer une sauvegarde</h2><p>Récupère des budgets enregistrés dans un fichier de sauvegarde tamia.</p>' +
       '<div class="btnrow"><button class="btn" data-act="import">Choisir un fichier</button></div></div>' +
-    '<div class="card panel"><h2>Supprimer mon compte</h2><p>Tous tes budgets et ton compte seront supprimés définitivement.</p>' +
-      '<div class="btnrow">' + (confirmAccountDelete
-        ? '<span style="font-size:.88rem">Tout supprimer, sans retour possible ?</span><button class="btn danger" data-act="acct-del-yes">Oui, supprimer mon compte</button><button class="btn" data-act="acct-del-no">Annuler</button>'
-        : '<button class="btn danger" data-act="acct-del-ask">Supprimer mon compte</button>') + '</div></div>' +
     '<div class="muted-links"><a href="./">Accueil</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a></div>' +
     '</div>';
 }
@@ -1285,6 +1344,8 @@ onAuthStateChanged(auth, u => {
   $("#authView").hidden = !!u;
   $("#appView").hidden = !u;
   if (!u) { setAuthMode("login"); return; }
+  $("#acctInitial").textContent = ((u.displayName || u.email || "?").trim().charAt(0) || "?").toUpperCase();
+  openAcct(false);
   startListeners();
   render();
 });
@@ -1352,6 +1413,84 @@ $("#emailForm").addEventListener("submit", e => {
   else if (authMode === "reset") p = sendPasswordResetEmail(auth, email).then(() => authMsg("C'est envoyé. Regarde ta boîte mail (et les spams).", true));
   p.catch(authError).finally(() => { btn.disabled = false; });
 });
+
+/* ---------- recurring expense modal ---------- */
+let recEdit = null;
+function renderRecChoices() {
+  $("#recCats").innerHTML = GROUPS.map(g => '<button type="button" data-cat="' + g.id + '" aria-pressed="' + (recEdit.group === g.id) + '"><i class="sq" style="background:' + g.color + '"></i><span>' + esc(g.label) + '</span></button>').join("");
+  const list = bankList();
+  $("#recBankField").hidden = !list.length;
+  $("#recBanks").innerHTML = list.map(b => '<button type="button" data-bank="' + esc(b.id) + '" aria-pressed="' + (recEdit.bank === b.id) + '"><i class="dot" style="background:' + b.color + '"></i><span>' + esc(b.name) + '</span></button>').join("") +
+    '<button type="button" data-bank="" aria-pressed="' + (!list.some(b => b.id === recEdit.bank)) + '"><i class="dot" style="background:var(--line)"></i><span>Sans banque</span></button>';
+}
+function openRec(r, group) {
+  recEdit = r ? { id: r.id, isNew: false, group: r.group || "fixe", bank: r.bank || "" } : { id: uid(), isNew: true, group: group || "fixe", bank: "" };
+  $("#recTitle").textContent = r ? "Modifier la dépense" : "Nouvelle dépense récurrente";
+  $("#recAmt").value = r ? show(parse(r.amount)) : "";
+  $("#recName").value = r ? r.name || "" : "";
+  $("#recName").placeholder = REC_PLACEHOLDER[recEdit.group] || "Ex. Mutuelle";
+  $("#recErr").hidden = true;
+  $("#recDel").hidden = !r;
+  renderRecChoices();
+  $("#recSheet").hidden = false;
+  document.body.style.overflow = "hidden";
+  setTimeout(() => { const f = r ? $("#recAmt") : $("#recAmt"); f.focus(); if (r) f.select(); }, 60);
+}
+function closeRec() { $("#recSheet").hidden = true; document.body.style.overflow = ""; recEdit = null; }
+function saveRec() {
+  if (!recEdit) return closeRec();
+  const name = $("#recName").value.trim();
+  if (!name) { $("#recErr").hidden = false; $("#recName").focus(); return; }
+  const item = { id: recEdit.id, name, amount: parse($("#recAmt").value), group: recEdit.group, bank: recEdit.bank };
+  const next = recEdit.isNew ? recurring.concat([item]) : recurring.map(x => x.id === item.id ? Object.assign({}, x, item) : x);
+  closeRec();
+  saveRecurring(next).then(render);
+}
+$("#recCats").addEventListener("click", e => { const b = e.target.closest("button[data-cat]"); if (!b) return; recEdit.group = b.dataset.cat; renderRecChoices(); });
+$("#recBanks").addEventListener("click", e => { const b = e.target.closest("button[data-bank]"); if (!b) return; recEdit.bank = b.dataset.bank; renderRecChoices(); });
+$("#recSave").addEventListener("click", saveRec);
+$("#recCancel").addEventListener("click", closeRec);
+$("#recScrim").addEventListener("click", closeRec);
+$("#recDel").addEventListener("click", () => { if (!recEdit) return; const id = recEdit.id; closeRec(); saveRecurring(recurring.filter(x => x.id !== id)).then(render); });
+$("#recSheet").addEventListener("keydown", e => {
+  if (e.key === "Escape") closeRec();
+  if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); saveRec(); }
+});
+
+/* ---------- account menu ---------- */
+let acctConfirm = false, acctMsg = "";
+function renderAcctPop() {
+  const pwd = user && user.providerData.some(pd => pd.providerId === "password");
+  const pop = $("#acctPop");
+  pop.innerHTML = '<div class="acct-who"><b>' + esc(user.displayName || (user.email || "").split("@")[0]) + '</b><span>' + esc(user.email || "") + '</span></div>' +
+    (acctMsg ? '<div class="acct-note">' + esc(acctMsg) + '</div>' : '') +
+    (acctConfirm
+      ? '<div class="acct-confirm"><span>Supprimer ton compte et tous tes budgets, sans retour possible ?</span><div class="btnrow"><button type="button" class="btn" data-acct="cancel">Annuler</button><button type="button" class="btn danger" data-acct="delete-yes">Oui, supprimer</button></div></div>'
+      : (pwd ? '<button type="button" role="menuitem" data-acct="password">Modifier mon mot de passe</button>' : '<div class="acct-note">Connecté avec Google : ton mot de passe se gère depuis ton compte Google.</div>') +
+        '<button type="button" role="menuitem" data-acct="logout">Se déconnecter</button><span class="sep"></span>' +
+        '<button type="button" role="menuitem" class="danger" data-acct="delete">Supprimer mon compte</button>');
+}
+function openAcct(open) {
+  $("#acctPop").hidden = !open;
+  $("#acctBtn").setAttribute("aria-expanded", String(open));
+  if (open) { acctConfirm = false; acctMsg = ""; renderAcctPop(); }
+}
+$("#acctBtn").addEventListener("click", e => { e.stopPropagation(); openAcct($("#acctPop").hidden); });
+$("#acctPop").addEventListener("click", e => {
+  e.stopPropagation();
+  const b = e.target.closest("[data-acct]"); if (!b) return;
+  const a = b.dataset.acct;
+  if (a === "logout") { openAcct(false); if (saveTimer) flush(); saving.finally(() => signOut(auth)); }
+  else if (a === "password") {
+    sendPasswordResetEmail(auth, user.email).then(() => { acctMsg = "Un e-mail pour choisir un nouveau mot de passe vient d'être envoyé à " + user.email + "."; renderAcctPop(); })
+      .catch(err => { acctMsg = "L'envoi a échoué (" + (err && err.code) + "). Réessaie."; renderAcctPop(); });
+  }
+  else if (a === "delete") { acctConfirm = true; renderAcctPop(); }
+  else if (a === "cancel") { acctConfirm = false; renderAcctPop(); }
+  else if (a === "delete-yes") { b.disabled = true; b.textContent = "Suppression…"; deleteAccount(); }
+});
+document.addEventListener("click", e => { if (!$("#acctPop").hidden && !e.target.closest(".acct")) openAcct(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#acctPop").hidden) { openAcct(false); $("#acctBtn").focus(); } });
 
 /* ---------- mobile envelope sheet ---------- */
 let sheetEnv = null, sheetIsNew = false, sheetBank = "";
@@ -1613,6 +1752,8 @@ mainEl.addEventListener("click", e => {
     return;
   }
   // settings
+  if (act === "rec-open") { const r = recurring.find(x => x.id === b.dataset.rid); if (r) openRec(r); return; }
+  if (act === "rec-new") { openRec(null, b.dataset.group); return; }
   if (act === "rec-del") { saveRecurring(recurring.filter(x => x.id !== b.dataset.rid)).then(render); return; }
   if (act === "bank-del") { saveBanks(banks.filter(x => x.id !== b.dataset.bank)).then(render); return; }
   if (act === "logout") { if (saveTimer) flush(); saving.finally(() => signOut(auth)); return; }
