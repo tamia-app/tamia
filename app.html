@@ -147,9 +147,19 @@ body { overflow-x: clip; }
 .fp-months i { font-style: normal; text-align: center; border-radius: 8px; padding: 6px 0; font-size: 0.72rem; font-weight: 700; background: var(--sunk); color: var(--muted); }
 .fp-months i.on { background: #f0a432; color: #121212; }
 .fp-months i.wait { background: none; border: 1.5px dashed var(--line); }
-.flame-pop h3 { margin: 4px 0 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-.flame-pop ol { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--muted); }
-.flame-pop ol b { color: var(--ink); }
+/* "your flame this month": a small checklist */
+.fp-now { background: var(--bg); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.fp-now h3 { margin: 0; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.fp-step { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; background: var(--surface); border-radius: 12px; padding: 8px 10px; text-align: left; border: none; color: var(--ink); font: inherit; width: 100%; }
+.fp-step img { width: 28px; height: 28px; display: block; }
+.fp-step b { display: block; font-size: 0.84rem; }
+.fp-step span { font-size: 0.74rem; color: var(--muted); }
+.fp-step.done { opacity: .55; }
+.fp-step em { font-style: normal; font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; background: #fde9c7; color: #a8650f; border-radius: 99px; padding: 2px 9px; white-space: nowrap; }
+button.fp-step { cursor: pointer; }
+button.fp-step:hover em { background: #f0a432; color: #121212; }
+.fp-prog { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-top: 2px; }
+.fp-prog i { display: block; height: 100%; background: #f0a432; border-radius: 3px; }
 .flame-pop .fp-note { margin: 0; font-size: 0.78rem; color: var(--muted); }
 /* Full-screen menu */
 .menu-wrap { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
@@ -1200,14 +1210,40 @@ function renderFlame() {
   $("#flameBtn").setAttribute("aria-label", "Ma flamme : " + n + " mois d'affilée");
 }
 function renderFlamePop() {
-  const n = streakInfo(), cur = monthIdOf(todayDate());
+  const n = streakInfo(), now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
   const ids = [-5, -4, -3, -2, -1, 0].map(k => shiftMonth(cur, k));
-  $("#flamePop").innerHTML = '<div class="fp-head"><img src="emoji/fire.png" alt="" width="40" height="40"><div><b>' + n + ' mois d\'affilée</b><span>' +
-      (n ? 'Tu as préparé ton budget et fait ton bilan ' + n + ' mois de suite.' : 'Ta flamme s\'allume au premier bilan de fin de mois.') + '</span></div></div>' +
-    '<div class="fp-months">' + ids.map(id => { const m = months[id]; const c = m && m.bilan ? "on" : id === cur || (id === shiftMonth(cur, -1) && todayDate().getDate() <= 10 && hasBudget(id)) ? "wait" : ""; return '<i class="' + c + '" title="' + esc(label(id)) + '">' + MONTHS_SHORT[Number(id.slice(5)) - 1].replace(".", "") + '</i>'; }).join("") + '</div>' +
-    '<h3>Comment gagner une flamme</h3><ol><li><b>Prépare le budget</b> du mois dans Finances.</li><li><b>Fais ton bilan</b> à partir du 25 : tamia te le propose à l\'ouverture.</li><li>Quelle que soit ta réponse, <b>+1 flamme</b>.</li></ol>' +
-    '<p class="fp-note">Un mois sans budget ou sans bilan (après le 10 du mois suivant) remet la flamme à zéro.</p>';
+  // the month whose flame is at stake: last month while its check-in is still open, otherwise this month
+  const M = now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan ? prev : cur;
+  const m = months[M], name = monthName(M);
+  const prepared = hasBudget(M), checked = !!(m && m.bilan);
+  const openFrom = new Date(Number(M.slice(0, 4)), Number(M.slice(5)) - 1, 25);
+  const available = M !== cur || now.getDate() >= 25;
+  const days = Math.max(0, Math.ceil((openFrom - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000));
+  const when = d => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  const ANS = { ok: "Budget tenu", almost: "Presque tenu", over: "Budget dépassé" };
+  const step1 = prepared
+    ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Budget préparé</b><span>' + (m.validatedAt ? 'Validé le ' + when(m.validatedAt) : 'Prêt dans Finances') + '</span></div></div>'
+    : '<div class="fp-step"><img src="emoji/calendar.png" alt=""><div><b>Prépare ton budget</b><span>Dans Finances</span></div></div>';
+  const step2 = checked
+    ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Bilan fait</b><span>' + ANS[m.bilan.answer] + ' · le ' + when(m.bilan.at) + '</span></div></div>'
+    : prepared && available
+      ? '<button type="button" class="fp-step" data-fp="bilan"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>Disponible maintenant</span></div><em>Faire</em></button>'
+      : '<div class="fp-step"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>' + (days ? 'Disponible dans ' + days + ' jour' + (days > 1 ? 's' : '') + ', le 25' : 'Dès le 25 ' + name) + '</span></div>' + (days ? '<em>' + days + ' j</em>' : '') + '</div>';
+  const doneSteps = (prepared ? 1 : 0) + (checked ? 1 : 0);
+  const sub = checked ? 'Ta flamme de ' + name + ' est gagnée.'
+    : n ? 'Encore ' + (2 - doneSteps) + ' étape' + (2 - doneSteps > 1 ? 's' : '') + ' pour passer à ' + (n + 1) + '.'
+    : 'Ta flamme s\'allume à ton premier bilan.';
+  $("#flamePop").innerHTML = '<div class="fp-head"><img src="emoji/fire.png" alt="" width="40" height="40"><div><b>' + n + ' mois d\'affilée</b><span>' + sub + '</span></div></div>' +
+    '<div class="fp-months">' + ids.map(id => { const x = months[id]; const c = x && x.bilan ? "on" : id === M ? "wait" : ""; return '<i class="' + c + '" title="' + esc(label(id)) + '">' + MONTHS_SHORT[Number(id.slice(5)) - 1].replace(".", "") + '</i>'; }).join("") + '</div>' +
+    '<div class="fp-now"><h3>Ta flamme de ' + esc(name) + '</h3>' + step1 + step2 + '<div class="fp-prog"><i style="width:' + Math.max(4, doneSteps * 50) + '%"></i></div></div>' +
+    '<p class="fp-note">Quelle que soit ta réponse au bilan, ta flamme ' + (n ? 'monte' : 's\'allume') + '. Un mois sans budget ou sans bilan la remet à zéro.</p>';
 }
+$("#flamePop").addEventListener("click", e => {
+  const b = e.target.closest('[data-fp="bilan"]'); if (!b) return;
+  const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
+  openFlame(false);
+  openBilan(now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan ? prev : cur);
+});
 function openFlame(open) {
   $("#flamePop").hidden = !open; $("#flameBtn").setAttribute("aria-expanded", String(open));
   if (open) renderFlamePop();
