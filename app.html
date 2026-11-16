@@ -89,7 +89,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band: #0a0a0a; --band-line: #2c2c2a; } }
 :root[data-theme="dark"] { --band: #0a0a0a; --band-line: #2c2c2a; }
 body { overflow-x: clip; }
-.top { position: relative; isolation: isolate; margin-top: -20px; padding-block: 14px; color: var(--ink);
+.top { position: relative; z-index: 20; isolation: isolate; margin-top: -20px; padding-block: 14px; color: var(--ink);
   --ink: #f2f2ef; --muted: #a3a39c; --line: #3a3a37; --surface: #262624; --sunk: #222220; --bg: #1b1b1a; }
 .top::before { content: ""; position: absolute; z-index: -1; top: calc(-1 * env(safe-area-inset-top, 0px)); bottom: 0; left: calc(50% - 50vw); right: calc(50% - 50vw); background: var(--band); border-bottom: 1px solid var(--band-line); }
 .mpop, .acct-pop { --ink: var(--ui-ink); --muted: var(--ui-muted); --line: var(--ui-line); --surface: var(--ui-surface); --sunk: var(--ui-sunk); --bg: var(--ui-bg); color: var(--ink); }
@@ -125,7 +125,105 @@ body { overflow-x: clip; }
 .mfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 9px; }
 .mfoot .linkbtn { font-size: 0.8rem; font-weight: 600; text-decoration: underline; }
 .right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-left: auto; }
-/* Account button (initial) + menu */
+/* Header right: flame + round menu button */
+.hdr-right { display: flex; align-items: center; gap: 8px; }
+.flamewrap { position: relative; }
+.flame-btn { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 4px 11px 4px 7px; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; }
+.flame-btn img { display: block; }
+.flame-btn:hover, .flame-btn[aria-expanded="true"] { border-color: var(--ink); }
+.flame-btn.zero img { filter: grayscale(1); opacity: .6; }
+.flame-btn.bump { animation: fbump .7s ease; }
+@keyframes fbump { 40% { transform: scale(1.3); background: #f0a432; color: #121212; border-color: #f0a432; } }
+.menu-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: grid; place-items: center; padding: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.menu-btn:hover, .menu-btn[aria-expanded="true"] { border-color: var(--ink); }
+.flame-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; width: 310px; max-width: calc(100vw - 32px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.4); padding: 16px; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;
+  --ink: var(--ui-ink); --muted: var(--ui-muted); --line: var(--ui-line); --surface: var(--ui-surface); --sunk: var(--ui-sunk); --bg: var(--ui-bg); color: var(--ink); }
+.fp-head { display: flex; align-items: center; gap: 10px; }
+.fp-head img { display: block; }
+.fp-head b { display: block; font-family: var(--font-display); font-size: 1.2rem; letter-spacing: -0.02em; }
+.fp-head span { color: var(--muted); font-size: 0.8rem; }
+.fp-months { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+.fp-months i { font-style: normal; text-align: center; border-radius: 8px; padding: 6px 0; font-size: 0.72rem; font-weight: 700; background: var(--sunk); color: var(--muted); }
+.fp-months i.on { background: #f0a432; color: #121212; }
+.fp-months i.wait { background: none; border: 1.5px dashed var(--line); }
+.flame-pop h3 { margin: 4px 0 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.flame-pop ol { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--muted); }
+.flame-pop ol b { color: var(--ink); }
+.flame-pop .fp-note { margin: 0; font-size: 0.78rem; color: var(--muted); }
+/* Full-screen menu */
+.menu-wrap { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+.menu-scrim { position: absolute; inset: 0; background: rgba(18,18,18,.55); }
+.menu-panel { position: relative; width: min(520px, 100%); height: min(680px, 100%); background: var(--bg); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; box-shadow: 0 30px 70px -20px rgba(0,0,0,.5); animation: menuIn .18s ease; }
+@keyframes menuIn { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+@media (prefers-reduced-motion: reduce) { .menu-panel, .flame-btn.bump, .bil-flame img, .bil-count b { animation: none !important; } }
+.mn-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.mn-top .brand { font-size: 1.3rem; }
+.mn-close { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; padding: 0; color: var(--ink); }
+.mn-close svg { width: 14px; height: 14px; }
+.mn-who { background: var(--surface); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+.mn-who .av { width: 40px; height: 40px; border-radius: 50%; background: #121212; color: #f2f2ef; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; flex: none; }
+.mn-who b { display: block; font-family: var(--font-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mn-who span { font-size: 0.82rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.mn-who > div { min-width: 0; }
+.mn-nav { display: flex; flex-direction: column; gap: 8px; }
+.mn-nav a { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; color: var(--ink); text-decoration: none; }
+.mn-nav a:hover { border-color: var(--ink); }
+.mn-nav a[aria-current="page"] { border: 2px solid var(--ink); padding: 11px 13px; }
+.mn-nav .sic { width: 40px; height: 40px; border-radius: 12px; background: var(--sunk); display: grid; place-items: center; }
+.mn-nav .sic img { width: 28px; height: 28px; display: block; }
+.mn-nav b { display: block; font-family: var(--font-display); font-size: 1rem; }
+.mn-nav small { color: var(--muted); font-size: 0.8rem; }
+.mn-nav .arr { color: var(--muted); font-size: 1.2rem; }
+.mn-out { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px; font-weight: 600; color: var(--bad); }
+.mn-out img { width: 20px; height: 20px; }
+/* Month-end check-in */
+.bil-wrap { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; justify-content: center; }
+@media (min-width: 641px) { .bil-wrap { align-items: center; } }
+.bil-sheet { position: relative; width: min(440px, 100%); background: var(--surface); border-radius: 24px 24px 0 0; padding: 12px 20px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; animation: menuIn .2s ease; }
+@media (min-width: 641px) { .bil-sheet { border-radius: 24px; padding: 22px 24px; } }
+.bil-grab { width: 38px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
+@media (min-width: 641px) { .bil-grab { display: none; } }
+.bil-kick { font-size: 0.7rem; letter-spacing: 0.1em; font-weight: 700; color: var(--brand-dark); text-transform: uppercase; }
+.bil-q { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em; line-height: 1.15; margin: 0; text-wrap: balance; }
+.bil-sub { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.bil-ans { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.bil-ans button { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 11px 14px; color: var(--ink); }
+@media (hover: hover) { .bil-ans button:hover { border-color: var(--ink); } }
+.bil-ans img { width: 32px; height: 32px; display: block; }
+.bil-ans b { display: block; font-size: 0.95rem; }
+.bil-ans small { color: var(--muted); font-size: 0.8rem; }
+.bil-later { align-self: center; border: none; background: none; text-decoration: underline; color: var(--muted); font-size: 0.86rem; padding: 6px; }
+.bil-sheet.done { align-items: center; text-align: center; padding-top: 22px; }
+.bil-flame { width: 140px; height: 140px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, rgba(240,164,50,.4), rgba(240,164,50,0) 68%); }
+.bil-flame img { width: 110px; height: 110px; animation: flick 1.6s ease-in-out infinite; transform-origin: 50% 85%; }
+@keyframes flick { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.06) rotate(2deg); } }
+.bil-count { position: relative; height: 2.8rem; width: 5rem; overflow: hidden; font-family: var(--font-display); font-weight: 800; font-size: 2.5rem; line-height: 2.8rem; }
+.bil-count b { position: absolute; inset: 0; }
+.bil-count .old { animation: cOut .5s .45s ease forwards; }
+.bil-count .new { transform: translateY(100%); animation: cIn .5s .45s ease forwards; color: #e0644f; }
+@keyframes cOut { to { transform: translateY(-100%); opacity: 0; } }
+@keyframes cIn { to { transform: translateY(0); } }
+.bil-next { display: flex; gap: 10px; align-items: center; text-align: left; background: var(--bg); border-radius: 12px; padding: 10px 12px; align-self: stretch; font-size: 0.86rem; }
+.bil-next img { width: 28px; height: 28px; }
+.bil-next small { display: block; color: var(--muted); }
+.bil-sheet .btn.primary { align-self: stretch; padding: 12px; border-radius: 12px; font-size: 0.95rem; }
+/* Trophies & account pages */
+.tro-page { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+.tro-sum { display: flex; align-items: center; gap: 14px; background: var(--band); color: #f2f2ef; border-radius: var(--radius); padding: 16px 18px; }
+.tro-sum img { width: 48px; height: 48px; }
+.tro-sum b { display: block; font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.02em; }
+.tro-sum span { color: #a3a39c; font-size: 0.86rem; }
+.tro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tro { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 10px 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
+.tro img { width: 44px; height: 44px; margin-bottom: 4px; }
+.tro b { font-family: var(--font-display); font-size: 0.92rem; }
+.tro span { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+.tro.off { background: var(--sunk); border-color: transparent; }
+.tro.off b, .tro.off span { opacity: .65; }
+.tro em { font-style: normal; font-size: 0.72rem; color: var(--muted); font-weight: 700; margin-top: 4px; }
+.closed-pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; padding: 7px 14px; background: var(--sunk); color: var(--muted); font-size: 0.86rem; font-weight: 600; white-space: nowrap; }
+/* old account popover (unused) */
 .acct { position: relative; }
 .acct-btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 5px 11px 5px 13px; font-weight: 600; font-size: 0.86rem; white-space: nowrap; }
 .acct-btn:hover, .acct-btn[aria-expanded="true"] { border-color: var(--ink); }
@@ -617,9 +715,12 @@ a.inline { color: var(--accent); }
     <div class="left">
       <div class="brand"><a href="./"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="37" rx="24" ry="22" fill="#7a5232"/><circle cx="32" cy="32" r="24" fill="#f0a432"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#7a5232" stroke-width="2.2" stroke-dasharray="2.2 2.7"/><g transform="translate(0 2)"><path fill="#121212" d="M29 17h6v17c0 2.5 1.4 3.5 3.4 3.5 1.4 0 2.6-.5 3.6-1v5.5c-1.4.7-3.2 1-5 1-5 0-8-3-8-8Z"/><rect x="23" y="23" width="17" height="4.5" rx="2.25" fill="#121212"/></g></svg> tamia</a></div>
     </div>
-    <div class="acct">
-      <button type="button" class="acct-btn" id="acctBtn" aria-haspopup="menu" aria-expanded="false" >Mon compte<svg class="pchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <div class="acct-pop" id="acctPop" role="menu" hidden></div>
+    <div class="hdr-right">
+      <div class="flamewrap">
+        <button type="button" class="flame-btn" id="flameBtn" aria-expanded="false" aria-controls="flamePop" aria-label="Ma flamme"><img src="emoji/fire.png" alt="" width="18" height="18"><span id="flameN">0</span></button>
+        <div class="flame-pop" id="flamePop" role="dialog" aria-label="Ta flamme" hidden></div>
+      </div>
+      <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 6.5h10M5 10h10M5 13.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
     </div>
   </header>
   <div class="subnav">
@@ -640,6 +741,14 @@ a.inline { color: var(--accent); }
       </div>
       <span id="validBox" class="validbox" hidden></span>
     </div>
+  </div>
+  <div class="menu-wrap" id="menu" hidden>
+    <div class="menu-scrim" data-menu="close"></div>
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-label="Menu" id="menuPanel"></div>
+  </div>
+  <div class="bil-wrap" id="bilan" hidden>
+    <div class="menu-scrim"></div>
+    <div class="bil-sheet" id="bilanSheet" role="dialog" aria-modal="true" aria-label="Bilan du mois"></div>
   </div>
   <div class="notice" id="notice" hidden></div>
   <main id="main"><div class="card loading">Chargement de tes budgets…</div></main>
@@ -960,12 +1069,191 @@ function renderKeepFocus() {
   }
 }
 
+/* ---------- month-end check-in, flame & trophies ---------- */
+const todayDate = () => (window.__tamiaToday ? new Date(window.__tamiaToday) : new Date());
+const monthIdOf = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+const shiftMonth = (id, n) => { const [y, m] = id.split("-").map(Number); return monthIdOf(new Date(y, m - 1 + n, 1)); };
+const hasBudget = id => !!(months[id] && (months[id].envelopes || []).length);
+const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
+// The flame = consecutive months with a budget and a check-in. The month in progress (and last month until the 10th) can't break it yet.
+function streakInfo() {
+  const now = todayDate(), cur = monthIdOf(now);
+  let m = cur;
+  if (!(months[m] && months[m].bilan)) {
+    m = shiftMonth(cur, -1);
+    if (!(months[m] && months[m].bilan) && now.getDate() <= 10) m = shiftMonth(cur, -2);
+  }
+  let n = 0;
+  while (months[m] && months[m].bilan && n < 240) { n++; m = shiftMonth(m, -1); }
+  return n;
+}
+function bestStreak() {
+  const ids = Object.keys(months).filter(id => months[id].bilan).sort();
+  let best = 0, run = 0, prev = null;
+  ids.forEach(id => { run = prev && shiftMonth(prev, 1) === id ? run + 1 : 1; best = Math.max(best, run); prev = id; });
+  return best;
+}
+// Which month should be checked in now, if any
+function bilanTarget() {
+  const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
+  if (now.getDate() >= 25 && hasBudget(cur) && !months[cur].bilan) return cur;
+  if (now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan) return prev;
+  return null;
+}
+const laterKey = id => "tamia-bilan-later-" + id;
+let bilanChecked = false, bilanId = null;
+function maybeAskBilan() {
+  if (bilanChecked || !loaded || !profileLoaded || !profile) return;
+  bilanChecked = true;
+  const id = bilanTarget(); if (!id) return;
+  let later = null; try { later = localStorage.getItem(laterKey(id)); } catch (e) {}
+  if (later === todayDate().toDateString()) return;
+  openBilan(id);
+}
+const BIL_ANS = [
+  { v: "ok", ic: "smile", t: "Oui, tenu", s: "J'ai suivi mes enveloppes", msg: "Budget tenu : bravo ! Un pas de plus vers tes trophées." },
+  { v: "almost", ic: "grimace", t: "Presque", s: "Quelques écarts", msg: "Presque ! Tu étais tout près, ta flamme continue." },
+  { v: "over", ic: "sweat", t: "Non, dépassé", s: "Le mois a été compliqué", msg: "Merci pour ta franchise. Ce qui compte, c'est de faire le point chaque mois." }
+];
+function openBilan(id) {
+  bilanId = id;
+  const name = monthName(id);
+  $("#bilanSheet").className = "bil-sheet";
+  $("#bilanSheet").innerHTML = '<span class="bil-grab"></span><span class="bil-kick">Bilan de ' + esc(name) + '</span>' +
+    '<p class="bil-q">' + (id === monthIdOf(todayDate()) ? esc(capFirst(name)) + ' touche à sa fin. As-tu tenu ton budget ?' : 'As-tu tenu ton budget de ' + esc(name) + ' ?') + '</p>' +
+    '<p class="bil-sub">Réponds honnêtement : ta flamme monte quelle que soit ta réponse.</p><div class="bil-ans">' +
+    BIL_ANS.map(x => '<button type="button" data-bil="' + x.v + '"><img src="emoji/' + x.ic + '.png" alt=""><span><b>' + x.t + '</b><small>' + x.s + '</small></span></button>').join("") +
+    '</div><button type="button" class="bil-later" data-bil="later">Plus tard</button>';
+  $("#bilan").hidden = false;
+}
+function answerBilan(v) {
+  const id = bilanId; if (!id) return;
+  const before = streakInfo();
+  const bilan = { answer: v, at: new Date().toISOString() };
+  months[id] = Object.assign({}, months[id], { bilan });
+  if (id === current && work) { work.bilan = bilan; changed(false); flush(); }
+  else setDoc(doc(monthsCol(), id), { bilan, updatedAt: bilan.at }, { merge: true }).catch(err => notice("Le bilan n'a pas pu être enregistré (" + (err && err.code) + ")."));
+  const after = streakInfo();
+  const x = BIL_ANS.find(a => a.v === v);
+  const nextT = TROPHIES.find(t => !t.got());
+  $("#bilanSheet").className = "bil-sheet done";
+  $("#bilanSheet").innerHTML = '<div class="bil-flame"><img src="emoji/fire.png" alt=""></div>' +
+    '<div class="bil-count"><b class="old">' + before + '</b><b class="new">' + after + '</b></div>' +
+    '<p class="bil-q">' + after + ' mois d\'affilée</p><p class="bil-sub">' + esc(x.msg) + '</p>' +
+    (nextT ? '<div class="bil-next"><img src="emoji/' + nextT.ic + '.png" alt=""><span><b>Prochain trophée : ' + esc(nextT.name) + '</b><small>' + esc(nextT.sub) + '</small></span></div>' : '') +
+    '<button type="button" class="btn primary" data-bil="close">Continuer</button>';
+}
+function closeBilan(bump) {
+  $("#bilan").hidden = true; bilanId = null;
+  render();
+  if (bump) { const f = $("#flameBtn"); f.classList.remove("bump"); void f.offsetWidth; f.classList.add("bump"); }
+}
+$("#bilan").addEventListener("click", e => {
+  const b = e.target.closest("[data-bil]"); if (!b) return;
+  const v = b.dataset.bil;
+  if (v === "later") { try { localStorage.setItem(laterKey(bilanId), todayDate().toDateString()); } catch (err) {} closeBilan(false); }
+  else if (v === "close") closeBilan(true);
+  else answerBilan(v);
+});
+
+// Trophies, all computed from the months
+const groupSum = (m, g) => (m.envelopes || []).filter(e => e.group === g).reduce((x, e) => x + parse(e.amount), 0);
+const allSum = m => (m.envelopes || []).reduce((x, e) => x + parse(e.amount), 0);
+const monthList = () => Object.keys(months).filter(hasBudget).map(id => [id, months[id]]);
+function onTime(id, at) {
+  const d = new Date(at), mid = monthIdOf(d);
+  return (mid === id && d.getDate() <= 5) || (mid === shiftMonth(id, -1) && d.getDate() >= 25);
+}
+const kept = () => monthList().filter(([, m]) => m.bilan && m.bilan.answer === "ok").length;
+const TROPHIES = [
+  { id: "first", ic: "star", name: "Premier pas", sub: "Créer ton premier budget", got: () => monthList().length > 0 },
+  { id: "ontime", ic: "check", name: "Pile à l'heure", sub: "Valider un budget entre le 25 du mois d'avant et le 5", got: () => monthList().some(([id, m]) => m.validatedAt && onTime(id, m.validatedAt)) },
+  { id: "zero", ic: "dart", name: "Zéro reste", sub: "Valider un budget entièrement réparti", got: () => monthList().some(([, m]) => m.validated && parse(m.income) > 0 && Math.abs(parse(m.income) - allSum(m)) < 0.01) },
+  { id: "ant", ic: "moneybag", name: "Fourmi", sub: "Prévoir 20 % d'épargne dans un mois", got: () => monthList().some(([, m]) => parse(m.income) > 0 && groupSum(m, "epargne") >= parse(m.income) * 0.2) },
+  { id: "invest", ic: "seedling", name: "Investisseur", sub: "Prévoir un investissement", got: () => monthList().some(([, m]) => (m.envelopes || []).some(e => /invest|etf|bourse|crypto|pea/i.test(e.name || "") && parse(e.amount) > 0)) },
+  { id: "bilan1", ic: "medal", name: "Premier bilan", sub: "Faire ton premier bilan de fin de mois", got: () => monthList().some(([, m]) => m.bilan) },
+  { id: "kept1", ic: "smile", name: "Budget tenu", sub: "Tenir un budget jusqu'au bout", got: () => kept() >= 1 },
+  { id: "fire3", ic: "fire", name: "Régulier", sub: "3 mois d'affilée", got: () => bestStreak() >= 3, prog: () => Math.min(bestStreak(), 3) + " / 3" },
+  { id: "kept3", ic: "trophy", name: "Tenace", sub: "Tenir 3 budgets", got: () => kept() >= 3, prog: () => Math.min(kept(), 3) + " / 3" },
+  { id: "fire6", ic: "fire", name: "Bien lancé", sub: "6 mois d'affilée", got: () => bestStreak() >= 6, prog: () => Math.min(bestStreak(), 6) + " / 6" },
+  { id: "fire12", ic: "crown", name: "Saison complète", sub: "12 mois d'affilée", got: () => bestStreak() >= 12, prog: () => Math.min(bestStreak(), 12) + " / 12" }
+];
+function trophiesView() {
+  const got = TROPHIES.filter(t => t.got()).length, n = streakInfo();
+  return '<div class="tro-page"><div class="tro-sum"><img src="emoji/trophy.png" alt=""><div><b>' + got + ' trophée' + (got > 1 ? 's' : '') + ' sur ' + TROPHIES.length + '</b><span>Ta flamme : ' + n + ' mois d\'affilée · ton record : ' + bestStreak() + '</span></div></div>' +
+    '<div class="tro-grid">' + TROPHIES.map(t => { const ok = t.got(); return '<div class="tro' + (ok ? '' : ' off') + '"><img src="emoji/' + (ok ? t.ic : 'lock') + '.png" alt=""><b>' + esc(t.name) + '</b><span>' + esc(t.sub) + '</span>' + (!ok && t.prog ? '<em>' + t.prog() + '</em>' : '') + '</div>'; }).join("") + '</div></div>';
+}
+function accountView() {
+  const pwd = user.providerData.some(pd => pd.providerId === "password");
+  return '<div class="settings">' + (settingsMsg ? '<div class="msg ok">' + esc(settingsMsg) + '</div>' : '') +
+    '<div class="card panel"><h2>Mon compte</h2>' +
+      '<p><b>' + esc(user.displayName || (user.email || "").split("@")[0]) + '</b><br>' + esc(user.email || "") + '<br>Connexion : ' + (pwd ? 'e-mail et mot de passe' : 'compte Google') + '</p>' +
+      (pwd ? '<div class="btnrow"><button class="btn" data-act="pwd-reset">Modifier mon mot de passe</button></div>' : '<p>Ton mot de passe se gère depuis ton compte Google.</p>') + '</div>' +
+    '<div class="card panel"><h2>Supprimer mon compte</h2><p>Tous tes budgets, tes banques et tes dépenses récurrentes seront effacés, sans retour possible.</p>' +
+      (confirmAccountDelete ? '<div class="btnrow"><button class="btn" data-act="acct-del-no">Annuler</button><button class="btn danger" data-act="acct-del-yes">Oui, supprimer mon compte</button></div>'
+        : '<div class="btnrow"><button class="btn danger" data-act="acct-del-ask">Supprimer mon compte</button></div>') + '</div></div>';
+}
+function renderFlame() {
+  const n = streakInfo();
+  $("#flameN").textContent = n;
+  $("#flameBtn").classList.toggle("zero", n === 0);
+  $("#flameBtn").setAttribute("aria-label", "Ma flamme : " + n + " mois d'affilée");
+}
+function renderFlamePop() {
+  const n = streakInfo(), cur = monthIdOf(todayDate());
+  const ids = [-5, -4, -3, -2, -1, 0].map(k => shiftMonth(cur, k));
+  $("#flamePop").innerHTML = '<div class="fp-head"><img src="emoji/fire.png" alt="" width="40" height="40"><div><b>' + n + ' mois d\'affilée</b><span>' +
+      (n ? 'Tu as préparé ton budget et fait ton bilan ' + n + ' mois de suite.' : 'Ta flamme s\'allume au premier bilan de fin de mois.') + '</span></div></div>' +
+    '<div class="fp-months">' + ids.map(id => { const m = months[id]; const c = m && m.bilan ? "on" : id === cur || (id === shiftMonth(cur, -1) && todayDate().getDate() <= 10 && hasBudget(id)) ? "wait" : ""; return '<i class="' + c + '" title="' + esc(label(id)) + '">' + MONTHS_SHORT[Number(id.slice(5)) - 1].replace(".", "") + '</i>'; }).join("") + '</div>' +
+    '<h3>Comment gagner une flamme</h3><ol><li><b>Prépare le budget</b> du mois dans Finances.</li><li><b>Fais ton bilan</b> à partir du 25 : tamia te le propose à l\'ouverture.</li><li>Quelle que soit ta réponse, <b>+1 flamme</b>.</li></ol>' +
+    '<p class="fp-note">Un mois sans budget ou sans bilan (après le 10 du mois suivant) remet la flamme à zéro.</p>';
+}
+function openFlame(open) {
+  $("#flamePop").hidden = !open; $("#flameBtn").setAttribute("aria-expanded", String(open));
+  if (open) renderFlamePop();
+}
+$("#flameBtn").addEventListener("click", e => { e.stopPropagation(); openFlame($("#flamePop").hidden); });
+document.addEventListener("click", e => { if (!$("#flamePop").hidden && !e.target.closest(".flamewrap")) openFlame(false); });
+
+// Full-screen menu
+const MENU = [
+  { p: "finances", ic: "moneybag", t: "Finances", s: "Mes budgets du mois" },
+  { p: "rapports", ic: "chartup", t: "Rapports", s: "Répartition et historique" },
+  { p: "trophees", ic: "trophy", t: "Trophées", s: () => TROPHIES.filter(t => t.got()).length + " sur " + TROPHIES.length + " débloqués" },
+  { p: "reglages", ic: "gear", t: "Réglages", s: "Banques et dépenses récurrentes" },
+  { p: "compte", ic: "single", t: "Mon compte", s: "Mot de passe, suppression" }
+];
+function openMenu(open) {
+  $("#menu").hidden = !open; $("#menuBtn").setAttribute("aria-expanded", String(open));
+  document.body.style.overflow = open ? "hidden" : "";
+  if (!open) return;
+  const name = user.displayName || (user.email || "").split("@")[0];
+  $("#menuPanel").innerHTML = '<div class="mn-top"><span class="brand">' + $(".top .brand a").innerHTML + '</span><button type="button" class="mn-close" data-menu="close" aria-label="Fermer le menu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>' +
+    '<div class="mn-who"><span class="av">' + esc((name.trim().charAt(0) || "?").toUpperCase()) + '</span><div><b>' + esc(name) + '</b><span>' + esc(user.email || "") + '</span></div></div>' +
+    '<nav class="mn-nav" aria-label="Pages">' + MENU.map(m => '<a href="#' + m.p + '" data-menu="go"' + (page === m.p ? ' aria-current="page"' : '') + '><span class="sic"><img src="emoji/' + m.ic + '.png" alt=""></span><span><b>' + m.t + '</b><small>' + esc(typeof m.s === "function" ? m.s() : m.s) + '</small></span><span class="arr">›</span></a>').join("") + '</nav>' +
+    '<button type="button" class="mn-out" data-menu="logout"><img src="emoji/door.png" alt="">Se déconnecter</button>';
+  const c = $("#menuPanel .mn-close"); if (c) c.focus();
+}
+$("#menuBtn").addEventListener("click", () => openMenu(true));
+$("#menu").addEventListener("click", e => {
+  const b = e.target.closest("[data-menu]"); if (!b) return;
+  const a = b.dataset.menu;
+  if (a === "close" || a === "go") openMenu(false);
+  if (a === "logout") { openMenu(false); if (saveTimer) flush(); saving.finally(() => signOut(auth)); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (!$("#menu").hidden) { openMenu(false); $("#menuBtn").focus(); }
+  else if (!$("#flamePop").hidden) { openFlame(false); $("#flameBtn").focus(); }
+});
+
 function renderValidBox() {
   const box = $("#validBox");
   const show = page === "finances" && loaded && profileLoaded && !!profile && !!work;
   box.hidden = !show;
   if (!show) { box.innerHTML = ""; return; }
-  box.innerHTML = work.validated
+  box.innerHTML = work.bilan ? '<span class="closed-pill">Mois clôturé</span>'
+    : work.validated
     ? '<button type="button" class="btn vb-edit" data-act="unlock">Modifier</button>'
     : '<button type="button" class="btn primary vb-go" data-act="validate">Valider le budget</button>';
 }
@@ -990,11 +1278,15 @@ function render() {
   $("#monthLabel").textContent = label(current);
   $("#monthDot").className = "mst " + monthState(current);
   if (!$("#monthPop").hidden) renderMonthGrid();
-  $(".mpick").hidden = page === "reglages";
+  $(".mpick").hidden = page !== "finances" && page !== "rapports";
+  renderFlame();
   renderValidBox();
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
+  maybeAskBilan();
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
+  if (page === "compte") { mainEl.innerHTML = accountView(); return; }
+  if (page === "trophees") { mainEl.innerHTML = trophiesView(); return; }
   if (!profile) { mainEl.innerHTML = onboardingView(); return; }
   if (page === "rapports") { mainEl.innerHTML = reportsView(); return; }
   if (!work && wiz) { mainEl.innerHTML = wizView(); return; }
@@ -1138,7 +1430,7 @@ function wizGo(delta) {
 
 function financesView() {
   const p = prevMonthId();
-  const locked = !!work.validated;
+  const locked = !!work.validated || !!work.bilan;
   const when = work.validatedAt ? new Date(work.validatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "";
   const g = work.goal && !locked && !work.goalHidden ? GOALS.find(x => x.id === work.goal) : null;
   const banner = g ? '<div class="proposal"><div><b>Ton budget sur mesure · ' + esc(g.label) + '</b>' +
@@ -1529,7 +1821,7 @@ onAuthStateChanged(auth, u => {
   $("#authView").hidden = !!u;
   $("#appView").hidden = !u;
   if (!u) { setAuthMode("login"); return; }
-  openAcct(false);
+  openMenu(false); openFlame(false); bilanChecked = false;
   startListeners();
   render();
 });
@@ -1641,41 +1933,6 @@ $("#recSheet").addEventListener("keydown", e => {
   if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); saveRec(); }
 });
 
-/* ---------- account menu ---------- */
-let acctConfirm = false, acctMsg = "";
-function renderAcctPop() {
-  const pwd = user && user.providerData.some(pd => pd.providerId === "password");
-  const pop = $("#acctPop");
-  pop.innerHTML = '<div class="acct-who"><b>' + esc(user.displayName || (user.email || "").split("@")[0]) + '</b><span>' + esc(user.email || "") + '</span></div>' +
-    (acctMsg ? '<div class="acct-note">' + esc(acctMsg) + '</div>' : '') +
-    (acctConfirm
-      ? '<div class="acct-confirm"><span>Supprimer ton compte et tous tes budgets, sans retour possible ?</span><div class="btnrow"><button type="button" class="btn" data-acct="cancel">Annuler</button><button type="button" class="btn danger" data-acct="delete-yes">Oui, supprimer</button></div></div>'
-      : (pwd ? '<button type="button" role="menuitem" data-acct="password">Modifier mon mot de passe</button>' : '<div class="acct-note">Connecté avec Google : ton mot de passe se gère depuis ton compte Google.</div>') +
-        '<button type="button" role="menuitem" data-acct="logout">Se déconnecter</button><span class="sep"></span>' +
-        '<button type="button" role="menuitem" class="danger" data-acct="delete">Supprimer mon compte</button>');
-}
-function openAcct(open) {
-  $("#acctPop").hidden = !open;
-  $("#acctBtn").setAttribute("aria-expanded", String(open));
-  if (open) { acctConfirm = false; acctMsg = ""; renderAcctPop(); }
-}
-$("#acctBtn").addEventListener("click", e => { e.stopPropagation(); openAcct($("#acctPop").hidden); });
-$("#acctPop").addEventListener("click", e => {
-  e.stopPropagation();
-  const b = e.target.closest("[data-acct]"); if (!b) return;
-  const a = b.dataset.acct;
-  if (a === "logout") { openAcct(false); if (saveTimer) flush(); saving.finally(() => signOut(auth)); }
-  else if (a === "password") {
-    sendPasswordResetEmail(auth, user.email).then(() => { acctMsg = "Un e-mail pour choisir un nouveau mot de passe vient d'être envoyé à " + user.email + "."; renderAcctPop(); })
-      .catch(err => { acctMsg = "L'envoi a échoué (" + (err && err.code) + "). Réessaie."; renderAcctPop(); });
-  }
-  else if (a === "delete") { acctConfirm = true; renderAcctPop(); }
-  else if (a === "cancel") { acctConfirm = false; renderAcctPop(); }
-  else if (a === "delete-yes") { b.disabled = true; b.textContent = "Suppression…"; deleteAccount(); }
-});
-document.addEventListener("click", e => { if (!$("#acctPop").hidden && !e.target.closest(".acct")) openAcct(false); });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#acctPop").hidden) { openAcct(false); $("#acctBtn").focus(); } });
-
 /* ---------- mobile envelope sheet ---------- */
 let sheetEnv = null, sheetIsNew = false, sheetBank = "";
 function renderSheetBanks() {
@@ -1734,7 +1991,7 @@ if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else m
 /* ---------- routing ---------- */
 function route() {
   const h = (location.hash || "").replace("#", "");
-  const next = ["rapports", "reglages"].includes(h) ? h : "finances";
+  const next = ["rapports", "reglages", "trophees", "compte"].includes(h) ? h : "finances";
   if (next !== page && saveTimer) flush();
   page = next; confirmDelete = false; confirmAccountDelete = false; settingsMsg = "";
   render();
@@ -1941,6 +2198,12 @@ mainEl.addEventListener("click", e => {
   if (act === "rec-new") { openRec(null, b.dataset.group); return; }
   if (act === "rec-del") { saveRecurring(recurring.filter(x => x.id !== b.dataset.rid)).then(render); return; }
   if (act === "bank-del") { saveBanks(banks.filter(x => x.id !== b.dataset.bank)).then(render); return; }
+  if (act === "pwd-reset") {
+    b.disabled = true;
+    sendPasswordResetEmail(auth, user.email).then(() => { settingsMsg = "Un e-mail pour choisir un nouveau mot de passe vient d'être envoyé à " + user.email + "."; render(); })
+      .catch(err => { b.disabled = false; notice("L'envoi a échoué (" + (err && err.code) + "). Réessaie."); });
+    return;
+  }
   if (act === "logout") { if (saveTimer) flush(); saving.finally(() => signOut(auth)); return; }
   if (act === "export") { exportData(); return; }
   if (act === "import") { $("#importFile").click(); return; }
@@ -1951,7 +2214,7 @@ mainEl.addEventListener("click", e => {
   if (act === "validate") { validateBudget(); return; }
   if (act === "unlock") { unlockBudget(); return; }
   if (act === "vinfo") { const open = b.getAttribute("aria-expanded") !== "true"; b.setAttribute("aria-expanded", String(open)); const tip = $("#vtip"); if (tip) tip.hidden = !open; return; }
-  if (work && work.validated && act !== "create") return;
+  if (work && (work.validated || work.bilan) && act !== "create") return;
   if (act === "sheet-open") { const env = findEnv(b); if (env) openSheet(clone(env), false); return; }
   if (act === "wiz-start") {
     const ni = $("#newIncome"); const income = ni ? parse(ni.value) : 0;
