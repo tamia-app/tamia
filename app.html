@@ -557,14 +557,14 @@ a.inline { color: var(--accent); }
 .startlist { display: flex; flex-direction: column; gap: 8px; }
 .startlist button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; }
 .startlist button:hover { border-color: var(--ink); }
-/* bark = the action tamia recommends: at most one per screen */
-.startlist button.star { background: #7a5232; border-color: #7a5232; color: #f8f1e8; }
-.startlist button.star:hover { background: #6a4629; border-color: #6a4629; }
-.startlist button.star small { color: #e3cdb6; }
-.startlist button.star .arr { color: #e3cdb6; }
+.startlist button.star { background: #121212; border-color: #121212; color: #f2f2ef; }
+.startlist button.star:hover { background: #262624; border-color: #262624; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .startlist button.star { background: #0a0a0a; border-color: #3a3a37; } }
+:root[data-theme="dark"] .startlist button.star { background: #0a0a0a; border-color: #3a3a37; }
+.startlist button.star small { color: #b9b9b2; }
 .ico { width: 22px; height: 22px; display: block; flex: none; }
 .startlist .sic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
-.startlist .star .sic { background: rgba(255,255,255,.14); color: #f8f1e8; }
+.startlist .star .sic { background: #2a2a28; color: #f2f2ef; }
 .startlist span.t { display: flex; flex-direction: column; min-width: 0; }
 .startlist b { font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; }
 .startlist small { color: var(--muted); font-size: 0.82rem; }
@@ -1395,7 +1395,7 @@ function createView() {
     '<div class="startlist">' +
       '<button type="button" data-act="create" data-from="manual"><span class="sic">' + EMO('brain') + '</span><span class="t"><b>Je le fais moi-même</b><small>Enveloppes de base à remplir</small></span><span class="arr">›</span></button>' +
       (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">' + EMO('repeat') + '</span><span class="t"><b>Copier le mois dernier</b><small>Le même budget que ' + esc(monthName(p)) + '</small></span><span class="arr">›</span></button>' : '') +
-      '<button type="button" class="star" data-act="wiz-start"><span class="sic">' + EMO('sparkles') + '</span><span class="t"><b>Budget sur mesure</b><small class="wrap">Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
+      '<button type="button" class="star" data-act="wiz-start"><span class="sic">' + EMO('sparkles') + '</span><span class="t"><b>Budget sur mesure</b><small class="wrap">Un budget adapté à ton besoin</small></span><span class="arr">›</span></button>' +
     '</div></div>';
 }
 // recurring expenses vs what's really left to share out, shown under the pay
@@ -1428,7 +1428,7 @@ function wizView() {
   const q = (title, sub, opts) => '<p class="wq">' + title + '</p>' + (sub ? '<p class="wsub">' + sub + '</p>' : '') + '<div class="wopts">' + opts + '</div>';
   let body = "";
   if (wiz.step === "need") {
-    body = q("Quel objectif vise-t-on ce mois-ci ?", "", GOALS.map(g => opt("need", g.id, g.ic, esc(g.label), esc(g.hint))).join(""));
+    body = q("Quel est ton objectif pour ce mois ?", "", GOALS.map(g => opt("need", g.id, g.ic, esc(g.label), esc(g.hint))).join(""));
   } else if (wiz.step === "project") {
     const pj = a.project || {};
     const m = projectMonthly(pj);
