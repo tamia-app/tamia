@@ -557,14 +557,14 @@ a.inline { color: var(--accent); }
 .startlist { display: flex; flex-direction: column; gap: 8px; }
 .startlist button { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; }
 .startlist button:hover { border-color: var(--ink); }
-.startlist button.star { background: #121212; border-color: #121212; color: #f2f2ef; }
-.startlist button.star:hover { background: #262624; border-color: #262624; }
-.startlist button.star small { color: #b9b9b2; }
+/* amber = the action tamia recommends: at most one per screen */
+.startlist button.star { background: #f0a432; border-color: #f0a432; color: #121212; }
+.startlist button.star:hover { background: #e6981f; border-color: #e6981f; }
+.startlist button.star small { color: #5a3a0e; }
+.startlist button.star .arr { color: #121212; }
 .ico { width: 22px; height: 22px; display: block; flex: none; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .startlist button.star { background: #0a0a0a; border-color: #3a3a37; } }
-:root[data-theme="dark"] .startlist button.star { background: #0a0a0a; border-color: #3a3a37; }
 .startlist .sic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); font-family: var(--font-display); font-weight: 800; }
-.startlist .star .sic { background: #2a2a28; }
+.startlist .star .sic { background: rgba(255,255,255,.35); color: #121212; }
 .startlist span.t { display: flex; flex-direction: column; min-width: 0; }
 .startlist b { font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; }
 .startlist small { color: var(--muted); font-size: 0.82rem; }
