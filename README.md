@@ -16,4 +16,3 @@ Tamia est une appli web de budget prévisionnel par enveloppes : on indique sa p
 
 Site statique publié avec GitHub Pages (branche `main`, dossier racine). Données et comptes : Firebase Authentication + Cloud Firestore (projet `tamia-fe68f`).
 
-Icônes du questionnaire : Fluent Emoji de Microsoft (licence MIT, voir emoji/LICENSE).
