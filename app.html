@@ -727,7 +727,7 @@ function projectMonthly(pj) {
   const n = Math.max(1, monthsBetween(current, pj.date) + 1);
   return Math.ceil(left / n / 10) * 10;
 }
-// answers: { need, project:{name,amount,date,saved}, exc:{Cadeaux:150,...}, safety:"ok"|"building"|"none", rhythm:"calm"|"normal"|"busy" }
+// answers: { need, project:{name,amount,date,saved}, exc:{Cadeaux:150,...}, rhythm:"calm"|"normal"|"busy" }
 // Lifestyle answers -> monthly needs (euros), then the rest is split according to the goal.
 const HOMES = {
   single: { label: "Seul·e", sub: "Je gère seul·e mon foyer", ic: "single", adults: 1 },
@@ -794,31 +794,22 @@ function buildTailored(income, a) {
   const tight = needSum > rest * 0.9;
   if (tight) { const k = rest * 0.9 / (needSum || 1); needs.forEach(n => { n.amount = r10(n.amount * k); }); needSum = needs.reduce((x, n) => x + n.amount, 0); }
   let left = Math.max(0, rest - needSum);
-  // 3. safety net first when there is none
+  // 3. what's left is split according to the goal
   const W = Object.assign({}, SPLIT[goal.id]);
   if (proj) W["Projet"] = 0;
   W["Sorties & restaurants"] *= rf; W["Shopping"] *= rf;
-  if (a.safety === "ok") W["Imprévus"] *= 0.5;
-  if (a.safety === "none") W["Investissement"] = 0; // build the safety net before investing
-  let safetyFloor = 0;
-  if (a.safety === "none") { safetyFloor = Math.min(r10(income * 0.10), r10(left * 0.5)); left -= safetyFloor; }
-  // still building it: a smaller safety envelope on top of the usual savings, and half the investing
-  let buildFloor = 0;
-  if (a.safety === "building") { W["Investissement"] *= 0.5; buildFloor = Math.min(r10(income * 0.05), r10(left * 0.3)); left -= buildFloor; }
   const wsum = Object.values(W).reduce((x, v) => x + v, 0) || 1;
   const flex = {};
   Object.keys(W).forEach(k => { flex[k] = r10(left * W[k] / wsum); });
   // tiny envelopes are not worth it: anything under 20 € goes to savings
   Object.keys(flex).forEach(k => { if (k !== "Épargne" && k !== "Sorties & restaurants" && flex[k] < 20) { flex["Épargne"] += flex[k]; flex[k] = 0; } });
-  flex["Épargne"] += safetyFloor;
   // 4. envelopes
   const out = needs.find(n => n.name === "Sorties & restaurants");
   out.amount += flex["Sorties & restaurants"]; delete flex["Sorties & restaurants"];
   const gen = needs.filter(n => n.amount > 0).map(n => ({ name: n.name, group: n.group, amount: n.amount }));
-  if (buildFloor) gen.push({ name: "Épargne de précaution", group: "epargne", amount: buildFloor });
-  Object.keys(flex).forEach(k => { if (flex[k] > 0) gen.push({ name: k === "Épargne" && a.safety === "none" ? "Épargne de précaution" : k, group: FLEX_GROUP[k], amount: flex[k] }); });
+  Object.keys(flex).forEach(k => { if (flex[k] > 0) gen.push({ name: k, group: FLEX_GROUP[k], amount: flex[k] }); });
   const used = gen.reduce((x, e) => x + e.amount, 0);
-  const prioName = goal.prio === "Épargne" && a.safety === "none" ? "Épargne de précaution" : goal.prio;
+  const prioName = goal.prio;
   const prio = gen.find(e => e.name === prioName) || gen.find(e => e.group === "epargne") || gen[0];
   if (prio) prio.amount = Math.round((prio.amount + (rest - used)) * 100) / 100;
   const order = ["epargne", "fixe", "courant", "plaisir", "projets", "imprevu"];
@@ -844,9 +835,6 @@ function buildTailored(income, a) {
     : goal.id === "projet" && proj ? "Pour « " + proj.name + " », " + money(proj.amount) + " sont mis de côté ce mois-ci."
     : "Une répartition équilibrée, avec " + money(saving) + " pour l'épargne (" + pctOf(saving, income) + " de ta paye).");
   if (excSum) parts.push(money(excSum) + " sont réservés pour " + exc.map(e => e.name.toLowerCase()).join(", ") + ".");
-  if (a.safety === "none") parts.push("Ton épargne de précaution passe en priorité.");
-  if (a.safety === "ok") parts.push("Ton épargne de précaution est complète : moins d'imprévus à anticiper.");
-  if (buildFloor) parts.push("Tu construis ton épargne de précaution : " + money(buildFloor) + " y vont ce mois-ci, en plus de ton épargne habituelle, et l'investissement est réduit de moitié.");
   if (a.rhythm === "busy") parts.push("Ton mois est bien rempli : sorties et shopping sont augmentés de moitié.");
   if (a.rhythm === "calm") parts.push("Ton mois est calme : sorties et shopping sont réduits, le reste va à l'épargne.");
   if (tight) parts.push("Ta paye est serrée après tes dépenses fixes : les montants du quotidien ont été réduits, vérifie-les.");
@@ -1040,7 +1028,7 @@ function lastQuiz() {
 }
 function wizSteps() {
   const a = wiz.a;
-  return ["need"].concat(a.need === "projet" ? ["project"] : [], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "tickets"], a.tickets === "yes" ? ["ticketsAmt"] : [], ["transport", "exc", "safety", "rhythm", "result"]);
+  return ["need"].concat(a.need === "projet" ? ["project"] : [], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "tickets"], a.tickets === "yes" ? ["ticketsAmt"] : [], ["transport", "exc", "rhythm", "result"]);
 }
 function wizView() {
   const steps = wizSteps(), a = wiz.a;
@@ -1091,9 +1079,6 @@ function wizView() {
       '<div class="psel-wrap"><button type="button" class="psel wpick" data-psel="exc" aria-haspopup="listbox" aria-expanded="false"><span class="sic">' + EMO("calendar") + '</span><span class="t"><b>' + (keys.length ? 'Ajouter une autre dépense' : 'Choisir une dépense') + '</b><small>Cadeaux, voyage, impôts, voiture…</small></span>' + PCHEV + '</button></div>' +
       (keys.length ? '' : opt("excNone", "1", "check", "Rien de spécial", "Un mois comme les autres")) + '</div>' +
       (keys.length ? '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>' : '');
-  } else if (wiz.step === "safety") {
-    body = q("As-tu une épargne de précaution ?", "De quoi faire face à un coup dur, en général 3 mois de dépenses.",
-      opt("safety", "ok", "check", "Oui, elle est complète", "Moins d'imprévus à anticiper") + opt("safety", "building", "brick", "Je la construis", "tamia continue de l'alimenter") + opt("safety", "none", "warning", "Pas encore", "tamia la met en priorité"));
   } else if (wiz.step === "rhythm") {
     body = q("À quoi ressemble ton mois ?", "Ça fait varier les sorties et le shopping.",
       opt("rhythm", "calm", "couch", "Plutôt calme", "Moins de sorties, plus d'épargne") + opt("rhythm", "normal", "coffee", "Normal", "Comme d'habitude") + opt("rhythm", "busy", "popper", "Bien rempli", "Fêtes, sorties, week-ends"));
@@ -1943,7 +1928,7 @@ mainEl.addEventListener("click", e => {
   if (act === "wiz-start") {
     const ni = $("#newIncome"); const income = ni ? parse(ni.value) : 0;
     newIncomeDraft = income;
-    wiz = { step: "need", income, a: { need: "", project: {}, exc: {}, safety: "", rhythm: "",
+    wiz = { step: "need", income, a: { need: "", project: {}, exc: {}, rhythm: "",
       home: "", kids: "", share: "", meals: "", tickets: "", ticketsAmt: 0, transport: "" } };
     render(); window.scrollTo(0, 0); return;
   }
