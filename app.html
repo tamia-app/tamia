@@ -707,7 +707,7 @@ const GOALS = [
   { id: "projet", label: "Financer un projet", hint: "Voyage, achat, permis…", prio: "Épargne", ic: "target" },
   { id: "investir", label: "Investir", hint: "Faire travailler mon argent", prio: "Investissement", ic: "seedling" }
 ];
-// Investment supports: each one chosen gets its own envelope, split with these weights
+// Investment supports asked in the questionnaire (one "Investissement" envelope whatever the choice)
 const INVEST = [
   { id: "etf", label: "ETF", sub: "Des fonds qui suivent tout un marché", ic: "globe", w: 50 },
   { id: "bourse", label: "Bourse", sub: "Des actions d'entreprises", ic: "chartup", w: 30 },
@@ -812,7 +812,8 @@ function buildTailored(income, a) {
   W["Sorties & restaurants"] *= rf; W["Shopping"] *= rf;
   // investing: nothing if the person doesn't invest, a real share if they do
   const supports = INVEST.filter(x => (a.invest || []).includes(x.id));
-  if (!supports.length) W["Investissement"] = 0;
+  const invests = goal.id === "investir" || supports.length > 0;
+  if (!invests) W["Investissement"] = 0;
   else if (W["Investissement"] < 8) W["Investissement"] = 8;
   const wsum = Object.values(W).reduce((x, v) => x + v, 0) || 1;
   const flex = {};
@@ -823,23 +824,9 @@ function buildTailored(income, a) {
   const out = needs.find(n => n.name === "Sorties & restaurants");
   out.amount += flex["Sorties & restaurants"]; delete flex["Sorties & restaurants"];
   const gen = needs.filter(n => n.amount > 0).map(n => ({ name: n.name, group: n.group, amount: n.amount }));
-  let investNames = [];
-  Object.keys(flex).forEach(k => {
-    if (!(flex[k] > 0)) return;
-    if (k === "Investissement" && supports.length) {
-      // one envelope per support; a share under 20 € joins the main support
-      const ws = supports.reduce((x, v) => x + v.w, 0);
-      const bits = supports.map(v => ({ name: v.label, amount: r10(flex[k] * v.w / ws) }));
-      const main = bits[0];
-      bits.slice(1).forEach(x => { if (x.amount < 20) { main.amount += x.amount; x.amount = 0; } });
-      main.amount += flex[k] - bits.reduce((x, v) => x + v.amount, 0);
-      bits.filter(x => x.amount > 0).forEach(x => { gen.push({ name: x.name, group: "epargne", amount: x.amount }); investNames.push(x.name); });
-      return;
-    }
-    gen.push({ name: k, group: FLEX_GROUP[k], amount: flex[k] });
-  });
+  Object.keys(flex).forEach(k => { if (flex[k] > 0) gen.push({ name: k, group: FLEX_GROUP[k], amount: flex[k] }); });
   const used = gen.reduce((x, e) => x + e.amount, 0);
-  const prioName = goal.prio === "Investissement" ? investNames[0] : goal.prio;
+  const prioName = goal.prio;
   const prio = gen.find(e => e.name === prioName) || gen.find(e => e.group === "epargne") || gen[0];
   if (prio) prio.amount = Math.round((prio.amount + (rest - used)) * 100) / 100;
   const order = ["epargne", "fixe", "courant", "plaisir", "projets", "imprevu"];
@@ -860,11 +847,11 @@ function buildTailored(income, a) {
   if (!hasTransport && a.transport === "car") parts.push("150 € pour le carburant et l'entretien de la voiture.");
   if (!hasTransport && a.transport === "metro") parts.push("80 € pour les transports en commun. Ajoute ton abonnement aux dépenses récurrentes pour être précis.");
   if (hasTransport) parts.push(a.transport === "car" ? "Ton carburant est déjà dans tes dépenses récurrentes." : "Ton abonnement de transport est déjà dans tes dépenses récurrentes.");
-  const invested = envs.filter(e => investNames.includes(e.name)).reduce((x, e) => x + e.amount, 0);
-  const invList = investNames.map(n => n === "ETF" ? "ETF" : n.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " et $1");
-  if (goal.id === "investir" && invested) parts.push("Tu veux investir : " + money(invested) + " vont en " + invList + " (" + pctOf(invested, income) + " de ta paye).");
-  else if (invested) parts.push(money(invested) + " pour tes investissements en " + invList + ".");
-  else if (supports.length) parts.push("La marge est trop juste ce mois-ci pour investir : ce qui reste va à l'épargne.");
+  const invested = amt("Investissement");
+  const invList = supports.map(x => x.id === "etf" ? "ETF" : x.label.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " et $1");
+  if (goal.id === "investir" && invested) parts.push("Tu veux investir : " + money(invested) + " vont à l'investissement (" + pctOf(invested, income) + " de ta paye).");
+  else if (invested) parts.push(money(invested) + " pour tes investissements" + (invList ? " (" + invList + ")" : "") + ".");
+  else if (invests) parts.push("La marge est trop juste ce mois-ci pour investir : ce qui reste va à l'épargne.");
   if (goal.id !== "investir") parts.push(goal.id === "epargne" ? "Tu veux mettre de côté : " + money(saving) + " vont à l'épargne (" + pctOf(saving, income) + " de ta paye)."
     : goal.id === "plaisir" ? "Tu veux te faire plaisir : les sorties et le shopping ont plus de place, et " + money(saving) + " restent pour l'épargne."
     : goal.id === "projet" && proj ? "Pour « " + proj.name + " », " + money(proj.amount) + " sont mis de côté ce mois-ci."
@@ -1063,7 +1050,7 @@ function lastQuiz() {
 }
 function wizSteps() {
   const a = wiz.a;
-  return ["need"].concat(a.need === "projet" ? ["project"] : [], ["invest"], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "tickets"], a.tickets === "yes" ? ["ticketsAmt"] : [], ["transport", "exc", "rhythm", "result"]);
+  return ["need"].concat(a.need === "projet" ? ["project"] : [], a.need === "investir" ? [] : ["invest"], ["home"], a.home === "family" ? ["kids"] : [], a.home === "couple" || a.home === "family" ? ["share"] : [], ["meals", "tickets"], a.tickets === "yes" ? ["ticketsAmt"] : [], ["transport", "exc", "rhythm", "result"]);
 }
 function wizView() {
   const steps = wizSteps(), a = wiz.a;
@@ -1087,10 +1074,9 @@ function wizView() {
       '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next">Continuer</button></div>';
   } else if (wiz.step === "invest") {
     const inv = Array.isArray(a.invest) ? a.invest : [];
-    const goalInv = a.need === "investir";
-    body = '<p class="wq">' + (goalInv ? 'Dans quoi veux-tu investir ?' : 'Fais-tu de l\'investissement ?') + '</p><p class="wsub">' + (goalInv ? 'Choisis un ou plusieurs supports : chacun aura son enveloppe.' : 'Choisis un ou plusieurs supports, ou passe si tu n\'investis pas.') + '</p><div class="wopts">' +
+    body = '<p class="wq">' + "Fais-tu de l'investissement ?" + '</p><p class="wsub">' + "Choisis un ou plusieurs supports, ou indique que tu n'investis pas." + '</p><div class="wopts">' +
       INVEST.map(x => '<button type="button" data-act="wiz-inv" data-val="' + x.id + '" aria-pressed="' + inv.includes(x.id) + '"><span class="sic">' + EMO(x.ic) + '</span><span class="t"><b>' + x.label + '</b><small>' + x.sub + '</small></span><span class="wtick" aria-hidden="true"></span></button>').join("") +
-      (goalInv ? '' : opt("invest", "no", "nope", "Non, je n'investis pas", "Pas d'enveloppe d'investissement")) + '</div>' +
+      opt("invest", "no", "nope", "Non, je n'investis pas", "Pas d'enveloppe d'investissement") + '</div>' +
       '<div class="wactions"><button type="button" class="btn primary" data-act="wiz-next"' + (inv.length ? '' : ' disabled') + '>Continuer</button></div>';
   } else if (wiz.step === "home") {
     body = q("Tu vis…", "Pour estimer tes courses et tes dépenses du quotidien.", Object.keys(HOMES).map(k => opt("home", k, HOMES[k].ic, HOMES[k].label, HOMES[k].sub)).join(""));
