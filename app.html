@@ -1228,7 +1228,7 @@ function renderFlamePop() {
     ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Bilan fait</b><span>' + ANS[m.bilan.answer] + ' · le ' + when(m.bilan.at) + '</span></div></div>'
     : prepared && available
       ? '<button type="button" class="fp-step" data-fp="bilan"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>Disponible maintenant</span></div><em>Faire</em></button>'
-      : '<div class="fp-step"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>' + (days ? 'Disponible dans ' + days + ' jour' + (days > 1 ? 's' : '') + ', le 25' : 'Dès le 25 ' + name) + '</span></div>' + (days ? '<em>' + days + ' j</em>' : '') + '</div>';
+      : '<div class="fp-step"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>' + (days ? 'Disponible dans ' + days + ' jour' + (days > 1 ? 's' : '') + '.' : 'Dès le 25 ' + name) + '</span></div></div>';
   const doneSteps = (prepared ? 1 : 0) + (checked ? 1 : 0);
   const sub = checked ? 'Ta flamme de ' + name + ' est gagnée.'
     : n ? 'Encore ' + (2 - doneSteps) + ' étape' + (2 - doneSteps > 1 ? 's' : '') + ' pour passer à ' + (n + 1) + '.'
