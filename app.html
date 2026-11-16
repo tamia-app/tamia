@@ -1217,10 +1217,8 @@ document.addEventListener("click", e => { if (!$("#flamePop").hidden && !e.targe
 
 // Full-screen menu
 const MENU = [
-  { p: "finances", ic: "moneybag", t: "Finances", s: "Mes budgets du mois" },
-  { p: "rapports", ic: "chartup", t: "Rapports", s: "Répartition et historique" },
+  { p: "finances", ic: "moneybag", t: "Mes budgets", s: "Finances, rapports et réglages", group: ["finances", "rapports", "reglages"] },
   { p: "trophees", ic: "trophy", t: "Trophées", s: () => TROPHIES.filter(t => t.got()).length + " sur " + TROPHIES.length + " débloqués" },
-  { p: "reglages", ic: "gear", t: "Réglages", s: "Banques et dépenses récurrentes" },
   { p: "compte", ic: "single", t: "Mon compte", s: "Mot de passe, suppression" }
 ];
 function openMenu(open) {
@@ -1230,7 +1228,7 @@ function openMenu(open) {
   const name = user.displayName || (user.email || "").split("@")[0];
   $("#menuPanel").innerHTML = '<div class="mn-top"><span class="brand">' + $(".top .brand a").innerHTML + '</span><button type="button" class="mn-close" data-menu="close" aria-label="Fermer le menu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>' +
     '<div class="mn-who"><span class="av">' + esc((name.trim().charAt(0) || "?").toUpperCase()) + '</span><div><b>' + esc(name) + '</b><span>' + esc(user.email || "") + '</span></div></div>' +
-    '<nav class="mn-nav" aria-label="Pages">' + MENU.map(m => '<a href="#' + m.p + '" data-menu="go"' + (page === m.p ? ' aria-current="page"' : '') + '><span class="sic"><img src="emoji/' + m.ic + '.png" alt=""></span><span><b>' + m.t + '</b><small>' + esc(typeof m.s === "function" ? m.s() : m.s) + '</small></span><span class="arr">›</span></a>').join("") + '</nav>' +
+    '<nav class="mn-nav" aria-label="Pages">' + MENU.map(m => '<a href="#' + m.p + '" data-menu="go"' + ((m.group || [m.p]).includes(page) ? ' aria-current="page"' : '') + '><span class="sic"><img src="emoji/' + m.ic + '.png" alt=""></span><span><b>' + m.t + '</b><small>' + esc(typeof m.s === "function" ? m.s() : m.s) + '</small></span><span class="arr">›</span></a>').join("") + '</nav>' +
     '<button type="button" class="mn-out" data-menu="logout"><img src="emoji/door.png" alt="">Se déconnecter</button>';
   const c = $("#menuPanel .mn-close"); if (c) c.focus();
 }
@@ -1279,6 +1277,7 @@ function render() {
   $("#monthDot").className = "mst " + monthState(current);
   if (!$("#monthPop").hidden) renderMonthGrid();
   $(".mpick").hidden = page !== "finances" && page !== "rapports";
+  $(".subnav").hidden = page === "trophees" || page === "compte";
   renderFlame();
   renderValidBox();
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
