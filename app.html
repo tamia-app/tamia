@@ -513,7 +513,26 @@ a.inline { color: var(--accent); }
 .legal-note a, .muted-links a { color: var(--muted); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 /* New month: income + three ways to start */
-.newmonth { padding: 24px; display: flex; flex-direction: column; gap: 18px; max-width: 760px; }
+.newmonth { display: flex; flex-direction: column; gap: 12px; max-width: 760px; }
+/* pay in the same ink block as the Finances strip */
+.nm-ink { background: var(--band); border: 1px solid var(--band-line); border-radius: var(--radius); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; color: var(--ink);
+  --ink: #f2f2ef; --muted: #a3a39c; --line: #3a3a37; --accent: #f2f2ef; }
+.nm-ink .eyebrow { color: #a3a39c; }
+.nm-ink .income-field { font-size: 2.1rem; }
+.nm-ink input { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; letter-spacing: -0.02em; border: none; background: none; color: #f2f2ef; width: 6ch; padding: 0; outline: none; }
+.nm-split { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.84rem; color: #a3a39c; }
+.nm-split span { display: inline-flex; align-items: center; gap: 6px; }
+.nm-split b { color: #f2f2ef; font-variant-numeric: tabular-nums; }
+.nm-split b.neg { color: #ff8a80; }
+.nm-split a, .nm-tip a { color: #f2f2ef; }
+.nm-split i { width: 9px; height: 9px; border-radius: 3px; }
+.nm-split i.r { background: #6f94d1; } .nm-split i.l { border: 1.5px dashed #a3a39c; }
+.nm-bar { display: flex; gap: 3px; height: 8px; }
+.nm-bar i { display: block; border-radius: 4px; min-width: 0; }
+.nm-bar i.r { background: #6f94d1; } .nm-bar i.l { background: #2a2a28; }
+.nm-tip { margin: 0; font-size: 0.84rem; color: #a3a39c; }
+.newmonth .nm-q { color: var(--ink); margin: 6px 0 0; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+.startlist small:not(.wrap) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .newmonth h2 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
 .newmonth > p { margin: 0; color: var(--muted); }
 .nm-income { display: flex; flex-direction: column; gap: 4px; }
@@ -1358,16 +1377,27 @@ function createView() {
   const p = prevMonthId();
   const pm = p && months[p];
   const inc = newIncomeDraft != null ? newIncomeDraft : (pm ? pm.income || 0 : 0);
-  const rt = recTotal();
-  return '<div class="card newmonth">' +
-    '<h2>Préparer le budget de ' + esc(label(current).toLowerCase()) + '</h2>' +
-    '<div class="nm-income"><label class="eyebrow" for="newIncome">Montant de ta paye</label><div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
-    '<span class="nm-rec">' + (recurring.length ? 'Dépenses récurrentes : <b>' + money(rt) + '</b>, ajoutées automatiquement · <a class="inline" href="#reglages">Modifier</a>' : 'Astuce : indique tes dépenses récurrentes dans <a class="inline" href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.') + '</span></div>' +
+  return '<div class="newmonth">' +
+    '<div class="nm-ink">' +
+      '<label class="eyebrow" for="newIncome">' + esc(label(current)) + ' · ta paye</label>' +
+      '<div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
+      '<div id="nmSplit">' + nmSplitHtml(inc) + '</div>' +
+    '</div>' +
+    '<p class="nm-q">Comment veux-tu le préparer ?</p>' +
     '<div class="startlist">' +
-      '<button type="button" data-act="create" data-from="manual"><span class="sic">' + EMO('pencil') + '</span><span class="t"><b>Je le fais moi-même</b><small>' + (recurring.length ? 'Tes dépenses récurrentes et les enveloppes de base, à remplir' : 'Les enveloppes de base, à remplir') + '</small></span><span class="arr">›</span></button>' +
-      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">' + EMO('clipboard') + '</span><span class="t"><b>Copier ' + esc(monthName(p)) + '</b><small>' + money(pm.income) + ' · ' + (pm.envelopes || []).length + ' enveloppes</small></span><span class="arr">›</span></button>' : '') +
-      '<button type="button" class="star" data-act="wiz-start"><span class="sic">' + EMO('sparkles') + '</span><span class="t"><b>Budget sur mesure</b><small>Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
+      '<button type="button" data-act="create" data-from="manual"><span class="sic">' + EMO('hand') + '</span><span class="t"><b>Je le fais moi-même</b><small>Enveloppes de base à remplir</small></span><span class="arr">›</span></button>' +
+      (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">' + EMO('repeat') + '</span><span class="t"><b>Copier ' + esc(monthName(p)) + '</b><small>Le même budget que ' + esc(monthName(p)) + '</small></span><span class="arr">›</span></button>' : '') +
+      '<button type="button" class="star" data-act="wiz-start"><span class="sic">' + EMO('sparkles') + '</span><span class="t"><b>Budget sur mesure</b><small class="wrap">Quelques questions pour un budget adapté à ton mois</small></span><span class="arr">›</span></button>' +
     '</div></div>';
+}
+// recurring expenses vs what's really left to share out, shown under the pay
+function nmSplitHtml(inc) {
+  const rt = recTotal(), left = inc - rt;
+  if (!recurring.length) return '<p class="nm-tip">Astuce : ajoute tes dépenses récurrentes dans <a href="#reglages">Réglages</a>, elles seront ajoutées à chaque mois.</p>';
+  const a = Math.max(0, rt), b = Math.max(0, left);
+  return '<div class="nm-split"><span><i class="r"></i>Récurrentes <b>' + money(rt) + '</b> · <a href="#reglages">Modifier</a></span>' +
+    '<span><i class="l"></i>' + (left < 0 ? 'Dépassement <b class="neg">' + money(-left) + '</b>' : 'À répartir <b>' + money(left) + '</b>') + '</span></div>' +
+    '<div class="nm-bar"><i class="r" style="flex:' + (a || 0.0001) + '"></i><i class="l" style="flex:' + (b || 0.0001) + '"></i></div>';
 }
 
 /* ---------- tailored budget questionnaire ---------- */
@@ -2152,7 +2182,7 @@ mainEl.addEventListener("input", e => {
     if (grp === "tickets") wiz.a.ticketsAmt = parse(t.value);
     return;
   }
-  if (t.id === "newIncome") { sizeInput(t); return; }
+  if (t.id === "newIncome") { sizeInput(t); const sp = $("#nmSplit"); if (sp) sp.innerHTML = nmSplitHtml(parse(t.value)); return; }
   if (!work || work.validated || page !== "finances") return;
   if (t.id === "income") { work.income = parse(t.value); sizeIncome(); changed(); }
   else if (t.id === "note") { work.note = t.value; changed(false); }
