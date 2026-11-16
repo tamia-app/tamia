@@ -1084,6 +1084,8 @@ const todayDate = () => (window.__tamiaToday ? new Date(window.__tamiaToday) : n
 const monthIdOf = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
 const shiftMonth = (id, n) => { const [y, m] = id.split("-").map(Number); return monthIdOf(new Date(y, m - 1 + n, 1)); };
 const hasBudget = id => !!(months[id] && (months[id].envelopes || []).length);
+// a month counts for the flame once its budget has been validated ("Valider le budget")
+const isPrepared = id => hasBudget(id) && !!months[id].validated;
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 // The flame = consecutive months with a budget and a check-in. The month in progress (and last month until the 10th) can't break it yet.
 function streakInfo() {
@@ -1106,8 +1108,8 @@ function bestStreak() {
 // Which month should be checked in now, if any
 function bilanTarget() {
   const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
-  if (now.getDate() >= 25 && hasBudget(cur) && !months[cur].bilan) return cur;
-  if (now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan) return prev;
+  if (now.getDate() >= 25 && isPrepared(cur) && !months[cur].bilan) return cur;
+  if (now.getDate() <= 10 && isPrepared(prev) && !months[prev].bilan) return prev;
   return null;
 }
 const laterKey = id => "tamia-bilan-later-" + id;
@@ -1213,9 +1215,9 @@ function renderFlamePop() {
   const n = streakInfo(), now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
   const ids = [-5, -4, -3, -2, -1, 0].map(k => shiftMonth(cur, k));
   // the month whose flame is at stake: last month while its check-in is still open, otherwise this month
-  const M = now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan ? prev : cur;
+  const M = now.getDate() <= 10 && isPrepared(prev) && !months[prev].bilan ? prev : cur;
   const m = months[M], name = monthName(M);
-  const prepared = hasBudget(M), checked = !!(m && m.bilan);
+  const prepared = isPrepared(M), checked = !!(m && m.bilan), drafted = hasBudget(M);
   const openFrom = new Date(Number(M.slice(0, 4)), Number(M.slice(5)) - 1, 25);
   const available = M !== cur || now.getDate() >= 25;
   const days = Math.max(0, Math.ceil((openFrom - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000));
@@ -1223,12 +1225,12 @@ function renderFlamePop() {
   const ANS = { ok: "Budget tenu", almost: "Presque tenu", over: "Budget dépassé" };
   const step1 = prepared
     ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Budget préparé</b><span>' + (m.validatedAt ? 'Validé le ' + when(m.validatedAt) : 'Prêt dans Finances') + '</span></div></div>'
-    : '<div class="fp-step"><img src="emoji/calendar.png" alt=""><div><b>Prépare ton budget</b><span>Dans Finances</span></div></div>';
+    : '<div class="fp-step"><img src="emoji/calendar.png" alt=""><div><b>' + (drafted ? 'Valide ton budget' : 'Prépare ton budget') + '</b><span>' + (drafted ? 'Bouton « Valider le budget » dans Finances' : 'Dans Finances, puis valide-le') + '</span></div></div>';
   const step2 = checked
     ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Bilan fait</b><span>' + ANS[m.bilan.answer] + ' · le ' + when(m.bilan.at) + '</span></div></div>'
     : prepared && available
       ? '<button type="button" class="fp-step" data-fp="bilan"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>Disponible maintenant</span></div><em>Faire</em></button>'
-      : '<div class="fp-step"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>' + (days ? 'Disponible dans ' + days + ' jour' + (days > 1 ? 's' : '') + '.' : 'Dès le 25 ' + name) + '</span></div></div>';
+      : '<div class="fp-step"><img src="emoji/medal.png" alt=""><div><b>Bilan de fin de mois</b><span>' + (days ? 'Disponible dans ' + days + ' jour' + (days > 1 ? 's' : '') + '.' : 'Après la validation du budget') + '</span></div></div>';
   const doneSteps = (prepared ? 1 : 0) + (checked ? 1 : 0);
   const sub = checked ? 'Ta flamme de ' + name + ' est gagnée.'
     : n ? 'Encore ' + (2 - doneSteps) + ' étape' + (2 - doneSteps > 1 ? 's' : '') + ' pour passer à ' + (n + 1) + '.'
@@ -1242,7 +1244,7 @@ $("#flamePop").addEventListener("click", e => {
   const b = e.target.closest('[data-fp="bilan"]'); if (!b) return;
   const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
   openFlame(false);
-  openBilan(now.getDate() <= 10 && hasBudget(prev) && !months[prev].bilan ? prev : cur);
+  openBilan(now.getDate() <= 10 && isPrepared(prev) && !months[prev].bilan ? prev : cur);
 });
 function openFlame(open) {
   $("#flamePop").hidden = !open; $("#flameBtn").setAttribute("aria-expanded", String(open));
