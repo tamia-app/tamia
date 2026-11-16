@@ -1225,7 +1225,7 @@ function renderFlamePop() {
   const ANS = { ok: "Budget tenu", almost: "Presque tenu", over: "Budget dépassé" };
   const step1 = prepared
     ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Budget préparé</b><span>' + (m.validatedAt ? 'Validé le ' + when(m.validatedAt) : 'Prêt dans Finances') + '</span></div></div>'
-    : '<div class="fp-step"><img src="emoji/calendar.png" alt=""><div><b>' + (drafted ? 'Valide ton budget' : 'Prépare ton budget') + '</b><span>' + (drafted ? 'Bouton « Valider le budget » dans Finances' : 'Dans Finances, puis valide-le') + '</span></div></div>';
+    : '<div class="fp-step"><img src="emoji/calendar.png" alt=""><div><b>' + (drafted ? 'Valide ton budget' : 'Prépare ton budget') + '</b><span>' + (drafted ? 'Bouton « Valider le budget »' : 'Dans Finances, puis valide-le') + '</span></div></div>';
   const step2 = checked
     ? '<div class="fp-step done"><img src="emoji/check.png" alt=""><div><b>Bilan fait</b><span>' + ANS[m.bilan.answer] + ' · le ' + when(m.bilan.at) + '</span></div></div>'
     : prepared && available
