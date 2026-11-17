@@ -729,9 +729,10 @@ a.inline { color: var(--accent); }
   box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 28px -16px rgba(0,0,0,.6); }
 .strip, .nm-ink { border-radius: 20px; }
 .top .flame-btn, .top .menu-btn { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.16); box-shadow: inset 0 1px 0 rgba(255,255,255,.16); }
-/* pages tabs: text tabs on large screens, floating glass bar at the bottom on phones */
+/* pages tabs: floating glass bar at the bottom */
 .tabs a svg { display: none; }
-@media (max-width: 640px) {
+/* floating glass tab bar at the bottom, on every screen size */
+@media all {
   .subnav .tabs { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 40;
     gap: 4px; padding: 6px; border-radius: 99px; background: rgba(255,255,255,.62); -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
     border: 1px solid rgba(255,255,255,.75); box-shadow: inset 0 1px 0 #fff, 0 14px 32px -12px rgba(0,0,0,.38); }
@@ -740,10 +741,13 @@ a.inline { color: var(--accent); }
   .subnav .tabs a[aria-current="page"] { background: rgba(255,255,255,.9); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(0,0,0,.25); }
   .app { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
 }
-@media (max-width: 640px) and (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .subnav .tabs { background: rgba(30,30,29,.62); border-color: rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 32px -12px rgba(0,0,0,.7); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .subnav .tabs { background: rgba(30,30,29,.62); border-color: rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 32px -12px rgba(0,0,0,.7); }
   :root:not([data-theme="light"]) .subnav .tabs a[aria-current="page"] { background: rgba(255,255,255,.14); } }
-@media (max-width: 640px) { :root[data-theme="dark"] .subnav .tabs { background: rgba(30,30,29,.62); border-color: rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 32px -12px rgba(0,0,0,.7); }
+@media all { :root[data-theme="dark"] .subnav .tabs { background: rgba(30,30,29,.62); border-color: rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 32px -12px rgba(0,0,0,.7); }
   :root[data-theme="dark"] .subnav .tabs a[aria-current="page"] { background: rgba(255,255,255,.14); } }
+/* the logo only shows in the menu; the header keeps the flame and the menu button */
+.top .left { display: none; }
+.top { justify-content: flex-end; }
 </style>
 </head>
 <body>
@@ -1369,7 +1373,7 @@ function render() {
   $("#monthDot").className = "mst " + monthState(current);
   if (!$("#monthPop").hidden) renderMonthGrid();
   $(".mpick").hidden = page !== "finances" && page !== "rapports";
-  $(".subnav").hidden = page === "trophees" || page === "compte";
+  $("#monthBar").hidden = page === "trophees" || page === "compte";
   renderFlame();
   renderValidBox();
   ["finances", "rapports", "reglages"].forEach(p => { const a = $("#tab-" + p); if (p === page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
