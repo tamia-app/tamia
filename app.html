@@ -750,7 +750,8 @@ a.inline { color: var(--accent); }
 .top { justify-content: flex-end; }
 
 /* ---------- header reduced to the ink bar; tabs: Finances, Objectifs, Voyages, Plus ---------- */
-.top { padding-block: 5px; min-height: 0; }
+.top { display: none; }
+.app { padding-top: max(20px, env(safe-area-inset-top, 0px)); }
 .subnav .tabs a { padding: 7px 14px; min-width: 72px; }
 /* menu: flame card */
 .mn-flame { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; cursor: pointer; }
@@ -1489,6 +1490,7 @@ function render() {
   $(".mpick").hidden = page !== "finances" && page !== "rapports";
   $("#monthBar").hidden = !["finances", "rapports", "reglages"].includes(page);
   document.body.dataset.page = page;
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = page === "voyages" ? "#121212" : getComputedStyle(document.body).backgroundColor;
   renderFlame();
   renderValidBox();
   [["tab-finances", ["finances"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["rapports", "reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
