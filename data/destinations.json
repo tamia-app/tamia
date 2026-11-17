@@ -1,0 +1,1049 @@
+{
+ "schemaVersion": 1,
+ "updatedAt": "2026-11-17",
+ "currency": "EUR",
+ "checkEveryMonths": 6,
+ "margin": 0.1,
+ "departures": [
+  {
+   "id": "PAR",
+   "name": "Paris",
+   "factor": 1
+  },
+  {
+   "id": "LYS",
+   "name": "Lyon",
+   "factor": 1.08
+  },
+  {
+   "id": "MRS",
+   "name": "Marseille",
+   "factor": 1.1
+  },
+  {
+   "id": "NCE",
+   "name": "Nice",
+   "factor": 1.08
+  },
+  {
+   "id": "BOD",
+   "name": "Bordeaux",
+   "factor": 1.12
+  },
+  {
+   "id": "TLS",
+   "name": "Toulouse",
+   "factor": 1.12
+  },
+  {
+   "id": "NTE",
+   "name": "Nantes",
+   "factor": 1.12
+  }
+ ],
+ "seasonNames": {
+  "low": "basse saison",
+  "mid": "moyenne saison",
+  "high": "haute saison"
+ },
+ "destinations": [
+  {
+   "id": "bangkok",
+   "name": "Bangkok",
+   "country": "Thaïlande",
+   "countryCode": "TH",
+   "zone": "Asie",
+   "coords": [
+    100.5,
+    13.75
+   ],
+   "color": "#d9822b",
+   "aliases": [
+    "thailande",
+    "thaïlande",
+    "krung thep"
+   ],
+   "seasons": {
+    "4": "low",
+    "5": "low",
+    "6": "low",
+    "9": "low",
+    "2": "mid",
+    "3": "mid",
+    "10": "mid",
+    "11": "mid",
+    "7": "high",
+    "8": "high",
+    "12": "high",
+    "1": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 600,
+    "mid": 700,
+    "high": 900
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 25,
+     "mid": 30,
+     "high": 40
+    },
+    "confort": {
+     "low": 60,
+     "mid": 70,
+     "high": 90
+    },
+    "plaisir": {
+     "low": 150,
+     "mid": 180,
+     "high": 220
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 65
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 9,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 6,
+     "confort": 15,
+     "plaisir": 35
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Baht (THB)",
+    "language": "Thaï",
+    "formalities": "Passeport. Pas de visa pour un court séjour touristique (durée autorisée à vérifier avant le départ) ; carte d'arrivée en ligne gratuite.",
+    "plug": "Types A, B, C et O, 220 V : adaptateur conseillé",
+    "timeDiff": "+5 h en été, +6 h en hiver",
+    "flightTime": "Environ 11 h 30 en direct",
+    "bestMonths": "De novembre à février, plus sec et moins chaud",
+    "tip": "Pourboire non obligatoire ; marchander est courant sur les marchés."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "istanbul",
+   "name": "Istanbul",
+   "country": "Turquie",
+   "countryCode": "TR",
+   "zone": "Europe",
+   "coords": [
+    28.98,
+    41.01
+   ],
+   "color": "#c8463c",
+   "aliases": [
+    "turquie",
+    "constantinople"
+   ],
+   "seasons": {
+    "11": "low",
+    "12": "low",
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "4": "mid",
+    "5": "mid",
+    "9": "mid",
+    "10": "mid",
+    "6": "high",
+    "7": "high",
+    "8": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 170,
+    "mid": 230,
+    "high": 320
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 45,
+     "mid": 55,
+     "high": 70
+    },
+    "confort": {
+     "low": 85,
+     "mid": 105,
+     "high": 130
+    },
+    "plaisir": {
+     "low": 170,
+     "mid": 210,
+     "high": 260
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 60
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 22,
+     "plaisir": 45
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Livre turque (TRY)",
+    "language": "Turc",
+    "formalities": "Passeport ou carte d'identité. Pas de visa jusqu'à 90 jours.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "+1 h en été, +2 h en hiver",
+    "flightTime": "Environ 3 h 20 en direct",
+    "bestMonths": "Avril-mai et septembre-octobre",
+    "tip": "Sainte-Sophie et le palais de Topkapı sont payants pour les visiteurs étrangers."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "londres",
+   "name": "Londres",
+   "country": "Royaume-Uni",
+   "countryCode": "GB",
+   "zone": "Europe",
+   "coords": [
+    -0.13,
+    51.51
+   ],
+   "color": "#2f5aa8",
+   "aliases": [
+    "london",
+    "angleterre",
+    "royaume-uni",
+    "uk"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "5": "mid",
+    "9": "mid",
+    "10": "mid",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "12": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 120,
+    "mid": 160,
+    "high": 220
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 90,
+     "mid": 110,
+     "high": 140
+    },
+    "confort": {
+     "low": 160,
+     "mid": 190,
+     "high": 240
+    },
+    "plaisir": {
+     "low": 300,
+     "mid": 360,
+     "high": 450
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 30,
+     "confort": 55,
+     "plaisir": 100
+    },
+    "transport": {
+     "malin": 9,
+     "confort": 12,
+     "plaisir": 25
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 19,
+    "perPersonLabel": "Autorisation ETA"
+   },
+   "info": {
+    "currency": "Livre sterling (GBP)",
+    "language": "Anglais",
+    "formalities": "Passeport et autorisation de voyage ETA obligatoires.",
+    "plug": "Type G, 230 V : adaptateur obligatoire",
+    "timeDiff": "-1 h",
+    "flightTime": "Environ 1 h 15 en avion, 2 h 20 en Eurostar",
+    "bestMonths": "De mai à septembre",
+    "tip": "Les grands musées nationaux sont gratuits ; paie le métro sans contact, le montant est plafonné par jour."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "hong-kong",
+   "name": "Hong Kong",
+   "country": "Chine (RAS)",
+   "countryCode": "HK",
+   "zone": "Asie",
+   "coords": [
+    114.17,
+    22.3
+   ],
+   "color": "#b8325a",
+   "aliases": [
+    "hongkong",
+    "hk"
+   ],
+   "seasons": {
+    "6": "low",
+    "9": "low",
+    "1": "mid",
+    "2": "mid",
+    "3": "mid",
+    "4": "mid",
+    "5": "mid",
+    "7": "high",
+    "8": "high",
+    "10": "high",
+    "11": "high",
+    "12": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 650,
+    "mid": 750,
+    "high": 950
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 70,
+     "mid": 80,
+     "high": 95
+    },
+    "confort": {
+     "low": 130,
+     "mid": 150,
+     "high": 180
+    },
+    "plaisir": {
+     "low": 250,
+     "mid": 290,
+     "high": 350
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 25,
+     "confort": 45,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 7,
+     "confort": 10,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 22,
+     "plaisir": 45
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Dollar de Hong Kong (HKD)",
+    "language": "Cantonais et anglais",
+    "formalities": "Passeport. Pas de visa jusqu'à 90 jours.",
+    "plug": "Type G, 220 V : adaptateur obligatoire",
+    "timeDiff": "+6 h en été, +7 h en hiver",
+    "flightTime": "Environ 12 h en direct",
+    "bestMonths": "D'octobre à décembre",
+    "tip": "La carte Octopus sert pour les transports et beaucoup de petits achats."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "dubai",
+   "name": "Dubaï",
+   "country": "Émirats arabes unis",
+   "countryCode": "AE",
+   "zone": "Moyen-Orient",
+   "coords": [
+    55.27,
+    25.2
+   ],
+   "color": "#b08a3c",
+   "aliases": [
+    "dubai",
+    "emirats",
+    "émirats"
+   ],
+   "seasons": {
+    "5": "low",
+    "6": "low",
+    "7": "low",
+    "8": "low",
+    "9": "low",
+    "4": "mid",
+    "10": "mid",
+    "11": "high",
+    "12": "high",
+    "1": "high",
+    "2": "high",
+    "3": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 380,
+    "mid": 450,
+    "high": 600
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 80,
+     "high": 100
+    },
+    "confort": {
+     "low": 110,
+     "mid": 150,
+     "high": 200
+    },
+    "plaisir": {
+     "low": 220,
+     "mid": 300,
+     "high": 420
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 25,
+     "confort": 50,
+     "plaisir": 100
+    },
+    "transport": {
+     "malin": 6,
+     "confort": 12,
+     "plaisir": 30
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 40,
+     "plaisir": 90
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Dirham (AED)",
+    "language": "Arabe, anglais très répandu",
+    "formalities": "Passeport. Visa gratuit délivré à l'arrivée, jusqu'à 90 jours.",
+    "plug": "Type G, 230 V : adaptateur obligatoire",
+    "timeDiff": "+2 h en été, +3 h en hiver",
+    "flightTime": "Environ 6 h 45 en direct",
+    "bestMonths": "De novembre à mars ; l'été dépasse souvent 40 °C",
+    "tip": "Une petite taxe touristique par nuit s'ajoute souvent au prix de l'hôtel."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "antalya",
+   "name": "Antalya",
+   "country": "Turquie",
+   "countryCode": "TR",
+   "zone": "Europe",
+   "coords": [
+    30.71,
+    36.9
+   ],
+   "color": "#2b8a9e",
+   "aliases": [
+    "turquie",
+    "riviera turque"
+   ],
+   "seasons": {
+    "11": "low",
+    "12": "low",
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "4": "low",
+    "5": "mid",
+    "6": "mid",
+    "9": "mid",
+    "10": "mid",
+    "7": "high",
+    "8": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 220,
+    "mid": 280,
+    "high": 380
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 35,
+     "mid": 45,
+     "high": 65
+    },
+    "confort": {
+     "low": 70,
+     "mid": 95,
+     "high": 140
+    },
+    "plaisir": {
+     "low": 150,
+     "mid": 200,
+     "high": 280
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 50
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Livre turque (TRY)",
+    "language": "Turc",
+    "formalities": "Passeport ou carte d'identité. Pas de visa jusqu'à 90 jours.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "+1 h en été, +2 h en hiver",
+    "flightTime": "Environ 4 h en direct",
+    "bestMonths": "Mai-juin et septembre-octobre",
+    "tip": "Beaucoup d'hôtels proposent la formule tout compris : les repas sont alors déjà payés."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "kuala-lumpur",
+   "name": "Kuala Lumpur",
+   "country": "Malaisie",
+   "countryCode": "MY",
+   "zone": "Asie",
+   "coords": [
+    101.69,
+    3.14
+   ],
+   "color": "#3f7f5f",
+   "aliases": [
+    "malaisie",
+    "kl"
+   ],
+   "seasons": {
+    "5": "low",
+    "6": "low",
+    "9": "low",
+    "10": "low",
+    "11": "low",
+    "1": "mid",
+    "2": "mid",
+    "3": "mid",
+    "4": "mid",
+    "7": "high",
+    "8": "high",
+    "12": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 650,
+    "mid": 750,
+    "high": 950
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 25,
+     "mid": 30,
+     "high": 40
+    },
+    "confort": {
+     "low": 55,
+     "mid": 65,
+     "high": 85
+    },
+    "plaisir": {
+     "low": 120,
+     "mid": 140,
+     "high": 180
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 55
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 6,
+     "confort": 15,
+     "plaisir": 35
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Ringgit (MYR)",
+    "language": "Malais, anglais très répandu",
+    "formalities": "Passeport. Pas de visa jusqu'à 90 jours ; carte d'arrivée en ligne gratuite.",
+    "plug": "Type G, 240 V : adaptateur obligatoire",
+    "timeDiff": "+6 h en été, +7 h en hiver",
+    "flightTime": "Environ 14 h avec une escale",
+    "bestMonths": "De décembre à février et de juin à août",
+    "tip": "Une taxe touristique d'environ 2 € par nuit est demandée à l'hôtel."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "new-york",
+   "name": "New York",
+   "country": "États-Unis",
+   "countryCode": "US",
+   "zone": "Amérique du Nord",
+   "coords": [
+    -74.0,
+    40.71
+   ],
+   "color": "#2a2a28",
+   "aliases": [
+    "nyc",
+    "ny",
+    "usa",
+    "etats-unis",
+    "états-unis",
+    "manhattan"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "4": "mid",
+    "5": "mid",
+    "9": "mid",
+    "10": "mid",
+    "11": "mid",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "12": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 450,
+    "mid": 550,
+    "high": 750
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 170,
+     "mid": 200,
+     "high": 250
+    },
+    "confort": {
+     "low": 260,
+     "mid": 320,
+     "high": 400
+    },
+    "plaisir": {
+     "low": 450,
+     "mid": 550,
+     "high": 700
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 40,
+     "confort": 70,
+     "plaisir": 130
+    },
+    "transport": {
+     "malin": 7,
+     "confort": 10,
+     "plaisir": 30
+    },
+    "activities": {
+     "malin": 20,
+     "confort": 45,
+     "plaisir": 90
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 35,
+    "perPersonLabel": "Autorisation ESTA"
+   },
+   "info": {
+    "currency": "Dollar américain (USD)",
+    "language": "Anglais",
+    "formalities": "Passeport et autorisation ESTA obligatoires.",
+    "plug": "Types A et B, 120 V : adaptateur obligatoire",
+    "timeDiff": "-6 h",
+    "flightTime": "Environ 8 h 30 en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Les prix s'affichent hors taxes et le pourboire de 18 à 20 % est attendu au restaurant."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "tokyo",
+   "name": "Tokyo",
+   "country": "Japon",
+   "countryCode": "JP",
+   "zone": "Asie",
+   "coords": [
+    139.69,
+    35.69
+   ],
+   "color": "#e0644f",
+   "aliases": [
+    "japon",
+    "japan"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "6": "low",
+    "5": "mid",
+    "9": "mid",
+    "10": "mid",
+    "11": "mid",
+    "12": "mid",
+    "3": "high",
+    "4": "high",
+    "7": "high",
+    "8": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 850,
+    "mid": 1000,
+    "high": 1250
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 70,
+     "high": 90
+    },
+    "confort": {
+     "low": 110,
+     "mid": 130,
+     "high": 170
+    },
+    "plaisir": {
+     "low": 250,
+     "mid": 300,
+     "high": 380
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 20,
+     "confort": 40,
+     "plaisir": 80
+    },
+    "transport": {
+     "malin": 7,
+     "confort": 10,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Yen (JPY)",
+    "language": "Japonais",
+    "formalities": "Passeport. Pas de visa jusqu'à 90 jours.",
+    "plug": "Types A et B, 100 V : adaptateur obligatoire",
+    "timeDiff": "+7 h en été, +8 h en hiver",
+    "flightTime": "Environ 14 h en direct",
+    "bestMonths": "Mars-avril (cerisiers) et octobre-novembre",
+    "tip": "Pas de pourboire au Japon ; garde un peu d'espèces, toutes les boutiques ne prennent pas la carte."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "rome",
+   "name": "Rome",
+   "country": "Italie",
+   "countryCode": "IT",
+   "zone": "Europe",
+   "coords": [
+    12.5,
+    41.9
+   ],
+   "color": "#a8650f",
+   "aliases": [
+    "roma",
+    "italie"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "mid",
+    "4": "mid",
+    "11": "mid",
+    "12": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high",
+    "10": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 110,
+    "mid": 160,
+    "high": 230
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 80,
+     "mid": 100,
+     "high": 130
+    },
+    "confort": {
+     "low": 130,
+     "mid": 170,
+     "high": 220
+    },
+    "plaisir": {
+     "low": 260,
+     "mid": 330,
+     "high": 420
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 30,
+     "confort": 50,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 7,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 55
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 5,
+     "confort": 7.5,
+     "plaisir": 10
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Italien",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types F et L, 230 V : adaptateur conseillé pour les prises L",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 2 h en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Réserve le Colisée et les musées du Vatican en ligne à l'avance."
+   },
+   "meta": {
+    "updatedAt": "2026-11-17",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  }
+ ]
+}
