@@ -32,6 +32,12 @@ def main():
 
     if data.get("schemaVersion") != 1: errors.append("schemaVersion inconnue")
     if not any(x.get("id") == "PAR" for x in data.get("departures", [])): errors.append("départ PAR manquant")
+    for x in data.get("departures", []):
+        if not x.get("name") or not isinstance(x.get("factor"), (int, float)) or not 0.5 <= x["factor"] <= 2:
+            errors.append(f"départ {x.get('id', '?')} : nom ou coefficient invalide")
+    for k, lo, hi in (("margin", 0, 0.5), ("unexpectedRate", 0, 0.5)):
+        if not isinstance(data.get(k), (int, float)) or not lo <= data[k] <= hi:
+            errors.append(f"{k} doit être un nombre entre {lo} et {hi}")
 
     for x in data.get("destinations", []):
         d = x.get("id", "?")

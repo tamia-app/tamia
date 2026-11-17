@@ -752,7 +752,8 @@ a.inline { color: var(--accent); }
 /* ---------- header reduced to the ink bar; tabs: Finances, Objectifs, Voyages, Plus ---------- */
 .top { display: none; }
 .app { padding-top: max(20px, env(safe-area-inset-top, 0px)); }
-.subnav .tabs a { padding: 7px 14px; min-width: 72px; }
+.subnav .tabs a { padding: 7px 10px; min-width: 64px; }
+@media (max-width: 380px) { .subnav .tabs a { padding: 7px 6px; min-width: 56px; } }
 /* menu: flame card */
 .mn-flame { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; cursor: pointer; }
 .mn-flame .sic { width: 40px; height: 40px; border-radius: 12px; background: #fde9c7; color: #e0644f; display: grid; place-items: center; }
@@ -855,6 +856,26 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 @media (max-width: 420px) { .v-info dl div { grid-template-columns: 1fr; gap: 1px; } }
 .v-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
 .v-btns .btn { justify-content: center; padding: 12px; }
+
+.recitem .ru { display: block; font-size: 0.74rem; color: var(--muted); font-weight: 500; }
+.v-novol { align-self: flex-start; }
+.v-lbl { margin: 12px 4px 0; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+.v-trip { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; border-radius: 18px; padding: 12px 14px; text-align: left; font: inherit; cursor: pointer; }
+.v-trip-b { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.v-trip-b b { font-family: var(--font-display); font-size: 1rem; } .v-trip-b small { color: var(--muted); font-size: .8rem; }
+.v-proj-num { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); margin-top: 4px; } .v-proj-num b { color: #f2f2ef; font-family: var(--font-display); }
+.v-proj { border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.v-proj-top { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: center; margin-bottom: 4px; }
+.v-proj-top b { display: block; font-family: var(--font-display); } .v-proj-top small { color: var(--muted); font-size: .8rem; }
+.v-proj .linkbtn { align-self: flex-start; margin-top: 6px; font-size: .82rem; font-weight: 600; color: #c9c9c2; }
+.v-cta { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; }
+.v-cta .ico { width: 20px; height: 20px; }
+.v-amt { display: flex; align-items: baseline; gap: 4px; } .v-amt input { flex: 1; min-width: 0; width: 100%; background: none; border: none; color: #f2f2ef; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; padding: 2px 0; outline: none; }
+.v-amt em { font-style: normal; color: var(--muted); font-weight: 600; }
+.v-calc { background: #fde9c7; color: #121212; border-radius: 18px; padding: 13px 16px; display: flex; flex-direction: column; }
+.v-calc span { font-size: .72rem; font-weight: 700; color: #7a4a0a; text-transform: uppercase; letter-spacing: .08em; }
+.v-calc b { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: -.02em; } .v-calc em { font-style: normal; font-size: .9rem; font-weight: 600; }
+.v-calc small { color: #7a4a0a; font-size: .82rem; }
 </style>
 </head>
 <body>
@@ -900,6 +921,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
   <div class="subnav">
     <nav class="tabs" aria-label="Pages">
       <a href="#finances" id="tab-finances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8V6.5A2.5 2.5 0 0 1 7.5 4H16v4"/><rect x="3.5" y="8" width="17" height="12" rx="2.2"/><path d="M15.5 14h2"/></svg><span>Finances</span></a>
+      <a href="#rapports" id="tab-rapports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16"/><path d="M7.5 15l3.5-3.5 3 3L19 9"/><path d="M15.5 9H19v3.5"/></svg><span>Rapports</span></a>
       <a href="#objectifs" id="tab-objectifs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg><span>Objectifs</span></a>
       <a href="#voyages" id="tab-voyages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3.5L3 10.5l7 2.8 2.8 7z"/><path d="M10 13.3L21 3.5"/></svg><span>Voyages</span></a>
       <a href="#" id="menuBtn" role="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg><span>Plus</span></a>
@@ -1000,8 +1022,9 @@ const INVEST = [
 ];
 // Typical envelopes used by the proposal, with each goal's share of what is left after recurring expenses.
 let newGoalTouched = false;
-const recEnvelopes = () => recurring.filter(r => r.name || r.amount).map(r => ({ id: uid(), rid: r.id, name: r.name || "", group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank || "", amount: parse(r.amount), est: !!r.est }));
-const recTotal = () => recurring.reduce((a, r) => a + parse(r.amount), 0);
+const recActive = (r, id) => (!r.from || (id || current) >= r.from) && (!r.until || (id || current) <= r.until);
+const recEnvelopes = () => recurring.filter(r => (r.name || r.amount) && recActive(r)).map(r => ({ id: uid(), rid: r.id, name: r.name || "", group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank || "", amount: parse(r.amount), est: !!r.est }));
+const recTotal = () => recurring.filter(r => recActive(r)).reduce((a, r) => a + parse(r.amount), 0);
 function lastBankFor(name) {
   const ids = Object.keys(months).filter(id => id < current).sort().reverse();
   for (const id of ids) { const e = (months[id].envelopes || []).find(x => (x.name || "").trim().toLowerCase() === name.toLowerCase()); if (e && e.bank) return e.bank; }
@@ -1423,7 +1446,6 @@ document.addEventListener("click", e => { if (!$("#flamePop").hidden && !e.targe
 
 // Full-screen menu
 const MENU = [
-  { p: "rapports", ic: "trend", t: "Rapports", s: "Tes mois en un coup d'œil" },
   { p: "reglages", ic: "sliders", t: "Réglages", s: "Banques, dépenses récurrentes, données" },
   { p: "trophees", ic: "trophy", t: "Trophées", s: () => TROPHIES.filter(t => t.got()).length + " sur " + TROPHIES.length + " débloqués" },
   { p: "compte", ic: "single", t: "Mon compte", s: "Mot de passe, suppression" }
@@ -1493,7 +1515,7 @@ function render() {
   const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = page === "voyages" ? "#121212" : getComputedStyle(document.body).backgroundColor;
   renderFlame();
   renderValidBox();
-  [["tab-finances", ["finances"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["rapports", "reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  [["tab-finances", ["finances"]], ["tab-rapports", ["rapports"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (page === "objectifs") { mainEl.innerHTML = goalsSoonView(); return; }
   if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); return; }
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
@@ -1892,7 +1914,7 @@ function recGroupsView() {
 function recItemView(r) {
   const b = bankList().find(x => x.id === r.bank);
   return '<button type="button" class="recitem" data-act="rec-open" data-rid="' + esc(r.id) + '" aria-label="Modifier ' + esc(r.name || "la dépense") + '">' +
-    '<span class="rn">' + esc(r.name || "Sans nom") + '</span>' +
+    '<span class="rn">' + esc(r.name || "Sans nom") + (r.until ? '<small class="ru">jusqu\'en ' + esc(label(r.until).toLowerCase()) + '</small>' : '') + '</span>' +
     (banks.length ? '<span class="rb">' + (b ? '<i class="dot" style="background:' + b.color + '"></i>' + esc(b.name) : 'Sans banque') + '</span>' : '<span></span>') +
     '<span class="ra">' + money(parse(r.amount)) + '</span><span class="rc">›</span></button>';
 }
@@ -2150,7 +2172,7 @@ function saveRec() {
   if (!recEdit) return closeRec();
   const name = $("#recName").value.trim();
   if (!name) { $("#recErr").hidden = false; $("#recName").focus(); return; }
-  const item = { id: recEdit.id, name, amount: parse($("#recAmt").value), group: recEdit.group, bank: recEdit.bank };
+  const item = { id: recEdit.id, name: name.slice(0, 60), amount: parse($("#recAmt").value), group: recEdit.group, bank: recEdit.bank };
   const next = recEdit.isNew ? recurring.concat([item]) : recurring.map(x => x.id === item.id ? Object.assign({}, x, item) : x);
   closeRec();
   saveRecurring(next).then(render);
@@ -2230,7 +2252,8 @@ function goalsSoonView() {
 
 /* ---------- Voyages: travel budget estimate from data/destinations.json ---------- */
 let DEST = null, destErr = false, MAPD = null;
-let voy = { step: "search", q: "", id: null, month: "", days: 7, people: 2, style: "", from: "", all: false };
+const VOY0 = () => ({ step: "search", q: "", fq: "", id: null, month: "", days: 7, people: 2, style: "", from: "", all: false, trip: null, budget: 0, saved: 0 });
+let voy = VOY0();
 function loadDest() {
   if (DEST || loadDest.p) return;
   loadDest.p = fetch("data/destinations.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw 0; return r.json(); })
@@ -2272,8 +2295,10 @@ function voyEstimate(d) {
   rows.push({ ic: "target", t: "Activités & visites", v: d.daily.activities[st] * days * P });
   const fees = d.fees.cityTaxPerPersonNight[st] * nights * P + d.fees.perPerson * P;
   if (fees) rows.push({ ic: "receipt", t: d.fees.perPerson ? "Taxes & " + d.fees.perPersonLabel : "Taxe de séjour", v: fees });
-  rows.forEach(r => { r.v = vr10(r.v); });
-  const total = rows.reduce((a, r) => a + r.v, 0) * (1 + (DEST.margin || .1));
+  const mg = 1 + (DEST.margin || .1);
+  rows.forEach(r => { r.v = vr10(r.v * mg); });
+  rows.push({ ic: "warning", t: "Imprévus", v: vr10(rows.reduce((a, r) => a + r.v, 0) * (DEST.unexpectedRate || .05)) });
+  const total = rows.reduce((a, r) => a + r.v, 0);
   return { rows, season, nights, low: vr50(total * .92), high: vr50(total * 1.08), perDay: Math.round(total / days / P) };
 }
 const vnum = n => Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " ");
@@ -2291,6 +2316,48 @@ function voyResults() {
   if (!found.length) return '<div class="vg v-none">' + ICON("globe") + '<div><b>« ' + esc(q) + ' » n\'est pas encore disponible sur tamia</b><span>On ajoute de nouvelles destinations régulièrement. Essaie une autre ville ou un autre pays.</span></div></div>';
   return '<div class="v-list">' + found.map(vdestBtn).join("") + '</div>';
 }
+function vfromResults() {
+  const n = vnorm(voy.fq);
+  if (!n) return '';
+  const found = DEST.departures.filter(x => [x.name, x.id].concat(x.aliases || []).some(a => vnorm(a).startsWith(n) || vnorm(a).includes(" " + n)));
+  if (!found.length) return '<div class="vg v-none">' + ICON("pin") + '<div><b>« ' + esc(voy.fq.trim()) + ' » n\'est pas encore disponible comme ville de départ</b><span>Choisis l\'aéroport le plus proche de chez toi.</span></div></div>';
+  return '<div class="v-pills">' + found.map(x => '<button type="button" class="vg v-pill' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '">' + esc(x.name) + '</button>').join("") + '</div>';
+}
+// a trip becomes a recurring expense limited to the months before departure (from → until), in "Projets personnels"
+const vtrip = () => voy.trip && recurring.find(r => r.id === voy.trip && r.trip);
+const vtrips = () => recurring.filter(r => r.trip && DEST.destinations.some(d => d.id === r.trip.dest));
+function vmonthsBetween(a, b) { const [y1, m1] = a.split("-").map(Number), [y2, m2] = b.split("-").map(Number); return (y2 - y1) * 12 + m2 - m1 + 1; }
+function vplan() {
+  const now = monthIdOf(todayDate());
+  const start = hasBudget(now) ? shiftMonth(now, 1) : now;
+  const n = vmonthsBetween(start, voy.month), need = Math.max(0, voy.budget - voy.saved);
+  return { start, n, need, monthly: n > 0 ? Math.ceil(need / n / 5) * 5 : 0, ok: n > 0 && need > 0 };
+}
+function vcalcHtml() {
+  const p = vplan();
+  if (p.n <= 0) return '<span>Ton départ est trop proche</span><small>tamia ne peut plus mettre de côté chaque mois avant ' + esc(monthName(voy.month)) + '.</small>';
+  if (!p.need) return '<span>À mettre de côté</span><b>0 €</b><small>Tu as déjà tout mis de côté, bon voyage !</small>';
+  return '<span>À mettre de côté</span><b>' + vnum(p.monthly) + ' € <em>par mois</em></b><small>pendant ' + p.n + ' mois, ' + (p.n > 1 ? 'de ' + esc(monthName(p.start)) + ' à ' + esc(monthName(voy.month)) : 'en ' + esc(monthName(p.start))) + '</small>';
+}
+function vprojBox(r) {
+  const t = r.trip, got = vsavedFor(r);
+  return '<div class="vg v-proj"><div class="v-proj-top"><span class="v-ic sm">' + ICON("target") + '</span><div><b>Projet en cours</b><small>' + vnum(parse(r.amount)) + ' € par mois dans tes budgets, jusqu\'en ' + esc(label(r.until).toLowerCase()) + '</small></div></div>' +
+    '<div class="v-pb"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></div>' +
+    '<div class="v-proj-num"><span><b>' + vnum(got) + ' €</b> de côté</span><span>sur ' + vnum(t.budget) + ' €</span></div>' +
+    '<button type="button" class="linkbtn" data-voy="unproject">Retirer ce projet de mes budgets</button></div>';
+}
+// what is already put aside: the amount given at the start + the envelope of this trip in each month's budget so far
+function vsavedFor(r) {
+  const now = monthIdOf(todayDate());
+  return (r.trip.saved || 0) + Object.keys(months).filter(id => id <= now).reduce((a, id) => a + (months[id].envelopes || []).filter(x => x.rid === r.id).reduce((b, x) => b + parse(x.amount), 0), 0);
+}
+function voySave() {
+  const d = vdest(), p = vplan(); if (!d || !p.ok) return;
+  const name = "Voyage à " + d.name;
+  const item = { id: uid(), name, amount: p.monthly, group: "projets", bank: lastBankFor(name), est: false, from: p.start, until: voy.month,
+    trip: { dest: d.id, month: voy.month, days: voy.days, people: voy.people, style: voy.style, dep: voy.from, budget: voy.budget, saved: voy.saved, createdAt: new Date().toISOString() } };
+  saveRecurring(recurring.concat([item])).then(() => { voy.trip = item.id; voyGo("result"); setSync("Projet ajouté à tes budgets"); });
+}
 function voyView() {
   loadDest();
   if (!DEST) return '<div class="voy"><div class="vg v-none">' + (destErr ? 'Impossible de charger les destinations. Vérifie ta connexion et réessaie.' : 'Chargement des destinations…') + '</div></div>';
@@ -2298,7 +2365,10 @@ function voyView() {
   if (voy.step === "search" || !d) {
     return '<div class="voy"><h1 class="v-h">Alors, quel prochain voyage allons-nous faire ?</h1>' +
       '<label class="vg v-search">' + ICON("plane") + '<input id="voyQ" type="search" placeholder="Ville ou pays…" autocomplete="off" aria-label="Rechercher une destination" value="' + esc(voy.q) + '"></label>' +
-      '<div id="voyRes">' + voyResults() + '</div></div>';
+      '<div id="voyRes">' + voyResults() + '</div>' +
+      (vtrips().length ? '<p class="v-lbl">Mes voyages</p>' + vtrips().map(r => { const t = r.trip, x = DEST.destinations.find(y => y.id === t.dest), got = vsavedFor(r);
+        return '<button type="button" class="vg v-trip" data-voy="trip" data-rid="' + esc(r.id) + '"><span class="v-dc" style="background:' + x.color + '">' + x.countryCode + '</span><span class="v-trip-b"><b>' + esc(x.name) + ' · ' + t.days + ' jours</b><small>Départ en ' + esc(label(t.month).toLowerCase()) + ' · ' + (t.people > 1 ? t.people + ' voyageurs' : 'en solo') + '</small>' +
+          '<span class="v-pb"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><span class="v-proj-num"><span><b>' + vnum(got) + ' €</b> de côté</span><span>sur ' + vnum(t.budget) + ' €</span></span></span></button>'; }).join("") : '') + '</div>';
   }
   if (voy.step === "when") {
     const opts = voyMonths().map(id => '<option value="' + id + '"' + (id === voy.month ? ' selected' : '') + '>' + esc(label(id)) + '</option>').join("");
@@ -2316,8 +2386,18 @@ function voyView() {
   }
   if (voy.step === "from") {
     return '<div class="voy">' + vtop(d.name + ' · 3 sur 3') + vprog(3) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
-      '<div class="v-pills">' + DEST.departures.map(x => '<button type="button" class="vg v-pill' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '">' + esc(x.name) + '</button>').join("") +
-      '<button type="button" class="vg v-pill' + (voy.from === "none" ? ' on' : '') + '" data-voy="from" data-v="none">Pas de vol à prévoir</button></div></div>';
+      '<label class="vg v-search">' + ICON("pin") + '<input id="voyFrom" type="search" placeholder="Ta ville de départ…" autocomplete="off" aria-label="Rechercher une ville de départ" value="' + esc(voy.fq) + '"></label>' +
+      '<div id="voyFromRes">' + vfromResults() + '</div>' +
+      '<button type="button" class="vg v-pill v-novol' + (voy.from === "none" ? ' on' : '') + '" data-voy="from" data-v="none">Pas de vol à prévoir</button></div>';
+  }
+  if (voy.step === "project") {
+    const fld = (k, t) => '<label class="vg v-field"><small>' + t + '</small><span class="v-amt"><input data-vp="' + k + '" inputmode="decimal" autocomplete="off" value="' + (voy[k] ? vnum(voy[k]) : '') + '" placeholder="0"><em>€</em></span></label>';
+    return '<div class="voy">' + vtop('Voyage à ' + d.name) + '<h2 class="v-q">En faire un projet</h2>' +
+      '<div class="vg v-recap"><span><b>' + esc(label(voy.month, true).replace(".", "")) + '</b> ' + voy.month.slice(0, 4) + '</span><span><b>' + voy.days + '</b> jours</span><span><b>' + voy.people + '</b> voyageur' + (voy.people > 1 ? 's' : '') + '</span></div>' +
+      '<div class="v-two">' + fld("budget", "Budget du voyage") + fld("saved", "Déjà mis de côté") + '</div>' +
+      '<div class="v-calc" id="vcalc">' + vcalcHtml() + '</div>' +
+      '<p class="v-sub">tamia ajoute une enveloppe « Voyage à ' + esc(d.name) + ' » à tes prochains budgets, dans Projets personnels, jusqu\'à ton départ. Tu la retrouves aussi dans Réglages, avec tes dépenses récurrentes.</p>' +
+      '<button type="button" class="btn primary v-cta" data-voy="save"' + (vplan().ok ? '' : ' disabled') + '>Ajouter à mes budgets</button></div>';
   }
   const e = voyEstimate(d), max = Math.max(...e.rows.map(r => r.v));
   const styleName = { malin: "malin", confort: "confort", plaisir: "plaisir" }[voy.style];
@@ -2325,18 +2405,25 @@ function voyView() {
   const info = [["Formalités", I.formalities], ["Monnaie", I.currency], ["Langue", I.language], ["Prises", I.plug], ["Décalage", I.timeDiff], ["Vol", I.flightTime], ["Meilleure période", I.bestMonths], ["Astuce", I.tip]];
   return '<div class="voy">' + vtop(d.name + ' · ' + styleName) +
     '<div class="vg v-total"><small>À prévoir pour ' + voy.people + ' · ' + voy.days + ' jours</small><b>' + vnum(e.low) + ' – ' + vnum(e.high) + ' €</b><span>Environ ' + vnum(e.perDay) + ' € par jour et par personne · ' + esc(monthName(voy.month)) + ', ' + DEST.seasonNames[e.season] + '</span></div>' +
-    '<div class="vg v-posts">' + e.rows.map(r => '<div class="v-post"><span class="v-ic sm">' + ICON(r.ic) + '</span><div><div class="v-pl"><span>' + esc(r.t) + '</span><b>' + vnum(r.v) + ' €</b></div><div class="v-pb"><i style="width:' + Math.max(3, Math.round(r.v / max * 100)) + '%"></i></div></div></div>').join("") +
-      '<div class="v-marge">' + ICON("note") + '<span>Une marge de ' + Math.round((DEST.margin || .1) * 100) + ' % est appliquée pour anticiper les potentiels imprévus</span></div></div>' +
+    '<div class="vg v-posts">' + e.rows.map(r => '<div class="v-post"><span class="v-ic sm">' + ICON(r.ic) + '</span><div><div class="v-pl"><span>' + esc(r.t) + '</span><b>' + vnum(r.v) + ' €</b></div><div class="v-pb"><i style="width:' + Math.max(3, Math.round(r.v / max * 100)) + '%"></i></div></div></div>').join("") + '</div>' +
     '<p class="v-note">Estimation indicative, à partir de prix moyens relevés en ' + esc(upd) + '.</p>' +
+    (vtrip() ? vprojBox(vtrip()) : '<button type="button" class="btn primary v-cta" data-voy="project">' + ICON("target") + 'En faire un projet</button>') +
+
     '<div class="vg v-info"><h3>Bon à savoir</h3><dl>' + info.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + esc(v) + '</dd></div>').join("") + '</dl></div>' +
-    '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn primary" data-voy="reset">Autre destination</button></div></div>';
+    '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }
 function voyGo(step) { voy.step = step; render(); scrollTo(0, 0); }
 mainEl.addEventListener("input", e => {
-  if (e.target.id !== "voyQ") return;
-  voy.q = e.target.value; const r = $("#voyRes"); if (r) r.innerHTML = voyResults();
+  const t = e.target;
+  if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
+  if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) go.disabled = !vplan().ok; return; }
+  if (t.id !== "voyQ") return;
+  voy.q = t.value; const r = $("#voyRes"); if (r) r.innerHTML = voyResults();
 });
 mainEl.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "voyFrom") {
+    const b = mainEl.querySelectorAll('#voyFromRes [data-voy="from"]'); if (b.length === 1) { e.preventDefault(); b[0].click(); } return;
+  }
   if (e.key !== "Enter" || e.target.id !== "voyQ") return;
   const f = vfind(voy.q); if (f.length === 1) { e.preventDefault(); voy.id = f[0].id; voy.month = ""; voy.style = ""; voy.from = ""; voyGo("when"); }
 });
@@ -2348,11 +2435,15 @@ mainEl.addEventListener("click", e => {
   const b = e.target.closest("[data-voy]"); if (!b || page !== "voyages") return;
   const a = b.dataset.voy;
   if (a === "all") { voy.all = !voy.all; $("#voyRes").innerHTML = voyResults(); return; }
-  if (a === "pick") { voy.id = b.dataset.id; voy.month = ""; voy.style = ""; voy.from = ""; voyGo("when"); return; }
-  if (a === "back") { voyGo({ when: "search", style: "when", from: "style", result: "from" }[voy.step] || "search"); return; }
+  if (a === "pick") { voy.id = b.dataset.id; voy.month = ""; voy.style = ""; voy.from = ""; voy.fq = ""; voy.trip = null; voyGo("when"); return; }
+  if (a === "trip") { const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return; voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, from: r.trip.dep, trip: r.id }); voyGo("result"); return; }
+  if (a === "project") { const e = voyEstimate(vdest()); voy.budget = vr50((e.low + e.high) / 2); voy.saved = 0; voyGo("project"); return; }
+  if (a === "save") { voySave(); return; }
+  if (a === "unproject") { const id = voy.trip; saveRecurring(recurring.filter(x => x.id !== id)).then(() => { voy.trip = null; render(); setSync("Projet retiré de tes budgets"); }); return; }
+  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", from: "style", result: "from", project: "result" }[voy.step] || "search"); return; }
   if (a === "next") { if (voy.month) voyGo("style"); return; }
-  if (a === "edit") { voyGo("when"); return; }
-  if (a === "reset") { voy = { step: "search", q: "", id: null, month: "", days: 7, people: 2, style: "", from: "", all: false }; voyGo("search"); return; }
+  if (a === "edit") { voy.trip = null; voyGo("when"); return; }
+  if (a === "reset") { voy = VOY0(); voyGo("search"); return; }
   if (/^(days|people)[+-]$/.test(a)) {
     const k = a.slice(0, -1), lim = k === "days" ? [2, 30] : [1, 9];
     voy[k] = Math.min(lim[1], Math.max(lim[0], voy[k] + (a.endsWith("+") ? 1 : -1))); render(); return;

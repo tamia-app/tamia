@@ -7,8 +7,9 @@
 - `schemaVersion` : version du format (1).
 - `updatedAt` : date de la dernière mise à jour du fichier.
 - `checkEveryMonths` : au-delà de ce délai, une destination doit être revérifiée (6 mois).
-- `margin` : marge pour les imprévus ajoutée au total (0,10 = 10 %).
-- `departures` : villes de départ, avec un coefficient appliqué au prix du vol depuis Paris (`factor`).
+- `margin` : marge de sécurité répartie dans chaque poste de l'estimation (0,10 = 10 %). Elle n'est pas affichée à part.
+- `unexpectedRate` : poste « Imprévus » affiché en plus, en part du total des autres postes (0,05 = 5 %).
+- `departures` : villes de départ proposées dans la recherche : `id` (code de l'aéroport), `name`, `factor` (coefficient appliqué au prix du vol depuis Paris) et `aliases` (autres mots acceptés dans la recherche, par exemple « mulhouse » pour Bâle-Mulhouse).
 - `seasonNames` : libellés des saisons `low`, `mid`, `high`.
 - `destinations` : une entrée par ville :
   - `id`, `name`, `country`, `countryCode`, `zone`, `coords` [longitude, latitude], `color`, `aliases` (mots acceptés dans la recherche) ;
@@ -22,11 +23,24 @@
 
 ## Calcul de l'estimation
 
+Chaque poste est majoré de la marge `margin` :
+
 - Vols : prix de la saison du mois de départ × coefficient de la ville de départ × voyageurs.
 - Logement : nuits (jours − 1) × chambres (voyageurs ÷ 2, arrondi au-dessus) × prix de la nuit.
 - Repas, transports, activités : jours × voyageurs × montant du style.
 - Taxes : taxe de séjour × nuits × voyageurs, plus les formalités × voyageurs.
-- Total : somme des postes + marge, affiché en fourchette de −8 % à +8 %.
+- Imprévus : `unexpectedRate` × la somme des postes précédents.
+- Total : somme des postes, affichée en fourchette de −8 % à +8 %.
+
+## Projets de voyage
+
+Un voyage transformé en projet est enregistré dans le profil de l'utilisateur, parmi ses dépenses récurrentes (`users/{uid}.recurring`), dans le groupe « Projets personnels » :
+
+- `name` : « Voyage à {ville} », `amount` : montant à mettre de côté chaque mois ;
+- `from` et `until` (mois au format `AAAA-MM`) : l'enveloppe est ajoutée aux budgets créés entre ces deux mois, du premier mois sans budget jusqu'au mois du départ ;
+- `trip` : `dest` (id de la destination), `month`, `days`, `people`, `style`, `dep` (id de la ville de départ ou `none`), `budget`, `saved` (déjà mis de côté au départ), `createdAt`.
+
+Le montant déjà mis de côté affiché = `saved` + les enveloppes de ce projet dans les budgets des mois passés et du mois en cours.
 
 ## Check-up
 

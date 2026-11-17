@@ -8,37 +8,176 @@
   {
    "id": "PAR",
    "name": "Paris",
-   "factor": 1
+   "factor": 1,
+   "aliases": [
+    "cdg",
+    "orly",
+    "roissy",
+    "beauvais",
+    "ile de france",
+    "île-de-france"
+   ]
   },
   {
    "id": "LYS",
    "name": "Lyon",
-   "factor": 1.08
+   "factor": 1.08,
+   "aliases": [
+    "saint-exupery",
+    "saint-exupéry"
+   ]
   },
   {
    "id": "MRS",
    "name": "Marseille",
-   "factor": 1.1
+   "factor": 1.1,
+   "aliases": [
+    "marignane",
+    "provence",
+    "aix"
+   ]
   },
   {
    "id": "NCE",
    "name": "Nice",
-   "factor": 1.08
+   "factor": 1.08,
+   "aliases": [
+    "cote d'azur",
+    "côte d'azur",
+    "cannes",
+    "monaco"
+   ]
   },
   {
    "id": "BOD",
    "name": "Bordeaux",
-   "factor": 1.12
+   "factor": 1.12,
+   "aliases": [
+    "merignac",
+    "mérignac"
+   ]
   },
   {
    "id": "TLS",
    "name": "Toulouse",
-   "factor": 1.12
+   "factor": 1.12,
+   "aliases": [
+    "blagnac"
+   ]
   },
   {
    "id": "NTE",
    "name": "Nantes",
-   "factor": 1.12
+   "factor": 1.12,
+   "aliases": [
+    "atlantique",
+    "angers"
+   ]
+  },
+  {
+   "id": "LIL",
+   "name": "Lille",
+   "factor": 1.12,
+   "aliases": [
+    "lesquin",
+    "nord"
+   ]
+  },
+  {
+   "id": "SXB",
+   "name": "Strasbourg",
+   "factor": 1.15,
+   "aliases": [
+    "alsace",
+    "entzheim"
+   ]
+  },
+  {
+   "id": "MLH",
+   "name": "Bâle-Mulhouse",
+   "factor": 1.1,
+   "aliases": [
+    "mulhouse",
+    "bale",
+    "bâle",
+    "basel",
+    "euroairport",
+    "colmar"
+   ]
+  },
+  {
+   "id": "MPL",
+   "name": "Montpellier",
+   "factor": 1.12,
+   "aliases": [
+    "herault",
+    "hérault"
+   ]
+  },
+  {
+   "id": "RNS",
+   "name": "Rennes",
+   "factor": 1.15,
+   "aliases": [
+    "bretagne"
+   ]
+  },
+  {
+   "id": "BES",
+   "name": "Brest",
+   "factor": 1.18,
+   "aliases": [
+    "finistere",
+    "finistère"
+   ]
+  },
+  {
+   "id": "BIQ",
+   "name": "Biarritz",
+   "factor": 1.15,
+   "aliases": [
+    "bayonne",
+    "pays basque"
+   ]
+  },
+  {
+   "id": "CFE",
+   "name": "Clermont-Ferrand",
+   "factor": 1.18,
+   "aliases": [
+    "clermont",
+    "auvergne"
+   ]
+  },
+  {
+   "id": "GNB",
+   "name": "Grenoble",
+   "factor": 1.15,
+   "aliases": [
+    "isere",
+    "isère"
+   ]
+  },
+  {
+   "id": "GVA",
+   "name": "Genève",
+   "factor": 1.05,
+   "aliases": [
+    "geneve",
+    "geneva",
+    "annecy",
+    "suisse"
+   ]
+  },
+  {
+   "id": "BRU",
+   "name": "Bruxelles",
+   "factor": 1.0,
+   "aliases": [
+    "brussels",
+    "belgique",
+    "charleroi"
+   ]
   }
  ],
  "seasonNames": {
@@ -1045,5 +1184,6 @@
     ]
    }
   }
- ]
+ ],
+ "unexpectedRate": 0.05
 }
