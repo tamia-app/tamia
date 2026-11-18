@@ -892,6 +892,22 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-how[hidden] { display: none; }
 .v-how-step { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; }
 .v-how-step b { display: block; font-family: var(--font-display); font-size: .98rem; } .v-how-step small { color: var(--muted); font-size: .8rem; }
+
+/* thinking checklist */
+.think { max-width: 460px; margin: 12vh auto 0; display: flex; flex-direction: column; gap: 16px; }
+.think-t { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; font-size: clamp(1.05rem, 5.2vw, 1.4rem); }
+.think-list { background: var(--glass, var(--surface)); border: 1px solid var(--glass-edge, var(--line)); border-radius: 18px; box-shadow: var(--glass-hi, none), var(--glass-shadow, none); padding: 6px 4px; }
+.think.dark .think-list { background: rgba(18,18,18,.4); border-color: rgba(255,255,255,.14); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.think-i { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px 14px; font-size: 0.92rem; transition: opacity .25s; }
+.think-l { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.think-i.no { opacity: .4; }
+.think-ck { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; box-sizing: border-box; border: 2px solid var(--line); }
+.think-ck .ico { width: 10px; height: 10px; stroke-width: 3; opacity: 0; }
+.think-i.wait .think-ck { border-color: var(--line); border-top-color: #f0a432; animation: thinkspin .8s linear infinite; }
+.think-i.ok .think-ck { background: #5fb67f; border-color: #5fb67f; color: #121212; }
+.think-i.ok .think-ck .ico { opacity: 1; }
+@keyframes thinkspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .think-i.wait .think-ck { animation: none; } }
 </style>
 </head>
 <body>
@@ -1576,6 +1592,7 @@ ICO.piggy = '<path d="M4.5 11.5c0-3.3 3.1-5.5 7-5.5 1.6 0 3.1.3 4.3 1l2.7-1.5-.6
 ICO.search = '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>';
 ICO.boat = '<path d="M3 15.5h18l-2.5 4.5h-13z"/><path d="M6 15.5V11h12v4.5"/><path d="M9 11V7.5h6V11"/><path d="M12 7.5V4"/>';
 ICO.dots = '<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>';
+ICO.checkmark = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
 ICO.note = '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/><path d="M8.5 8.5h7M8.5 11.5h4"/>';
 const ICO_ALIAS = {"hand":"pen","repeat":"loop","sparkles":"sparkle","moneybag":"coins","scale":"balance","bags":"bag","seedling":"sprout","chartup":"trend","rocket":"gem","single":"person","parents":"home","k1":"n1","k2":"n2","k3":"n3","cooking":"pan","sandwich":"bowl","scooter":"takeaway","fork":"cutlery","coin":"euro","metro":"train","pushpin":"pin","coffee":"cup","popper":"party","grimace":"meh","sweat":"sad","fire":"flame","dart":"target","door":"logout","gear":"sliders"};
 const ICON = (n, cls) => '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[ICO_ALIAS[n] || n] || '') + '</svg>';
@@ -1697,6 +1714,13 @@ function wizGo(delta) {
   const steps = wizSteps(), i = steps.indexOf(wiz.step) + delta;
   if (i < 0) { wiz = null; render(); return; }
   wiz.step = steps[Math.min(i, steps.length - 1)];
+  if (wiz.step === "result" && delta > 0) {
+    const g = GOALS.find(x => x.id === wiz.a.need);
+    mainEl.innerHTML = thinkHtml("Je prépare ton budget…", ["Ta paye : " + money(wiz.income), "Tes dépenses récurrentes", "Objectif : " + (g ? g.label : "équilibre"), "Répartition des enveloppes", "Marge pour les imprévus"]);
+    window.scrollTo(0, 0);
+    runThink(() => { if (wiz && wiz.step === "result" && page === "finances") render(); });
+    return;
+  }
   render();
   const w = mainEl.querySelector(".wiz");
   if (w) { w.classList.add("fresh"); w.addEventListener("pointermove", () => w.classList.remove("fresh"), { once: true }); }
@@ -2263,6 +2287,27 @@ $("#mini").addEventListener("click", e => {
 const onMQ = () => { if (page === "finances" && work) render(); };
 if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
 
+/* ---------- "tamia réfléchit": a short checklist before showing a budget ---------- */
+let thinkTimer = null;
+function thinkHtml(title, labels, cls) {
+  return '<div class="think ' + (cls || '') + '" role="status" aria-live="polite"><p class="think-t">' + esc(title) + '</p><div class="think-list">' +
+    labels.map((l, i) => '<div class="think-i' + (i ? ' no' : ' wait') + '"><span class="think-ck">' + ICON("checkmark") + '</span><span class="think-l">' + esc(l) + '</span></div>').join("") + '</div></div>';
+}
+function runThink(done) {
+  clearInterval(thinkTimer);
+  const items = Array.from(mainEl.querySelectorAll(".think-i"));
+  const step = matchMedia("(prefers-reduced-motion: reduce)").matches ? 200 : 480;
+  let i = 0;
+  thinkTimer = setInterval(() => {
+    if (!items[0] || !items[0].isConnected) { clearInterval(thinkTimer); return; }
+    if (items[i]) items[i].className = "think-i ok";
+    i++;
+    if (items[i]) { items[i].className = "think-i wait"; return; }
+    clearInterval(thinkTimer);
+    setTimeout(done, 350);
+  }, step);
+}
+
 /* ---------- Objectifs (coming soon) ---------- */
 const PAGES = ["finances", "objectifs", "voyages", "rapports", "reglages", "trophees", "compte"];
 function goalsSoonView() {
@@ -2407,6 +2452,14 @@ function voyView() {
     return '<div class="voy">' + vtop(d.name + ' · 2 sur 4') + vprog(2) + vrecap() + '<h2 class="v-q">Quel style de voyage ?</h2>' +
       S.map(([v, ic, t, sub]) => '<button type="button" class="vg v-opt' + (voy.style === v ? ' on' : '') + '" data-voy="style" data-v="' + v + '"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></button>').join("") + '</div>';
   }
+  if (voy.step === "thinking") {
+    const dep = DEST.departures.find(x => x.id === voy.from), nights = Math.max(1, voy.days - 1);
+    const MODE = { train: "en train", voiture: "en voiture", bateau: "en bateau", autre: "" };
+    const mo = monthName(voy.month);
+    return '<div class="voy">' + thinkHtml("Je prépare ton estimation…", [mo.charAt(0).toUpperCase() + mo.slice(1) + " : " + DEST.seasonNames[vseason(d, voy.month)],
+      voy.mode === "avion" || !voy.mode ? "Vols depuis " + (dep ? dep.name : "ta ville") : ("Trajet " + (MODE[voy.mode] || "")).trim(),
+      "Logement · " + nights + " nuit" + (nights > 1 ? "s" : ""), "Repas et visites", "Marge et imprévus"], "dark") + '</div>';
+  }
   if (voy.step === "how") {
     const M = [["avion", "plane", "En avion"], ["train", "train", "En train"], ["voiture", "car", "En voiture"], ["bateau", "boat", "En bateau"], ["autre", "dots", "Autre"]];
     return '<div class="voy">' + vtop(d.name + ' · 3 sur 4') + vprog(3) + vrecap() + '<h2 class="v-q">Comment voyages-tu ?</h2>' +
@@ -2442,6 +2495,10 @@ function voyView() {
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }
 $("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") return; e.preventDefault(); voy = VOY0(); voyGo("search"); });
+function voyThink() {
+  voy.step = "thinking"; render(); scrollTo(0, 0);
+  runThink(() => { if (page === "voyages" && voy.step === "thinking") voyGo("result"); });
+}
 function voyGo(step) { voy.step = step; render(); scrollTo(0, 0); }
 mainEl.addEventListener("input", e => {
   const t = e.target;
@@ -2472,7 +2529,7 @@ mainEl.addEventListener("click", e => {
   if (a === "project") { const e = voyEstimate(vdest()); voy.budget = vr50((e.low + e.high) / 2); voy.saved = 0; voyGo("project"); return; }
   if (a === "save") { voySave(); return; }
   if (a === "unproject") { const id = voy.trip; saveRecurring(recurring.filter(x => x.id !== id)).then(() => { voy.trip = null; render(); setSync("Projet retiré de tes budgets"); }); return; }
-  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", how: "style", from: "how", result: "from", project: "result" }[voy.step] || "search"); return; }
+  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", how: "style", from: "how", thinking: "from", result: "from", project: "result" }[voy.step] || "search"); return; }
   if (a === "next") {
     const bad = ["days", "people"].find(k => { const n = voy[k], lim = k === "days" ? [2, 30] : [1, 9]; return !(n >= lim[0] && n <= lim[1]); });
     if (bad) { const er = $("#vnErr"); if (er) { er.hidden = false; er.textContent = bad === "days" ? "Indique une durée entre 2 et 30 jours." : "Indique entre 1 et 9 voyageurs."; } return; }
@@ -2483,7 +2540,7 @@ mainEl.addEventListener("click", e => {
   if (a === "style" || a === "from" || a === "mode") {
     voy[a] = b.dataset.v;
     mainEl.querySelectorAll('[data-voy="' + a + '"]').forEach(x => x.classList.toggle("on", x === b));
-    setTimeout(() => voyGo({ style: "how", mode: "from", from: "result" }[a]), 180);
+    setTimeout(() => { if (a === "from") voyThink(); else voyGo({ style: "how", mode: "from" }[a]); }, 180);
   }
 });
 
