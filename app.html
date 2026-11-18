@@ -876,6 +876,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-calc span { font-size: .72rem; font-weight: 700; color: #7a4a0a; text-transform: uppercase; letter-spacing: .08em; }
 .v-calc b { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: -.02em; } .v-calc em { font-style: normal; font-size: .9rem; font-weight: 600; }
 .v-calc small { color: #7a4a0a; font-size: .82rem; }
+.subnav .tabs a[aria-current="page"] { border-radius: 14px; }
 </style>
 </head>
 <body>
@@ -922,7 +923,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
     <nav class="tabs" aria-label="Pages">
       <a href="#finances" id="tab-finances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8V6.5A2.5 2.5 0 0 1 7.5 4H16v4"/><rect x="3.5" y="8" width="17" height="12" rx="2.2"/><path d="M15.5 14h2"/></svg><span>Finances</span></a>
       <a href="#rapports" id="tab-rapports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16"/><path d="M7.5 15l3.5-3.5 3 3L19 9"/><path d="M15.5 9H19v3.5"/></svg><span>Rapports</span></a>
-      <a href="#objectifs" id="tab-objectifs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 21V4"/><path d="M5.5 4.5c2.3-1.4 4.6-1.4 6.8 0s4.5 1.4 6.7 0v9c-2.2 1.4-4.5 1.4-6.7 0s-4.5-1.4-6.8 0"/></svg><span>Objectifs</span></a>
+      <a href="#objectifs" id="tab-objectifs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5c0-3.3 3.1-5.5 7-5.5 1.6 0 3.1.3 4.3 1l2.7-1.5-.6 3c.9.8 1.5 1.8 1.7 3h1.4v3.5h-1.6c-.5 1.2-1.4 2.2-2.6 2.9V20h-2.6v-1.5c-.8.2-1.7.3-2.7.3s-1.9-.1-2.7-.3V20H6.3v-2.3c-1.1-.9-1.8-2.4-1.8-4.2z"/><path d="M9.5 9.2h3.5"/><circle cx="15.6" cy="10.8" r=".8" fill="currentColor" stroke="none"/></svg><span>Objectifs</span></a>
       <a href="#voyages" id="tab-voyages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path transform="rotate(45 12 12)" d="M12 2.5c.9 0 1.5 1 1.5 2.2V9l7 4.2v2l-7-2.2v4.3l2 1.6v1.6l-3.5-1-3.5 1v-1.6l2-1.6V13l-7 2.2v-2l7-4.2V4.7c0-1.2.6-2.2 1.5-2.2z"/></svg><span>Voyages</span></a>
       <a href="#" id="menuBtn" role="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg><span>Plus</span></a>
     </nav>
@@ -1556,7 +1557,7 @@ const ICO = {"pen":"<path d=\"M4 20l1.1-4.1L15.6 5.4a2.1 2.1 0 0 1 3 3L8.1 18.9z
 ICO.brain = '<path d="M12 5.5a3 3 0 0 0-5-.4 3 3 0 0 0-2.6 4.3A3.2 3.2 0 0 0 5 15a3 3 0 0 0 3.8 3.4A2.6 2.6 0 0 0 12 19.5z"/><path d="M12 5.5a3 3 0 0 1 5-.4 3 3 0 0 1 2.6 4.3A3.2 3.2 0 0 1 19 15a3 3 0 0 1-3.8 3.4A2.6 2.6 0 0 1 12 19.5z"/><path d="M12 5.5v14"/><path d="M8.6 9.5c.6 1.2 1.8 1.8 3.4 1.8M15.4 9.5c-.6 1.2-1.8 1.8-3.4 1.8M8.4 15c.7-.9 1.9-1.4 3.6-1.4M15.6 15c-.7-.9-1.9-1.4-3.6-1.4"/>';
 ICO.duplicate = '<rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.2"/><path d="M15.5 8.5V6.2A2.2 2.2 0 0 0 13.3 4H6.2A2.2 2.2 0 0 0 4 6.2v7.1a2.2 2.2 0 0 0 2.2 2.2h2.3"/>';
 ICO.bars = '<path d="M4 20h16"/><rect x="5.5" y="11" width="3.2" height="6.5" rx="1"/><rect x="10.4" y="5.5" width="3.2" height="12" rx="1"/><rect x="15.3" y="13.5" width="3.2" height="4" rx="1"/>';
-ICO.flag = '<path d="M5.5 21V4"/><path d="M5.5 4.5c2.3-1.4 4.6-1.4 6.8 0s4.5 1.4 6.7 0v9c-2.2 1.4-4.5 1.4-6.7 0s-4.5-1.4-6.8 0"/>';
+ICO.piggy = '<path d="M4.5 11.5c0-3.3 3.1-5.5 7-5.5 1.6 0 3.1.3 4.3 1l2.7-1.5-.6 3c.9.8 1.5 1.8 1.7 3h1.4v3.5h-1.6c-.5 1.2-1.4 2.2-2.6 2.9V20h-2.6v-1.5c-.8.2-1.7.3-2.7.3s-1.9-.1-2.7-.3V20H6.3v-2.3c-1.1-.9-1.8-2.4-1.8-4.2z"/><path d="M9.5 9.2h3.5"/><circle cx="15.6" cy="10.8" r=".8" fill="currentColor" stroke="none"/>';
 ICO.note = '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/><path d="M8.5 8.5h7M8.5 11.5h4"/>';
 const ICO_ALIAS = {"hand":"pen","repeat":"loop","sparkles":"sparkle","moneybag":"coins","scale":"balance","bags":"bag","seedling":"sprout","chartup":"trend","rocket":"gem","single":"person","parents":"home","k1":"n1","k2":"n2","k3":"n3","cooking":"pan","sandwich":"bowl","scooter":"takeaway","fork":"cutlery","coin":"euro","metro":"train","pushpin":"pin","coffee":"cup","popper":"party","grimace":"meh","sweat":"sad","fire":"flame","dart":"target","door":"logout","gear":"sliders"};
 const ICON = (n, cls) => '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[ICO_ALIAS[n] || n] || '') + '</svg>';
@@ -2247,7 +2248,7 @@ if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else m
 /* ---------- Objectifs (coming soon) ---------- */
 const PAGES = ["finances", "objectifs", "voyages", "rapports", "reglages", "trophees", "compte"];
 function goalsSoonView() {
-  return '<div class="soon card"><span class="soon-ic">' + ICON("flag") + '</span><span class="soon-tag">Pas encore disponible</span><h2>Objectifs</h2>' +
+  return '<div class="soon card"><span class="soon-ic">' + ICON("piggy") + '</span><span class="soon-tag">Pas encore disponible</span><h2>Objectifs</h2>' +
     '<p>Bientôt, tu pourras créer tes objectifs : un voyage, un apport, un nouvel ordinateur… tamia calculera combien mettre de côté chaque mois et l\'ajoutera à tes budgets.</p></div>';
 }
 
