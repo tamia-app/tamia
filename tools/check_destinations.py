@@ -64,6 +64,8 @@ def main():
         for st in STYLES: num(d, f"taxe de séjour {st}", fees.get("cityTaxPerPersonNight", {}).get(st), 0, 50)
         num(d, "frais par personne", fees.get("perPerson"), 0, 500)
         if fees.get("perPerson") and not fees.get("perPersonLabel"): err(d, "perPersonLabel manquant")
+        tips = x.get("tips", [])
+        if not isinstance(tips, list) or len(tips) < 3 or not all(isinstance(t, str) and t for t in tips): err(d, "au moins 3 astuces (tips) attendues")
         for k in INFO:
             if not x.get("info", {}).get(k): err(d, f"info {k} manquante")
         c = x.get("coords", [])

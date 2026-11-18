@@ -284,7 +284,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Prends le métro aérien (BTS) et le métro (MRT) : bien moins cher que le taxi dans les bouchons.",
+    "Pour un taxi, commande avec Grab : le prix est fixé à l'avance.",
+    "Chaque retrait au distributeur coûte des frais fixes : retire moins souvent, des montants plus gros.",
+    "La street food est bonne et très bon marché : quelques euros le repas."
+   ]
   },
   {
    "id": "istanbul",
@@ -383,7 +389,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Achète une carte Istanbulkart dès l'arrivée : chaque trajet coûte moins cher qu'un ticket.",
+    "Mange dans les lokanta, les cantines du quartier : plats du jour à petit prix.",
+    "Au Grand Bazar, marchander fait partie du jeu.",
+    "Paye en livres turques plutôt qu'en euros : le prix est souvent meilleur."
+   ]
   },
   {
    "id": "londres",
@@ -484,7 +496,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Les grands musées nationaux sont gratuits : British Museum, National Gallery, Tate Modern…",
+    "Paye le métro en sans contact : le montant est plafonné chaque jour.",
+    "Les formules déjeuner des supermarchés (sandwich, boisson, snack) évitent les restos chers le midi.",
+    "Réserve l'Eurostar ou l'avion tôt : les prix montent à l'approche du départ."
+   ]
   },
   {
    "id": "hong-kong",
@@ -583,7 +601,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Prends la carte Octopus pour les transports et les petits achats.",
+    "Le Star Ferry traverse la baie pour quelques dizaines de centimes, avec la plus belle vue.",
+    "Les cantines à dim sum et les marchés de nuit sont bien moins chers que les restaurants.",
+    "Les randonnées et les plages sont gratuites et à portée de métro."
+   ]
   },
   {
    "id": "dubai",
@@ -683,7 +707,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Le métro et sa carte Nol coûtent bien moins cher que les taxis.",
+    "Les plages publiques sont gratuites.",
+    "Réserve les attractions en ligne : les tickets sur place et aux heures de pointe sont plus chers.",
+    "L'alcool est très taxé : prévois-le à part ou passe-t'en."
+   ]
   },
   {
    "id": "antalya",
@@ -782,7 +812,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Compare avec une formule tout compris : les repas sont alors déjà payés.",
+    "Les dolmuş, minibus locaux, relient la ville et les plages pour presque rien.",
+    "Mange hors des rues touristiques de la vieille ville.",
+    "Paye en livres turques plutôt qu'en euros."
+   ]
   },
   {
    "id": "kuala-lumpur",
@@ -881,7 +917,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Mange dans les hawker centers et food courts : repas complets pour quelques euros.",
+    "Commande tes trajets avec Grab : prix fixé, souvent moins cher qu'un taxi.",
+    "La carte Touch 'n Go sert pour les transports en commun.",
+    "Beaucoup de sites sont gratuits, comme les grottes de Batu."
+   ]
   },
   {
    "id": "new-york",
@@ -984,7 +1026,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Paye le métro en sans contact : au-delà de 12 trajets en 7 jours, les suivants sont gratuits.",
+    "Le ferry pour Staten Island est gratuit et passe devant la statue de la Liberté.",
+    "Certains musées proposent des soirées gratuites ou à prix libre : vérifie avant d'y aller.",
+    "Prévois le pourboire (18 à 20 %) dans ton budget repas, il n'est pas inclus."
+   ]
   },
   {
    "id": "tokyo",
@@ -1083,7 +1131,13 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Prends une carte Suica ou Pasmo pour tous les transports.",
+    "Le midi, les menus des restaurants (teishoku) et les konbini sont bien moins chers que le soir.",
+    "Le pass ferroviaire JR n'est rentable que si tu sors de Tokyo : fais le calcul.",
+    "Dans les boutiques Tax-Free, ton passeport permet d'acheter sans la taxe."
+   ]
   },
   {
    "id": "rome",
@@ -1182,8 +1236,23 @@
     "sources": [
      "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
     ]
-   }
+   },
+   "tips": [
+    "Remplis ta gourde aux fontaines publiques (nasoni) : l'eau est potable et gratuite.",
+    "Le premier dimanche du mois, les musées et sites de l'État sont gratuits.",
+    "Le café au comptoir coûte bien moins cher qu'en terrasse.",
+    "Le centre se visite très bien à pied : garde le métro pour les longues distances."
+   ]
   }
  ],
- "unexpectedRate": 0.05
+ "unexpectedRate": 0.05,
+ "generalTips": {
+  "foreignCurrency": [
+   "Utilise une carte bancaire sans frais à l'étranger : les frais de paiement et de retrait s'additionnent vite.",
+   "Quand on te propose de payer en euros, choisis la monnaie locale : la conversion proposée est presque toujours plus chère."
+  ],
+  "all": [
+   "Réserve ton logement et ton transport tôt : c'est là que tu économises le plus."
+  ]
+ }
 }

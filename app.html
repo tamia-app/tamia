@@ -908,6 +908,15 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .think-i.ok .think-ck .ico { opacity: 1; }
 @keyframes thinkspin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .think-i.wait .think-ck { animation: none; } }
+.v-top .v-proj-btn { margin-left: auto; font: inherit; font-weight: 700; font-size: .86rem; color: #f2f2ef; padding: 9px 16px; border-radius: 99px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08)); border: 1px solid rgba(255,255,255,.32);
+  -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 0 rgba(255,255,255,.08), 0 10px 24px -12px rgba(0,0,0,.7); }
+.v-top .v-proj-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.12)); }
+.v-tips ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.v-tips li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.08); font-size: .86rem; line-height: 1.4; }
+.v-tips li:first-child { border-top: none; }
+.v-tips li .ico { width: 20px; height: 20px; color: #f0a432; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -2296,7 +2305,7 @@ function thinkHtml(title, labels, cls) {
 function runThink(done) {
   clearInterval(thinkTimer);
   const items = Array.from(mainEl.querySelectorAll(".think-i"));
-  const step = matchMedia("(prefers-reduced-motion: reduce)").matches ? 200 : 480;
+  const step = matchMedia("(prefers-reduced-motion: reduce)").matches ? 250 : 720;
   let i = 0;
   thinkTimer = setInterval(() => {
     if (!items[0] || !items[0].isConnected) { clearInterval(thinkTimer); return; }
@@ -2482,15 +2491,17 @@ function voyView() {
   const e = voyEstimate(d), max = Math.max(...e.rows.map(r => r.v));
   const styleName = { malin: "malin", confort: "confort", plaisir: "plaisir" }[voy.style];
   const I = d.info, upd = new Date(d.meta.updatedAt).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-  const info = [["Formalités", I.formalities], ["Monnaie", I.currency], ["Langue", I.language], ["Prises", I.plug], ["Décalage", I.timeDiff], ["Vol", I.flightTime], ["Meilleure période", I.bestMonths], ["Astuce", I.tip]];
+  const info = [["Formalités", I.formalities], ["Monnaie", I.currency], ["Langue", I.language], ["Prises", I.plug], ["Décalage", I.timeDiff], ["Vol", I.flightTime], ["Meilleure période", I.bestMonths]];
+  const G = DEST.generalTips || {}, tips = (d.tips || []).concat(d.currency === "EUR" || /Euro/.test(I.currency) ? [] : G.foreignCurrency || [], G.all || []);
   const MODE = { train: "en train", voiture: "en voiture", bateau: "en bateau", autre: "" };
   const modeNote = voy.mode && voy.mode !== "avion" ? '<p class="v-note">Le trajet' + (MODE[voy.mode] ? ' ' + MODE[voy.mode] : '') + ' n\'est pas encore estimé par tamia : pense à l\'ajouter au budget du projet.</p>' : '';
-  return '<div class="voy">' + vtop(d.name + ' · ' + styleName, vtrip() ? '' : '<button type="button" class="btn primary v-proj-btn" data-voy="project">En faire un projet</button>') +
+  return '<div class="voy">' + vtop(d.name + ' · ' + styleName, vtrip() ? '' : '<button type="button" class="v-proj-btn" data-voy="project">En faire un projet</button>') +
     '<div class="vg v-total"><small>À prévoir pour ' + voy.people + ' · ' + voy.days + ' jours</small><b>' + vnum(e.low) + ' – ' + vnum(e.high) + ' €</b><span>Environ ' + vnum(e.perDay) + ' € par jour et par personne · ' + esc(monthName(voy.month)) + ', ' + DEST.seasonNames[e.season] + '</span></div>' +
     '<div class="vg v-posts">' + e.rows.map(r => '<div class="v-post"><span class="v-ic sm">' + ICON(r.ic) + '</span><div><div class="v-pl"><span>' + esc(r.t) + '</span><b>' + vnum(r.v) + ' €</b></div><div class="v-pb"><i style="width:' + Math.max(3, Math.round(r.v / max * 100)) + '%"></i></div></div></div>').join("") + '</div>' +
     '<p class="v-note">Estimation indicative, à partir de prix moyens relevés en ' + esc(upd) + '.</p>' +
     modeNote + (vtrip() ? vprojBox(vtrip()) : '') +
 
+    (tips.length ? '<div class="vg v-info v-tips"><h3>Pour dépenser moins</h3><ul>' + tips.map(t => '<li>' + ICON("piggy") + '<span>' + esc(t) + '</span></li>').join("") + '</ul></div>' : '') +
     '<div class="vg v-info"><h3>Bon à savoir</h3><dl>' + info.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + esc(v) + '</dd></div>').join("") + '</dl></div>' +
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }

@@ -10,6 +10,7 @@
 - `margin` : marge de sécurité répartie dans chaque poste de l'estimation (0,10 = 10 %). Elle n'est pas affichée à part.
 - `unexpectedRate` : poste « Imprévus » affiché en plus, en part du total des autres postes (0,05 = 5 %).
 - `departures` : villes de départ proposées dans la recherche : `id` (code de l'aéroport), `name`, `factor` (coefficient appliqué au prix du vol depuis Paris) et `aliases` (autres mots acceptés dans la recherche, par exemple « mulhouse » pour Bâle-Mulhouse).
+- `generalTips` : astuces communes, `foreignCurrency` (ajoutées quand la monnaie n'est pas l'euro) et `all` (toutes les destinations).
 - `seasonNames` : libellés des saisons `low`, `mid`, `high`.
 - `destinations` : une entrée par ville :
   - `id`, `name`, `country`, `countryCode`, `zone`, `coords` [longitude, latitude], `color`, `aliases` (mots acceptés dans la recherche) ;
@@ -19,6 +20,7 @@
   - `daily` : par jour et par personne, par style : `food` (repas), `transport` (transports sur place), `activities` (activités et visites) ;
   - `fees` : `cityTaxPerPersonNight` (taxe de séjour par personne et par nuit, par style), `perPerson` (formalités payées une fois, par exemple ESTA ou ETA) et `perPersonLabel` ;
   - `info` : `currency`, `language`, `formalities`, `plug`, `timeDiff`, `flightTime`, `bestMonths`, `tip` ;
+  - `tips` : au moins 3 astuces pour dépenser moins sur place, affichées dans « Pour dépenser moins » ;
   - `meta` : `updatedAt` (date de la dernière vérification des prix), `confidence`, `sources`.
 
 ## Calcul de l'estimation
