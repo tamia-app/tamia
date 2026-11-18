@@ -38,7 +38,7 @@ Un voyage transformé en projet est enregistré dans le profil de l'utilisateur,
 
 - `name` : « Voyage à {ville} », `amount` : montant à mettre de côté chaque mois ;
 - `from` et `until` (mois au format `AAAA-MM`) : l'enveloppe est ajoutée aux budgets créés entre ces deux mois, du premier mois sans budget jusqu'au mois du départ ;
-- `trip` : `dest` (id de la destination), `month`, `days`, `people`, `style`, `dep` (id de la ville de départ ou `none`), `budget`, `saved` (déjà mis de côté au départ), `createdAt`.
+- `trip` : `dest` (id de la destination), `month`, `days`, `people`, `style`, `mode` (`avion`, `train`, `voiture`, `bateau` ou `autre` ; seuls les vols sont estimés pour l'instant), `dep` (id de la ville de départ), `budget`, `saved` (déjà mis de côté au départ), `createdAt`.
 
 Le montant déjà mis de côté affiché = `saved` + les enveloppes de ce projet dans les budgets des mois passés et du mois en cours.
 

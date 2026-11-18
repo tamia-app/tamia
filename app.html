@@ -885,6 +885,13 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-trip .v-pb i, .v-proj .v-pb i { background: #8d97a3; }
 .voy-map svg { opacity: .8; }
 .v-trip { margin-bottom: 0; } .voy .v-trip + .v-trip { margin-top: 0; }
+.v-top .v-proj-btn { margin-left: auto; padding: 8px 14px; font-size: .84rem; }
+.v-err { color: #f07c68; }
+.v-amt input[type=number] { -moz-appearance: textfield; } .v-amt input::-webkit-inner-spin-button, .v-amt input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.v-how { border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.v-how[hidden] { display: none; }
+.v-how-step { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; }
+.v-how-step b { display: block; font-family: var(--font-display); font-size: .98rem; } .v-how-step small { color: var(--muted); font-size: .8rem; }
 </style>
 </head>
 <body>
@@ -1567,6 +1574,8 @@ ICO.duplicate = '<rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.2"/><pat
 ICO.bars = '<path d="M4 20h16"/><rect x="5.5" y="11" width="3.2" height="6.5" rx="1"/><rect x="10.4" y="5.5" width="3.2" height="12" rx="1"/><rect x="15.3" y="13.5" width="3.2" height="4" rx="1"/>';
 ICO.piggy = '<path d="M4.5 11.5c0-3.3 3.1-5.5 7-5.5 1.6 0 3.1.3 4.3 1l2.7-1.5-.6 3c.9.8 1.5 1.8 1.7 3h1.4v3.5h-1.6c-.5 1.2-1.4 2.2-2.6 2.9V20h-2.6v-1.5c-.8.2-1.7.3-2.7.3s-1.9-.1-2.7-.3V20H6.3v-2.3c-1.1-.9-1.8-2.4-1.8-4.2z"/><path d="M9.5 9.2h3.5"/><circle cx="15.6" cy="10.8" r=".8" fill="currentColor" stroke="none"/>';
 ICO.search = '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>';
+ICO.boat = '<path d="M3 15.5h18l-2.5 4.5h-13z"/><path d="M6 15.5V11h12v4.5"/><path d="M9 11V7.5h6V11"/><path d="M12 7.5V4"/>';
+ICO.dots = '<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>';
 ICO.note = '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/><path d="M8.5 8.5h7M8.5 11.5h4"/>';
 const ICO_ALIAS = {"hand":"pen","repeat":"loop","sparkles":"sparkle","moneybag":"coins","scale":"balance","bags":"bag","seedling":"sprout","chartup":"trend","rocket":"gem","single":"person","parents":"home","k1":"n1","k2":"n2","k3":"n3","cooking":"pan","sandwich":"bowl","scooter":"takeaway","fork":"cutlery","coin":"euro","metro":"train","pushpin":"pin","coffee":"cup","popper":"party","grimace":"meh","sweat":"sad","fire":"flame","dart":"target","door":"logout","gear":"sliders"};
 const ICON = (n, cls) => '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[ICO_ALIAS[n] || n] || '') + '</svg>';
@@ -2263,7 +2272,7 @@ function goalsSoonView() {
 
 /* ---------- Voyages: travel budget estimate from data/destinations.json ---------- */
 let DEST = null, destErr = false, MAPD = null;
-const VOY0 = () => ({ step: "search", q: "", fq: "", id: null, month: "", days: 7, people: 2, style: "", from: "", all: false, trip: null, budget: 0, saved: 0 });
+const VOY0 = () => ({ step: "search", q: "", fq: "", id: null, month: "", days: 7, people: 2, style: "", mode: "", from: "", all: false, trip: null, budget: 0, saved: 0 });
 let voy = VOY0();
 function loadDest() {
   if (DEST || loadDest.p) return;
@@ -2299,7 +2308,7 @@ function voyEstimate(d) {
   const season = vseason(d, voy.month), st = voy.style, P = voy.people, days = voy.days, nights = Math.max(1, days - 1), rooms = Math.ceil(P / 2);
   const dep = DEST.departures.find(x => x.id === voy.from);
   const rows = [];
-  if (dep) rows.push({ ic: "plane", t: "Vols A/R depuis " + dep.name, v: d.flights[season] * dep.factor * P });
+  if (dep && (voy.mode || "avion") === "avion") rows.push({ ic: "plane", t: "Vols A/R depuis " + dep.name, v: d.flights[season] * dep.factor * P });
   rows.push({ ic: "home", t: "Logement", v: d.lodging[st][season] * nights * rooms });
   rows.push({ ic: "cutlery", t: "Repas", v: d.daily.food[st] * days * P });
   rows.push({ ic: "train", t: "Transports sur place", v: d.daily.transport[st] * days * P });
@@ -2313,8 +2322,8 @@ function voyEstimate(d) {
   return { rows, season, nights, low: vr50(total * .92), high: vr50(total * 1.08), perDay: Math.round(total / days / P) };
 }
 const vnum = n => Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " ");
-function vtop(t) { return '<div class="v-top"><button type="button" class="v-back vg" data-voy="back" aria-label="Retour">‹</button><span>' + esc(t) + '</span></div>'; }
-function vprog(k) { return '<div class="v-prog">' + [1, 2, 3].map(i => '<i' + (i <= k ? ' class="on"' : '') + '></i>').join("") + '</div>'; }
+function vtop(t, right) { return '<div class="v-top"><button type="button" class="v-back vg" data-voy="back" aria-label="Retour">‹</button><span>' + esc(t) + '</span>' + (right || '') + '</div>'; }
+function vprog(k) { return '<div class="v-prog">' + [1, 2, 3, 4].map(i => '<i' + (i <= k ? ' class="on"' : '') + '></i>').join("") + '</div>'; }
 function vrecap() { return '<div class="vg v-recap"><span><b>' + voy.days + '</b> jours</span><span><b>' + voy.people + '</b> voyageur' + (voy.people > 1 ? 's' : '') + '</span><span><b>' + esc(label(voy.month, true).replace(".", "")) + '</b></span></div>'; }
 function vdestBtn(d) {
   return '<button type="button" class="vg v-dest" data-voy="pick" data-id="' + d.id + '"><span class="v-dc" style="background:' + d.color + '">' + d.countryCode + '</span><span><b>' + esc(d.name) + '</b><small>' + esc(d.country) + ' · ' + esc(d.info.flightTime) + '</small></span><span class="arr">›</span></button>';
@@ -2332,7 +2341,7 @@ function vfromResults() {
   if (!n) return '';
   const found = DEST.departures.filter(x => (n.length < 3 ? [x.name] : [x.name, x.id].concat(x.aliases || [])).some(a => vnorm(a).startsWith(n) || vnorm(a).includes(" " + n)));
   if (!found.length) return '<div class="vg v-none">' + ICON("pin") + '<div><b>« ' + esc(voy.fq.trim()) + ' » n\'est pas encore disponible comme ville de départ</b><span>Choisis l\'aéroport le plus proche de chez toi.</span></div></div>';
-  return '<div class="v-list">' + found.map(x => '<button type="button" class="vg v-dest' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '"><span class="v-dc v-dep">' + ICON("plane") + '</span><span><b>' + esc(x.name) + '</b><small>Aéroport ' + x.id + '</small></span><span class="arr">›</span></button>').join("") + '</div>';
+  return '<div class="v-list">' + found.map(x => '<button type="button" class="vg v-dest' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '"><span class="v-dc v-dep">' + ICON("pin") + '</span><span><b>' + esc(x.name) + '</b><small>' + (voy.mode === "avion" ? 'Aéroport ' + x.id : 'Ville de départ') + '</small></span><span class="arr">›</span></button>').join("") + '</div>';
 }
 // a trip becomes a recurring expense limited to the months before departure (from → until), in "Projets personnels"
 const vtrip = () => voy.trip && recurring.find(r => r.id === voy.trip && r.trip);
@@ -2366,7 +2375,7 @@ function voySave() {
   const d = vdest(), p = vplan(); if (!d || !p.ok) return;
   const name = "Voyage à " + d.name;
   const item = { id: uid(), name, amount: p.monthly, group: "projets", bank: lastBankFor(name), est: false, from: p.start, until: voy.month,
-    trip: { dest: d.id, month: voy.month, days: voy.days, people: voy.people, style: voy.style, dep: voy.from, budget: voy.budget, saved: voy.saved, createdAt: new Date().toISOString() } };
+    trip: { dest: d.id, month: voy.month, days: voy.days, people: voy.people, style: voy.style, dep: voy.from, mode: voy.mode || "avion", budget: voy.budget, saved: voy.saved, createdAt: new Date().toISOString() } };
   saveRecurring(recurring.concat([item])).then(() => { voy.trip = item.id; voyGo("result"); setSync("Projet ajouté à tes budgets"); });
 }
 function voyView() {
@@ -2377,29 +2386,36 @@ function voyView() {
     return '<div class="voy"><h1 class="v-h">Où part-on ?</h1>' +
       '<label class="vg v-search">' + ICON("search") + '<input id="voyQ" type="search" placeholder="Ville ou pays…" autocomplete="off" aria-label="Rechercher une destination" value="' + esc(voy.q) + '"></label>' +
       '<div id="voyRes">' + voyResults() + '</div>' +
+      (!vtrips().length && !voy.q.trim() ? '<div class="vg v-how"><p class="v-lbl" style="margin:0">Comment ça marche</p>' +
+        [["search", "Choisis ta destination", "Une ville ou un pays parmi nos " + DEST.destinations.length + " destinations"], ["receipt", "Réponds à quelques questions", "Dates, durée, style de voyage, ville de départ"], ["piggy", "Mets de côté chaque mois", "tamia ajoute une enveloppe à tes budgets jusqu\'au départ"]]
+          .map(([ic, t, sub]) => '<div class="v-how-step"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></div>').join("") + '</div>' : '') +
       (vtrips().length ? '<p class="v-lbl">Mes voyages</p>' + vtrips().map(r => { const t = r.trip, x = DEST.destinations.find(y => y.id === t.dest), got = vsavedFor(r);
         return '<button type="button" class="vg v-trip" data-voy="trip" data-rid="' + esc(r.id) + '"><span class="v-dc" style="background:' + x.color + '">' + x.countryCode + '</span><span class="v-trip-b"><b>' + esc(x.name) + ' · ' + t.days + ' jours</b><small>Départ en ' + esc(label(t.month).toLowerCase()) + ' · ' + (t.people > 1 ? t.people + ' voyageurs' : 'en solo') + '</small>' +
           '<span class="v-pb"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><span class="v-proj-num"><span><b>' + vnum(got) + ' €</b> de côté</span><span>sur ' + vnum(t.budget) + ' €</span></span></span></button>'; }).join("") : '') + '</div>';
   }
   if (voy.step === "when") {
     const opts = voyMonths().map(id => '<option value="' + id + '"' + (id === voy.month ? ' selected' : '') + '>' + esc(label(id)) + '</option>').join("");
-    const stp = (k, v, unit, min, max) => '<div class="vg v-field"><small>' + unit[0] + '</small><div class="v-step"><button type="button" data-voy="' + k + '-" aria-label="Moins"' + (v <= min ? ' disabled' : '') + '>−</button><b>' + v + ' <em>' + (v > 1 ? unit[2] : unit[1]) + '</em></b><button type="button" data-voy="' + k + '+" aria-label="Plus"' + (v >= max ? ' disabled' : '') + '>+</button></div></div>';
+    const stp = (k, v, unit, min, max) => '<label class="vg v-field"><small>' + unit[0] + '</small><span class="v-amt"><input data-vn="' + k + '" type="number" inputmode="numeric" min="' + min + '" max="' + max + '" value="' + v + '" aria-label="' + unit[0] + '"><em>' + unit[2] + '</em></span></label>';
     const se = voy.month ? '<p class="v-sub">' + esc(label(voy.month).split(" ")[0]) + ' à ' + esc(d.name) + ' : ' + DEST.seasonNames[vseason(d, voy.month)] + '. Meilleure période : ' + esc(d.info.bestMonths.charAt(0).toLowerCase() + d.info.bestMonths.slice(1)) + '.</p>' : '';
-    return '<div class="voy">' + vtop(d.name + ' · 1 sur 3') + vprog(1) + '<h2 class="v-q">Quand et combien de temps ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 1 sur 4') + vprog(1) + '<h2 class="v-q">Quand et combien de temps ?</h2>' +
       '<label class="vg v-field"><small>Mois de départ</small><select id="voyMonth"><option value=""' + (voy.month ? '' : ' selected') + ' disabled>Choisir un mois</option>' + opts + '</select></label>' + se +
       '<div class="v-two">' + stp("days", voy.days, ["Durée", "jour", "jours"], 2, 30) + stp("people", voy.people, ["Voyageurs", "personne", "personnes"], 1, 9) + '</div>' +
-      '<button type="button" class="btn primary v-cta" data-voy="next"' + (voy.month ? '' : ' disabled') + '>Continuer</button></div>';
+      '<p class="v-sub v-err" id="vnErr" hidden></p><button type="button" class="btn primary v-cta" data-voy="next"' + (voy.month ? '' : ' disabled') + '>Continuer</button></div>';
   }
   if (voy.step === "style") {
     const S = [["malin", "coins", "Malin", "Auberges ou guesthouses, street food, transports en commun"], ["confort", "home", "Confort", "Hôtels 3 étoiles, restos, quelques activités"], ["plaisir", "sparkle", "Plaisir", "Beaux hôtels, bonnes tables, sorties"]];
-    return '<div class="voy">' + vtop(d.name + ' · 2 sur 3') + vprog(2) + vrecap() + '<h2 class="v-q">Quel style de voyage ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 2 sur 4') + vprog(2) + vrecap() + '<h2 class="v-q">Quel style de voyage ?</h2>' +
       S.map(([v, ic, t, sub]) => '<button type="button" class="vg v-opt' + (voy.style === v ? ' on' : '') + '" data-voy="style" data-v="' + v + '"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></button>').join("") + '</div>';
   }
+  if (voy.step === "how") {
+    const M = [["avion", "plane", "En avion"], ["train", "train", "En train"], ["voiture", "car", "En voiture"], ["bateau", "boat", "En bateau"], ["autre", "dots", "Autre"]];
+    return '<div class="voy">' + vtop(d.name + ' · 3 sur 4') + vprog(3) + vrecap() + '<h2 class="v-q">Comment voyages-tu ?</h2>' +
+      M.map(([v, ic, t]) => '<button type="button" class="vg v-opt' + (voy.mode === v ? ' on' : '') + '" data-voy="mode" data-v="' + v + '"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b></span></button>').join("") + '</div>';
+  }
   if (voy.step === "from") {
-    return '<div class="voy">' + vtop(d.name + ' · 3 sur 3') + vprog(3) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
-      '<label class="vg v-search">' + ICON("pin") + '<input id="voyFrom" type="search" placeholder="Ta ville de départ…" autocomplete="off" aria-label="Rechercher une ville de départ" value="' + esc(voy.fq) + '"></label>' +
-      '<div id="voyFromRes">' + vfromResults() + '</div>' +
-      '<button type="button" class="vg v-dest' + (voy.from === "none" ? ' on' : '') + '" data-voy="from" data-v="none"><span class="v-dc v-dep">' + ICON("nope") + '</span><span><b>Pas de vol à prévoir</b><small>J\'y vais en train, en voiture, ou c\'est déjà réglé</small></span><span class="arr">›</span></button></div>';
+    return '<div class="voy">' + vtop(d.name + ' · 4 sur 4') + vprog(4) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
+      '<label class="vg v-search">' + ICON("search") + '<input id="voyFrom" type="search" placeholder="Ta ville de départ…" autocomplete="off" aria-label="Rechercher une ville de départ" value="' + esc(voy.fq) + '"></label>' +
+      '<div id="voyFromRes">' + vfromResults() + '</div></div>';
   }
   if (voy.step === "project") {
     const fld = (k, t) => '<label class="vg v-field"><small>' + t + '</small><span class="v-amt"><input data-vp="' + k + '" inputmode="decimal" autocomplete="off" value="' + (voy[k] ? vnum(voy[k]) : '') + '" placeholder="0"><em>€</em></span></label>';
@@ -2414,11 +2430,13 @@ function voyView() {
   const styleName = { malin: "malin", confort: "confort", plaisir: "plaisir" }[voy.style];
   const I = d.info, upd = new Date(d.meta.updatedAt).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
   const info = [["Formalités", I.formalities], ["Monnaie", I.currency], ["Langue", I.language], ["Prises", I.plug], ["Décalage", I.timeDiff], ["Vol", I.flightTime], ["Meilleure période", I.bestMonths], ["Astuce", I.tip]];
-  return '<div class="voy">' + vtop(d.name + ' · ' + styleName) +
+  const MODE = { train: "en train", voiture: "en voiture", bateau: "en bateau", autre: "" };
+  const modeNote = voy.mode && voy.mode !== "avion" ? '<p class="v-note">Le trajet' + (MODE[voy.mode] ? ' ' + MODE[voy.mode] : '') + ' n\'est pas encore estimé par tamia : pense à l\'ajouter au budget du projet.</p>' : '';
+  return '<div class="voy">' + vtop(d.name + ' · ' + styleName, vtrip() ? '' : '<button type="button" class="btn primary v-proj-btn" data-voy="project">En faire un projet</button>') +
     '<div class="vg v-total"><small>À prévoir pour ' + voy.people + ' · ' + voy.days + ' jours</small><b>' + vnum(e.low) + ' – ' + vnum(e.high) + ' €</b><span>Environ ' + vnum(e.perDay) + ' € par jour et par personne · ' + esc(monthName(voy.month)) + ', ' + DEST.seasonNames[e.season] + '</span></div>' +
     '<div class="vg v-posts">' + e.rows.map(r => '<div class="v-post"><span class="v-ic sm">' + ICON(r.ic) + '</span><div><div class="v-pl"><span>' + esc(r.t) + '</span><b>' + vnum(r.v) + ' €</b></div><div class="v-pb"><i style="width:' + Math.max(3, Math.round(r.v / max * 100)) + '%"></i></div></div></div>').join("") + '</div>' +
     '<p class="v-note">Estimation indicative, à partir de prix moyens relevés en ' + esc(upd) + '.</p>' +
-    (vtrip() ? vprojBox(vtrip()) : '<button type="button" class="btn primary v-cta" data-voy="project">' + ICON("target") + 'En faire un projet</button>') +
+    modeNote + (vtrip() ? vprojBox(vtrip()) : '') +
 
     '<div class="vg v-info"><h3>Bon à savoir</h3><dl>' + info.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + esc(v) + '</dd></div>').join("") + '</dl></div>' +
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
@@ -2427,10 +2445,12 @@ $("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") retur
 function voyGo(step) { voy.step = step; render(); scrollTo(0, 0); }
 mainEl.addEventListener("input", e => {
   const t = e.target;
+  if (t.dataset.vn) { voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
   if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
   if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) go.disabled = !vplan().ok; return; }
   if (t.id !== "voyQ") return;
   voy.q = t.value; const r = $("#voyRes"); if (r) r.innerHTML = voyResults();
+  const how = mainEl.querySelector(".v-how"); if (how) how.hidden = !!voy.q.trim();
 });
 mainEl.addEventListener("keydown", e => {
   if (e.key === "Enter" && e.target.id === "voyFrom") {
@@ -2448,22 +2468,22 @@ mainEl.addEventListener("click", e => {
   const a = b.dataset.voy;
   if (a === "all") { voy.all = !voy.all; $("#voyRes").innerHTML = voyResults(); return; }
   if (a === "pick") { voy.id = b.dataset.id; voy.month = ""; voy.style = ""; voy.from = ""; voy.fq = ""; voy.trip = null; voyGo("when"); return; }
-  if (a === "trip") { const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return; voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, from: r.trip.dep, trip: r.id }); voyGo("result"); return; }
+  if (a === "trip") { const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return; voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, mode: r.trip.mode || "avion", from: r.trip.dep, trip: r.id }); voyGo("result"); return; }
   if (a === "project") { const e = voyEstimate(vdest()); voy.budget = vr50((e.low + e.high) / 2); voy.saved = 0; voyGo("project"); return; }
   if (a === "save") { voySave(); return; }
   if (a === "unproject") { const id = voy.trip; saveRecurring(recurring.filter(x => x.id !== id)).then(() => { voy.trip = null; render(); setSync("Projet retiré de tes budgets"); }); return; }
-  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", from: "style", result: "from", project: "result" }[voy.step] || "search"); return; }
-  if (a === "next") { if (voy.month) voyGo("style"); return; }
+  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", how: "style", from: "how", result: "from", project: "result" }[voy.step] || "search"); return; }
+  if (a === "next") {
+    const bad = ["days", "people"].find(k => { const n = voy[k], lim = k === "days" ? [2, 30] : [1, 9]; return !(n >= lim[0] && n <= lim[1]); });
+    if (bad) { const er = $("#vnErr"); if (er) { er.hidden = false; er.textContent = bad === "days" ? "Indique une durée entre 2 et 30 jours." : "Indique entre 1 et 9 voyageurs."; } return; }
+    if (voy.month) voyGo("style"); return;
+  }
   if (a === "edit") { voy.trip = null; voyGo("when"); return; }
   if (a === "reset") { voy = VOY0(); voyGo("search"); return; }
-  if (/^(days|people)[+-]$/.test(a)) {
-    const k = a.slice(0, -1), lim = k === "days" ? [2, 30] : [1, 9];
-    voy[k] = Math.min(lim[1], Math.max(lim[0], voy[k] + (a.endsWith("+") ? 1 : -1))); render(); return;
-  }
-  if (a === "style" || a === "from") {
+  if (a === "style" || a === "from" || a === "mode") {
     voy[a] = b.dataset.v;
     mainEl.querySelectorAll('[data-voy="' + a + '"]').forEach(x => x.classList.toggle("on", x === b));
-    setTimeout(() => voyGo(a === "style" ? "from" : "result"), 180);
+    setTimeout(() => voyGo({ style: "how", mode: "from", from: "result" }[a]), 180);
   }
 });
 
