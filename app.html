@@ -835,7 +835,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-pill { border-radius: 99px; padding: 10px 16px; font: inherit; font-weight: 600; cursor: pointer; }
 .v-total { border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; background: rgba(10,10,10,.6) !important; }
 .v-total small { font-size: .66rem; letter-spacing: .09em; text-transform: uppercase; color: #b9b9b2; font-weight: 700; }
-.v-total b { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 7vw, 2.1rem); letter-spacing: -.03em; color: #f0a432; white-space: nowrap; }
+.v-total b { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 7vw, 2.1rem); letter-spacing: -.03em; color: #f2f2ef; white-space: nowrap; }
 .v-total span { font-size: .82rem; color: #c9c9c2; }
 .v-posts { border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; gap: 9px; }
 .v-post { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: center; }
@@ -878,6 +878,9 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-calc small { color: #7a4a0a; font-size: .82rem; }
 .subnav .tabs a[aria-current="page"] { border-radius: 14px; }
 .subnav .tabs { border-radius: 20px; }
+.v-dest.on { border-color: #f0a432; box-shadow: inset 0 0 0 1px #f0a432; }
+.v-dc.v-dep { background: rgba(255,255,255,.1); color: #f2f2ef; } .v-dc.v-dep .ico { width: 22px; height: 22px; }
+#voyFromRes:not(:empty) { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -2322,9 +2325,9 @@ function voyResults() {
 function vfromResults() {
   const n = vnorm(voy.fq);
   if (!n) return '';
-  const found = DEST.departures.filter(x => [x.name, x.id].concat(x.aliases || []).some(a => vnorm(a).startsWith(n) || vnorm(a).includes(" " + n)));
+  const found = DEST.departures.filter(x => (n.length < 3 ? [x.name] : [x.name, x.id].concat(x.aliases || [])).some(a => vnorm(a).startsWith(n) || vnorm(a).includes(" " + n)));
   if (!found.length) return '<div class="vg v-none">' + ICON("pin") + '<div><b>« ' + esc(voy.fq.trim()) + ' » n\'est pas encore disponible comme ville de départ</b><span>Choisis l\'aéroport le plus proche de chez toi.</span></div></div>';
-  return '<div class="v-pills">' + found.map(x => '<button type="button" class="vg v-pill' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '">' + esc(x.name) + '</button>').join("") + '</div>';
+  return '<div class="v-list">' + found.map(x => '<button type="button" class="vg v-dest' + (voy.from === x.id ? ' on' : '') + '" data-voy="from" data-v="' + x.id + '"><span class="v-dc v-dep">' + ICON("plane") + '</span><span><b>' + esc(x.name) + '</b><small>Aéroport ' + x.id + '</small></span><span class="arr">›</span></button>').join("") + '</div>';
 }
 // a trip becomes a recurring expense limited to the months before departure (from → until), in "Projets personnels"
 const vtrip = () => voy.trip && recurring.find(r => r.id === voy.trip && r.trip);
@@ -2391,7 +2394,7 @@ function voyView() {
     return '<div class="voy">' + vtop(d.name + ' · 3 sur 3') + vprog(3) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
       '<label class="vg v-search">' + ICON("pin") + '<input id="voyFrom" type="search" placeholder="Ta ville de départ…" autocomplete="off" aria-label="Rechercher une ville de départ" value="' + esc(voy.fq) + '"></label>' +
       '<div id="voyFromRes">' + vfromResults() + '</div>' +
-      '<button type="button" class="vg v-pill v-novol' + (voy.from === "none" ? ' on' : '') + '" data-voy="from" data-v="none">Pas de vol à prévoir</button></div>';
+      '<button type="button" class="vg v-dest' + (voy.from === "none" ? ' on' : '') + '" data-voy="from" data-v="none"><span class="v-dc v-dep">' + ICON("nope") + '</span><span><b>Pas de vol à prévoir</b><small>J\'y vais en train, en voiture, ou c\'est déjà réglé</small></span><span class="arr">›</span></button></div>';
   }
   if (voy.step === "project") {
     const fld = (k, t) => '<label class="vg v-field"><small>' + t + '</small><span class="v-amt"><input data-vp="' + k + '" inputmode="decimal" autocomplete="off" value="' + (voy[k] ? vnum(voy[k]) : '') + '" placeholder="0"><em>€</em></span></label>';
@@ -2415,6 +2418,7 @@ function voyView() {
     '<div class="vg v-info"><h3>Bon à savoir</h3><dl>' + info.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + esc(v) + '</dd></div>').join("") + '</dl></div>' +
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }
+$("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") return; e.preventDefault(); voy = VOY0(); voyGo("search"); });
 function voyGo(step) { voy.step = step; render(); scrollTo(0, 0); }
 mainEl.addEventListener("input", e => {
   const t = e.target;
