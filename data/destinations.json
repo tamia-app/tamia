@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "updatedAt": "2026-11-17",
+ "updatedAt": "2026-11-18",
  "currency": "EUR",
  "checkEveryMonths": 6,
  "margin": 0.1,
@@ -1243,6 +1243,2130 @@
     "Le café au comptoir coûte bien moins cher qu'en terrasse.",
     "Le centre se visite très bien à pied : garde le métro pour les longues distances."
    ]
+  },
+  {
+   "id": "barcelone",
+   "name": "Barcelone",
+   "country": "Espagne",
+   "countryCode": "ES",
+   "zone": "Europe",
+   "coords": [
+    2.17,
+    41.39
+   ],
+   "color": "#c2410c",
+   "aliases": [
+    "barcelona",
+    "espagne",
+    "catalogne"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "12": "low",
+    "3": "mid",
+    "4": "mid",
+    "10": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 90,
+    "mid": 140,
+    "high": 220
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 70,
+     "mid": 90,
+     "high": 120
+    },
+    "confort": {
+     "low": 120,
+     "mid": 150,
+     "high": 200
+    },
+    "plaisir": {
+     "low": 240,
+     "mid": 300,
+     "high": 380
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 25,
+     "confort": 45,
+     "plaisir": 80
+    },
+    "transport": {
+     "malin": 5,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 3,
+     "confort": 5,
+     "plaisir": 7
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Espagnol et catalan",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 1 h 50 en direct",
+    "bestMonths": "Mai-juin et septembre",
+    "tip": "Réserve la Sagrada Família et le parc Güell en ligne."
+   },
+   "tips": [
+    "Prends la carte T-casual : 10 trajets en métro et bus, bien moins cher que les tickets à l'unité.",
+    "Le midi, le « menú del día » donne entrée, plat et dessert à prix doux.",
+    "Réserve la Sagrada Família et le parc Güell en ligne : moins cher et sans file d'attente.",
+    "Les plages et de nombreux quartiers se découvrent à pied, gratuitement."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "madrid",
+   "name": "Madrid",
+   "country": "Espagne",
+   "countryCode": "ES",
+   "zone": "Europe",
+   "coords": [
+    -3.7,
+    40.42
+   ],
+   "color": "#b91c1c",
+   "aliases": [
+    "espagne"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "7": "low",
+    "8": "low",
+    "3": "mid",
+    "11": "mid",
+    "12": "mid",
+    "4": "high",
+    "5": "high",
+    "6": "high",
+    "9": "high",
+    "10": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 90,
+    "mid": 130,
+    "high": 200
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 80,
+     "high": 100
+    },
+    "confort": {
+     "low": 110,
+     "mid": 140,
+     "high": 180
+    },
+    "plaisir": {
+     "low": 220,
+     "mid": 270,
+     "high": 340
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 22,
+     "confort": 40,
+     "plaisir": 75
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 7,
+     "plaisir": 16
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 22,
+     "plaisir": 45
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Espagnol",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 2 h en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Le Prado est gratuit en fin de journée."
+   },
+   "tips": [
+    "Le Prado et le musée Reina Sofía sont gratuits en fin de journée : vérifie les horaires.",
+    "Le « menú del día » du midi est la formule la moins chère pour bien manger.",
+    "La carte Multi rechargeable avec 10 trajets revient moins cher que les tickets simples.",
+    "Le parc du Retiro et les marchés se visitent gratuitement."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "lisbonne",
+   "name": "Lisbonne",
+   "country": "Portugal",
+   "countryCode": "PT",
+   "zone": "Europe",
+   "coords": [
+    -9.14,
+    38.72
+   ],
+   "color": "#0f766e",
+   "aliases": [
+    "lisboa",
+    "lisbon",
+    "portugal"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "12": "low",
+    "3": "mid",
+    "4": "mid",
+    "10": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 110,
+    "mid": 150,
+    "high": 230
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 80,
+     "high": 110
+    },
+    "confort": {
+     "low": 110,
+     "mid": 140,
+     "high": 190
+    },
+    "plaisir": {
+     "low": 220,
+     "mid": 280,
+     "high": 360
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 20,
+     "confort": 35,
+     "plaisir": 65
+    },
+    "transport": {
+     "malin": 5,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 4,
+     "confort": 4,
+     "plaisir": 4
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Portugais",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "-1 h",
+    "flightTime": "Environ 2 h 30 en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Les belvédères sont gratuits."
+   },
+   "tips": [
+    "Charge ta carte Navegante en mode « zapping » : chaque trajet coûte moins cher.",
+    "Le « prato do dia », plat du jour, est la bonne affaire du midi.",
+    "Les belvédères (miradouros) offrent les plus belles vues, gratuitement.",
+    "Le célèbre tram 28 est bondé et cher en ticket simple : prends-le avec ta carte, tôt le matin."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "amsterdam",
+   "name": "Amsterdam",
+   "country": "Pays-Bas",
+   "countryCode": "NL",
+   "zone": "Europe",
+   "coords": [
+    4.9,
+    52.37
+   ],
+   "color": "#ea580c",
+   "aliases": [
+    "pays-bas",
+    "hollande",
+    "netherlands"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "3": "mid",
+    "10": "mid",
+    "12": "mid",
+    "4": "high",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 90,
+    "mid": 130,
+    "high": 190
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 90,
+     "mid": 120,
+     "high": 160
+    },
+    "confort": {
+     "low": 160,
+     "mid": 200,
+     "high": 260
+    },
+    "plaisir": {
+     "low": 300,
+     "mid": 380,
+     "high": 480
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 30,
+     "confort": 50,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 8,
+     "confort": 10,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 55
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 5,
+     "confort": 9,
+     "plaisir": 18
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Néerlandais, anglais très répandu",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 1 h 15 en avion, 3 h 20 en train",
+    "bestMonths": "D'avril à septembre",
+    "tip": "Réserve les musées en ligne, souvent obligatoire."
+   },
+   "tips": [
+    "Loue un vélo : c'est le moyen le plus pratique et le moins cher pour tout voir.",
+    "Les passes transport GVB de 1 à 7 jours reviennent moins cher que les tickets à l'unité.",
+    "Les supermarchés et les marchés permettent de déjeuner pour peu.",
+    "Le logement est cher : réserve tôt ou loge un peu en dehors du centre."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "berlin",
+   "name": "Berlin",
+   "country": "Allemagne",
+   "countryCode": "DE",
+   "zone": "Europe",
+   "coords": [
+    13.4,
+    52.52
+   ],
+   "color": "#475569",
+   "aliases": [
+    "allemagne",
+    "germany"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "10": "mid",
+    "12": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 90,
+    "mid": 130,
+    "high": 190
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 75,
+     "high": 100
+    },
+    "confort": {
+     "low": 110,
+     "mid": 130,
+     "high": 170
+    },
+    "plaisir": {
+     "low": 200,
+     "mid": 250,
+     "high": 320
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 20,
+     "confort": 35,
+     "plaisir": 65
+    },
+    "transport": {
+     "malin": 9,
+     "confort": 10,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 20,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 3,
+     "confort": 5,
+     "plaisir": 10
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Allemand",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 1 h 50 en direct",
+    "bestMonths": "De mai à septembre",
+    "tip": "Beaucoup de sites du Mur sont gratuits."
+   },
+   "tips": [
+    "Les lieux de mémoire du Mur, comme l'East Side Gallery et le mémorial de la Bernauer Strasse, sont gratuits.",
+    "Le ticket journée ou la Berlin WelcomeCard évitent de payer chaque trajet.",
+    "Les Imbiss et les döner permettent de manger très bien pour peu.",
+    "Beaucoup de magasins ferment le dimanche : fais tes courses le samedi."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "prague",
+   "name": "Prague",
+   "country": "République tchèque",
+   "countryCode": "CZ",
+   "zone": "Europe",
+   "coords": [
+    14.42,
+    50.08
+   ],
+   "color": "#9f1239",
+   "aliases": [
+    "praha",
+    "tchequie",
+    "tchéquie",
+    "republique tcheque"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "3": "mid",
+    "10": "mid",
+    "12": "mid",
+    "4": "high",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 100,
+    "mid": 140,
+    "high": 200
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 45,
+     "mid": 60,
+     "high": 80
+    },
+    "confort": {
+     "low": 80,
+     "mid": 100,
+     "high": 130
+    },
+    "plaisir": {
+     "low": 160,
+     "mid": 200,
+     "high": 260
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 18,
+     "confort": 30,
+     "plaisir": 55
+    },
+    "transport": {
+     "malin": 5,
+     "confort": 6,
+     "plaisir": 14
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 35
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 2,
+     "confort": 2,
+     "plaisir": 2
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Couronne tchèque (CZK)",
+    "language": "Tchèque",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Type E, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 1 h 40 en direct",
+    "bestMonths": "Mai-juin et septembre, décembre pour les marchés de Noël",
+    "tip": "Évite les bureaux de change « 0 % de commission »."
+   },
+   "tips": [
+    "Les tickets transport de 24 h ou 72 h reviennent bien moins cher que les tickets à l'unité.",
+    "Méfie-toi des bureaux de change « 0 % de commission » : le taux est mauvais. Retire plutôt au distributeur d'une banque.",
+    "Mange à deux rues de la place de la Vieille-Ville : les prix baissent nettement.",
+    "Le pont Charles et le quartier du château se visitent gratuitement."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "vienne",
+   "name": "Vienne",
+   "country": "Autriche",
+   "countryCode": "AT",
+   "zone": "Europe",
+   "coords": [
+    16.37,
+    48.21
+   ],
+   "color": "#be123c",
+   "aliases": [
+    "wien",
+    "vienna",
+    "autriche"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "10": "mid",
+    "12": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 110,
+    "mid": 150,
+    "high": 210
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 70,
+     "mid": 90,
+     "high": 120
+    },
+    "confort": {
+     "low": 120,
+     "mid": 150,
+     "high": 190
+    },
+    "plaisir": {
+     "low": 230,
+     "mid": 290,
+     "high": 370
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 25,
+     "confort": 42,
+     "plaisir": 75
+    },
+    "transport": {
+     "malin": 6,
+     "confort": 8,
+     "plaisir": 16
+    },
+    "activities": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 2,
+     "confort": 3,
+     "plaisir": 6
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Allemand",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 2 h en direct",
+    "bestMonths": "Avril-juin, septembre et décembre",
+    "tip": "L'Opéra vend des places debout à petit prix."
+   },
+   "tips": [
+    "Les cartes de transport 24, 48 ou 72 h couvrent métro, tram et bus.",
+    "L'Opéra vend des places debout à petit prix le jour même.",
+    "Les stands de saucisses (Würstelstand) et les menus du midi sont les repas les moins chers.",
+    "Les jardins du château de Schönbrunn sont gratuits, seul le palais est payant."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "budapest",
+   "name": "Budapest",
+   "country": "Hongrie",
+   "countryCode": "HU",
+   "zone": "Europe",
+   "coords": [
+    19.04,
+    47.5
+   ],
+   "color": "#15803d",
+   "aliases": [
+    "hongrie",
+    "hungary"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "3": "mid",
+    "10": "mid",
+    "12": "mid",
+    "4": "high",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 100,
+    "mid": 140,
+    "high": 200
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 40,
+     "mid": 55,
+     "high": 75
+    },
+    "confort": {
+     "low": 75,
+     "mid": 95,
+     "high": 125
+    },
+    "plaisir": {
+     "low": 150,
+     "mid": 190,
+     "high": 250
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 16,
+     "confort": 28,
+     "plaisir": 50
+    },
+    "transport": {
+     "malin": 5,
+     "confort": 6,
+     "plaisir": 14
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 20,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 1,
+     "confort": 2,
+     "plaisir": 4
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Forint (HUF)",
+    "language": "Hongrois",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 2 h 10 en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Les bains thermaux sont moins bondés en semaine."
+   },
+   "tips": [
+    "Le pass transport 24 h ou 72 h est vite rentabilisé.",
+    "Le « napi menü », menu du midi, coûte bien moins cher que le soir.",
+    "Va aux bains thermaux en semaine : moins de monde et parfois moins cher.",
+    "Paye en forints : les prix affichés en euros sont souvent arrondis à la hausse."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "athenes",
+   "name": "Athènes",
+   "country": "Grèce",
+   "countryCode": "GR",
+   "zone": "Europe",
+   "coords": [
+    23.73,
+    37.98
+   ],
+   "color": "#1d4ed8",
+   "aliases": [
+    "athens",
+    "athina",
+    "grece",
+    "grèce"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "12": "low",
+    "3": "mid",
+    "4": "mid",
+    "11": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high",
+    "10": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 120,
+    "mid": 180,
+    "high": 280
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 50,
+     "mid": 70,
+     "high": 100
+    },
+    "confort": {
+     "low": 90,
+     "mid": 120,
+     "high": 170
+    },
+    "plaisir": {
+     "low": 180,
+     "mid": 240,
+     "high": 320
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 18,
+     "confort": 32,
+     "plaisir": 60
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 6,
+     "plaisir": 15
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 1,
+     "confort": 2,
+     "plaisir": 4
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Grec",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "+1 h",
+    "flightTime": "Environ 3 h 15 en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Visite l'Acropole à l'ouverture."
+   },
+   "tips": [
+    "Le billet combiné donne accès à l'Acropole et à plusieurs sites antiques pour moins cher qu'à l'unité.",
+    "De novembre à mars, les sites antiques sont gratuits le premier dimanche du mois.",
+    "Gyros et souvlaki : un repas complet pour quelques euros.",
+    "Pour les îles proches, les ferries classiques coûtent bien moins cher que les bateaux rapides."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "dublin",
+   "name": "Dublin",
+   "country": "Irlande",
+   "countryCode": "IE",
+   "zone": "Europe",
+   "coords": [
+    -6.26,
+    53.35
+   ],
+   "color": "#047857",
+   "aliases": [
+    "irlande",
+    "ireland"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "11": "low",
+    "3": "mid",
+    "4": "mid",
+    "10": "mid",
+    "12": "mid",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 110,
+    "mid": 160,
+    "high": 240
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 100,
+     "mid": 130,
+     "high": 170
+    },
+    "confort": {
+     "low": 170,
+     "mid": 210,
+     "high": 280
+    },
+    "plaisir": {
+     "low": 320,
+     "mid": 400,
+     "high": 500
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 35,
+     "confort": 55,
+     "plaisir": 95
+    },
+    "transport": {
+     "malin": 8,
+     "confort": 10,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Anglais et irlandais",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Type G, 230 V : adaptateur obligatoire",
+    "timeDiff": "-1 h",
+    "flightTime": "Environ 1 h 40 en direct",
+    "bestMonths": "De mai à septembre",
+    "tip": "Les musées nationaux sont gratuits."
+   },
+   "tips": [
+    "Les musées nationaux et la National Gallery sont gratuits.",
+    "La carte Leap Visitor couvre bus, tram et train pour 1 à 3 jours.",
+    "Les menus « early bird » en début de soirée sont bien moins chers.",
+    "Beaucoup de pubs proposent de la musique live gratuite."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "venise",
+   "name": "Venise",
+   "country": "Italie",
+   "countryCode": "IT",
+   "zone": "Europe",
+   "coords": [
+    12.33,
+    45.44
+   ],
+   "color": "#0e7490",
+   "aliases": [
+    "venezia",
+    "venice",
+    "italie"
+   ],
+   "seasons": {
+    "1": "low",
+    "11": "low",
+    "12": "low",
+    "2": "mid",
+    "3": "mid",
+    "10": "mid",
+    "4": "high",
+    "5": "high",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 100,
+    "mid": 150,
+    "high": 220
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 90,
+     "mid": 120,
+     "high": 160
+    },
+    "confort": {
+     "low": 150,
+     "mid": 200,
+     "high": 260
+    },
+    "plaisir": {
+     "low": 300,
+     "mid": 400,
+     "high": 520
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 30,
+     "confort": 50,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 12,
+     "confort": 18,
+     "plaisir": 30
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 3,
+     "confort": 4,
+     "plaisir": 5
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Euro (EUR)",
+    "language": "Italien",
+    "formalities": "Carte d'identité ou passeport.",
+    "plug": "Types F et L, 230 V : adaptateur conseillé pour les prises L",
+    "timeDiff": "Pas de décalage",
+    "flightTime": "Environ 1 h 40 en direct",
+    "bestMonths": "Avril-juin et septembre-octobre",
+    "tip": "Dormir à Mestre coûte bien moins cher."
+   },
+   "tips": [
+    "Le pass vaporetto de plusieurs jours revient bien moins cher que les billets à l'unité.",
+    "Pour traverser le Grand Canal, le traghetto (gondole collective) coûte quelques euros.",
+    "Les cicchetti, petites bouchées des bacari, remplacent un repas pour peu.",
+    "Dormir à Mestre, sur la terre ferme, divise souvent le prix du logement."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "marrakech",
+   "name": "Marrakech",
+   "country": "Maroc",
+   "countryCode": "MA",
+   "zone": "Afrique",
+   "coords": [
+    -7.99,
+    31.63
+   ],
+   "color": "#b45309",
+   "aliases": [
+    "maroc",
+    "morocco"
+   ],
+   "seasons": {
+    "6": "low",
+    "7": "low",
+    "8": "low",
+    "1": "mid",
+    "2": "mid",
+    "11": "mid",
+    "12": "mid",
+    "3": "high",
+    "4": "high",
+    "5": "high",
+    "9": "high",
+    "10": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 120,
+    "mid": 170,
+    "high": 260
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 30,
+     "mid": 40,
+     "high": 55
+    },
+    "confort": {
+     "low": 60,
+     "mid": 80,
+     "high": 110
+    },
+    "plaisir": {
+     "low": 140,
+     "mid": 180,
+     "high": 240
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 12,
+     "confort": 22,
+     "plaisir": 45
+    },
+    "transport": {
+     "malin": 4,
+     "confort": 8,
+     "plaisir": 15
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 2,
+     "confort": 3,
+     "plaisir": 4
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Dirham (MAD)",
+    "language": "Arabe et français",
+    "formalities": "Passeport. Pas de visa jusqu'à 90 jours.",
+    "plug": "Types C et E, 220 V : comme en France",
+    "timeDiff": "-1 h en été, pas de décalage en hiver",
+    "flightTime": "Environ 3 h 15 en direct",
+    "bestMonths": "Mars-mai et septembre-novembre",
+    "tip": "Marchander est normal dans les souks."
+   },
+   "tips": [
+    "Dans les souks, marchander fait partie du jeu : commence bien en dessous du prix annoncé.",
+    "En petit taxi, demande le compteur ou fixe le prix avant de monter.",
+    "Les stands de la place Jemaa el-Fna et les snacks locaux sont les repas les moins chers.",
+    "Beaucoup de riads incluent le petit-déjeuner : compare les offres."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "singapour",
+   "name": "Singapour",
+   "country": "Singapour",
+   "countryCode": "SG",
+   "zone": "Asie",
+   "coords": [
+    103.82,
+    1.35
+   ],
+   "color": "#dc2626",
+   "aliases": [
+    "singapore"
+   ],
+   "seasons": {
+    "4": "low",
+    "5": "low",
+    "9": "low",
+    "10": "low",
+    "11": "low",
+    "1": "mid",
+    "2": "mid",
+    "3": "mid",
+    "6": "mid",
+    "7": "high",
+    "8": "high",
+    "12": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 650,
+    "mid": 750,
+    "high": 950
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 90,
+     "mid": 110,
+     "high": 140
+    },
+    "confort": {
+     "low": 160,
+     "mid": 190,
+     "high": 240
+    },
+    "plaisir": {
+     "low": 300,
+     "mid": 360,
+     "high": 450
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 20,
+     "confort": 40,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 6,
+     "confort": 10,
+     "plaisir": 20
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 35,
+     "plaisir": 70
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Dollar de Singapour (SGD)",
+    "language": "Anglais, mandarin, malais et tamoul",
+    "formalities": "Passeport. Pas de visa jusqu'à 90 jours ; carte d'arrivée en ligne gratuite.",
+    "plug": "Type G, 230 V : adaptateur obligatoire",
+    "timeDiff": "+6 h en été, +7 h en hiver",
+    "flightTime": "Environ 12 h 45 en direct",
+    "bestMonths": "Toute l'année, de février à avril un peu plus sec",
+    "tip": "Les hawker centres sont la bonne adresse."
+   },
+   "tips": [
+    "Les hawker centres servent des plats délicieux pour quelques euros.",
+    "Paye le métro directement avec ta carte bancaire sans contact.",
+    "Les jardins extérieurs de Gardens by the Bay et le spectacle lumineux du soir sont gratuits.",
+    "L'alcool est très taxé : c'est souvent le plus gros poste des sorties."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "seoul",
+   "name": "Séoul",
+   "country": "Corée du Sud",
+   "countryCode": "KR",
+   "zone": "Asie",
+   "coords": [
+    126.98,
+    37.57
+   ],
+   "color": "#7c3aed",
+   "aliases": [
+    "seoul",
+    "coree",
+    "corée",
+    "korea"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "7": "low",
+    "8": "low",
+    "3": "mid",
+    "6": "mid",
+    "11": "mid",
+    "12": "mid",
+    "4": "high",
+    "5": "high",
+    "9": "high",
+    "10": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 700,
+    "mid": 850,
+    "high": 1050
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 50,
+     "mid": 60,
+     "high": 80
+    },
+    "confort": {
+     "low": 100,
+     "mid": 120,
+     "high": 150
+    },
+    "plaisir": {
+     "low": 220,
+     "mid": 260,
+     "high": 320
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 18,
+     "confort": 32,
+     "plaisir": 65
+    },
+    "transport": {
+     "malin": 5,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 8,
+     "confort": 18,
+     "plaisir": 40
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Won (KRW)",
+    "language": "Coréen",
+    "formalities": "Passeport. Pas de visa pour un court séjour ; vérifie avant le départ si l'autorisation K-ETA est demandée.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "+7 h en été, +8 h en hiver",
+    "flightTime": "Environ 13 h en direct",
+    "bestMonths": "Avril-mai et septembre-octobre",
+    "tip": "L'entrée des palais est gratuite en hanbok."
+   },
+   "tips": [
+    "Prends une carte T-money pour le métro et les bus.",
+    "L'entrée des palais royaux est gratuite si tu portes un hanbok, le costume traditionnel.",
+    "Les marchés comme Gwangjang et les menus du midi sont les repas les moins chers.",
+    "Dans les boutiques Tax-Free, ton passeport permet de récupérer la taxe."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "bali",
+   "name": "Bali",
+   "country": "Indonésie",
+   "countryCode": "ID",
+   "zone": "Asie",
+   "coords": [
+    115.19,
+    -8.65
+   ],
+   "color": "#16a34a",
+   "aliases": [
+    "indonesie",
+    "indonésie",
+    "denpasar",
+    "ubud"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "5": "mid",
+    "6": "mid",
+    "10": "mid",
+    "12": "mid",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 750,
+    "mid": 850,
+    "high": 1100
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 25,
+     "mid": 30,
+     "high": 40
+    },
+    "confort": {
+     "low": 60,
+     "mid": 70,
+     "high": 90
+    },
+    "plaisir": {
+     "low": 150,
+     "mid": 180,
+     "high": 230
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 55
+    },
+    "transport": {
+     "malin": 8,
+     "confort": 12,
+     "plaisir": 25
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 20,
+     "plaisir": 45
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 39,
+    "perPersonLabel": "Visa et taxe"
+   },
+   "info": {
+    "currency": "Roupie indonésienne (IDR)",
+    "language": "Indonésien",
+    "formalities": "Passeport. Visa payant à l'arrivée et taxe touristique de Bali.",
+    "plug": "Types C et F, 230 V : comme en France",
+    "timeDiff": "+6 h en été, +7 h en hiver",
+    "flightTime": "Environ 17 h avec une escale",
+    "bestMonths": "D'avril à octobre, la saison sèche",
+    "tip": "Mange dans les warungs."
+   },
+   "tips": [
+    "Mange dans les warungs, les petits restaurants locaux : bien moins chers que les cafés touristiques.",
+    "Commande tes trajets avec Grab ou Gojek : prix fixé à l'avance.",
+    "À plusieurs, un chauffeur à la journée revient moins cher que les taxis.",
+    "Retire aux distributeurs des banques, plus sûrs et souvent moins chers."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "phuket",
+   "name": "Phuket",
+   "country": "Thaïlande",
+   "countryCode": "TH",
+   "zone": "Asie",
+   "coords": [
+    98.39,
+    7.88
+   ],
+   "color": "#0284c7",
+   "aliases": [
+    "thailande",
+    "thaïlande",
+    "patong"
+   ],
+   "seasons": {
+    "5": "low",
+    "6": "low",
+    "9": "low",
+    "10": "low",
+    "4": "mid",
+    "7": "mid",
+    "8": "mid",
+    "11": "mid",
+    "12": "high",
+    "1": "high",
+    "2": "high",
+    "3": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 650,
+    "mid": 750,
+    "high": 950
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 30,
+     "mid": 40,
+     "high": 60
+    },
+    "confort": {
+     "low": 70,
+     "mid": 90,
+     "high": 130
+    },
+    "plaisir": {
+     "low": 160,
+     "mid": 220,
+     "high": 300
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 60
+    },
+    "transport": {
+     "malin": 8,
+     "confort": 15,
+     "plaisir": 30
+    },
+    "activities": {
+     "malin": 10,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 0,
+    "perPersonLabel": ""
+   },
+   "info": {
+    "currency": "Baht (THB)",
+    "language": "Thaï",
+    "formalities": "Passeport. Pas de visa pour un court séjour touristique (durée à vérifier avant le départ) ; carte d'arrivée en ligne gratuite.",
+    "plug": "Types A, B, C et O, 220 V : adaptateur conseillé",
+    "timeDiff": "+5 h en été, +6 h en hiver",
+    "flightTime": "Environ 14 h avec une escale",
+    "bestMonths": "De novembre à avril",
+    "tip": "Les taxis sont chers sur l'île."
+   },
+   "tips": [
+    "Les taxis sont chers à Phuket : négocie le prix ou utilise Grab ou Bolt.",
+    "Les songthaews, bus locaux, relient les plages pour presque rien.",
+    "Compare les excursions en mer entre plusieurs agences locales.",
+    "Loger hors de Patong coûte moins cher pour des plages plus calmes."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "montreal",
+   "name": "Montréal",
+   "country": "Canada",
+   "countryCode": "CA",
+   "zone": "Amérique du Nord",
+   "coords": [
+    -73.57,
+    45.5
+   ],
+   "color": "#1e3a8a",
+   "aliases": [
+    "montreal",
+    "quebec",
+    "québec",
+    "canada"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "5": "mid",
+    "10": "mid",
+    "12": "mid",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 450,
+    "mid": 550,
+    "high": 750
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 80,
+     "mid": 100,
+     "high": 130
+    },
+    "confort": {
+     "low": 140,
+     "mid": 170,
+     "high": 220
+    },
+    "plaisir": {
+     "low": 260,
+     "mid": 320,
+     "high": 400
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 30,
+     "confort": 50,
+     "plaisir": 90
+    },
+    "transport": {
+     "malin": 6,
+     "confort": 8,
+     "plaisir": 18
+    },
+    "activities": {
+     "malin": 12,
+     "confort": 25,
+     "plaisir": 50
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 5,
+    "perPersonLabel": "Autorisation AVE"
+   },
+   "info": {
+    "currency": "Dollar canadien (CAD)",
+    "language": "Français et anglais",
+    "formalities": "Passeport et autorisation de voyage AVE obligatoires.",
+    "plug": "Types A et B, 120 V : adaptateur obligatoire",
+    "timeDiff": "-6 h",
+    "flightTime": "Environ 7 h 15 en direct",
+    "bestMonths": "De juin à septembre, et l'automne pour les couleurs",
+    "tip": "Les prix sont affichés hors taxes."
+   },
+   "tips": [
+    "Les prix sont affichés hors taxes (environ 15 %) et le pourboire de 15 à 20 % s'ajoute : prévois-le.",
+    "Beaucoup de restaurants sont « apportez votre vin » : bien moins cher que le vin au restaurant.",
+    "La carte OPUS et les titres de 1 ou 3 jours couvrent métro et bus.",
+    "L'été, de nombreux festivals ont des concerts gratuits."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "miami",
+   "name": "Miami",
+   "country": "États-Unis",
+   "countryCode": "US",
+   "zone": "Amérique du Nord",
+   "coords": [
+    -80.19,
+    25.76
+   ],
+   "color": "#db2777",
+   "aliases": [
+    "floride",
+    "florida",
+    "usa",
+    "etats-unis",
+    "états-unis"
+   ],
+   "seasons": {
+    "6": "low",
+    "7": "low",
+    "8": "low",
+    "9": "low",
+    "10": "low",
+    "4": "mid",
+    "5": "mid",
+    "11": "mid",
+    "12": "high",
+    "1": "high",
+    "2": "high",
+    "3": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 550,
+    "mid": 650,
+    "high": 850
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 140,
+     "mid": 170,
+     "high": 220
+    },
+    "confort": {
+     "low": 220,
+     "mid": 280,
+     "high": 360
+    },
+    "plaisir": {
+     "low": 400,
+     "mid": 500,
+     "high": 650
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 40,
+     "confort": 65,
+     "plaisir": 120
+    },
+    "transport": {
+     "malin": 10,
+     "confort": 20,
+     "plaisir": 40
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 35,
+     "plaisir": 70
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 35,
+    "perPersonLabel": "Autorisation ESTA"
+   },
+   "info": {
+    "currency": "Dollar américain (USD)",
+    "language": "Anglais et espagnol",
+    "formalities": "Passeport et autorisation ESTA obligatoires.",
+    "plug": "Types A et B, 120 V : adaptateur obligatoire",
+    "timeDiff": "-6 h",
+    "flightTime": "Environ 10 h en direct",
+    "bestMonths": "De novembre à avril",
+    "tip": "Le Metromover du centre est gratuit."
+   },
+   "tips": [
+    "Le Metromover, métro léger du centre-ville, est gratuit.",
+    "Les plages publiques sont gratuites, seuls les transats se paient.",
+    "Vérifie les « resort fees » des hôtels : ces frais s'ajoutent chaque nuit.",
+    "Prévois le pourboire (18 à 20 %) et les taxes, non inclus dans les prix affichés."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "los-angeles",
+   "name": "Los Angeles",
+   "country": "États-Unis",
+   "countryCode": "US",
+   "zone": "Amérique du Nord",
+   "coords": [
+    -118.24,
+    34.05
+   ],
+   "color": "#9333ea",
+   "aliases": [
+    "la",
+    "californie",
+    "california",
+    "hollywood",
+    "usa",
+    "etats-unis",
+    "états-unis"
+   ],
+   "seasons": {
+    "1": "low",
+    "2": "low",
+    "3": "low",
+    "11": "low",
+    "4": "mid",
+    "5": "mid",
+    "10": "mid",
+    "12": "mid",
+    "6": "high",
+    "7": "high",
+    "8": "high",
+    "9": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 550,
+    "mid": 650,
+    "high": 900
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 130,
+     "mid": 160,
+     "high": 200
+    },
+    "confort": {
+     "low": 210,
+     "mid": 260,
+     "high": 330
+    },
+    "plaisir": {
+     "low": 380,
+     "mid": 470,
+     "high": 600
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 40,
+     "confort": 65,
+     "plaisir": 120
+    },
+    "transport": {
+     "malin": 15,
+     "confort": 30,
+     "plaisir": 55
+    },
+    "activities": {
+     "malin": 20,
+     "confort": 45,
+     "plaisir": 90
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 35,
+    "perPersonLabel": "Autorisation ESTA"
+   },
+   "info": {
+    "currency": "Dollar américain (USD)",
+    "language": "Anglais",
+    "formalities": "Passeport et autorisation ESTA obligatoires.",
+    "plug": "Types A et B, 120 V : adaptateur obligatoire",
+    "timeDiff": "-9 h",
+    "flightTime": "Environ 11 h 30 en direct",
+    "bestMonths": "Toute l'année, le printemps et l'automne sont plus doux",
+    "tip": "Réserve la voiture de location tôt."
+   },
+   "tips": [
+    "Une voiture est souvent indispensable : réserve-la tôt, les prix montent vite.",
+    "Le Getty Center et l'observatoire Griffith sont gratuits.",
+    "Food trucks et happy hours permettent de bien manger pour moins cher.",
+    "Prévois le pourboire (18 à 20 %) et les taxes, non inclus dans les prix affichés."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
+  },
+  {
+   "id": "cancun",
+   "name": "Cancún",
+   "country": "Mexique",
+   "countryCode": "MX",
+   "zone": "Amérique du Nord",
+   "coords": [
+    -86.85,
+    21.16
+   ],
+   "color": "#0891b2",
+   "aliases": [
+    "cancun",
+    "mexique",
+    "mexico",
+    "riviera maya"
+   ],
+   "seasons": {
+    "5": "low",
+    "6": "low",
+    "9": "low",
+    "10": "low",
+    "4": "mid",
+    "11": "mid",
+    "12": "high",
+    "1": "high",
+    "2": "high",
+    "3": "high",
+    "7": "high",
+    "8": "high"
+   },
+   "flights": {
+    "from": "PAR",
+    "unit": "EUR, aller-retour en classe éco, par personne",
+    "low": 600,
+    "mid": 700,
+    "high": 950
+   },
+   "lodging": {
+    "unit": "EUR par nuit, pour une chambre de 2",
+    "malin": {
+     "low": 60,
+     "mid": 80,
+     "high": 110
+    },
+    "confort": {
+     "low": 120,
+     "mid": 150,
+     "high": 200
+    },
+    "plaisir": {
+     "low": 250,
+     "mid": 320,
+     "high": 420
+    }
+   },
+   "daily": {
+    "unit": "EUR par jour et par personne",
+    "food": {
+     "malin": 20,
+     "confort": 40,
+     "plaisir": 80
+    },
+    "transport": {
+     "malin": 6,
+     "confort": 12,
+     "plaisir": 25
+    },
+    "activities": {
+     "malin": 15,
+     "confort": 35,
+     "plaisir": 70
+    }
+   },
+   "fees": {
+    "cityTaxPerPersonNight": {
+     "malin": 0,
+     "confort": 0,
+     "plaisir": 0
+    },
+    "perPerson": 15,
+    "perPersonLabel": "Taxe touristique"
+   },
+   "info": {
+    "currency": "Peso mexicain (MXN)",
+    "language": "Espagnol",
+    "formalities": "Passeport. Pas de visa pour un séjour touristique.",
+    "plug": "Types A et B, 127 V : adaptateur obligatoire",
+    "timeDiff": "-7 h en été, -6 h en hiver",
+    "flightTime": "Environ 11 h en direct",
+    "bestMonths": "De décembre à avril",
+    "tip": "Une taxe touristique est demandée à la sortie."
+   },
+   "tips": [
+    "Les bus ADO et les colectivos coûtent bien moins cher que les taxis.",
+    "Mange en ville plutôt que dans la zone hôtelière : les prix sont divisés par deux.",
+    "Compare avec une formule tout compris si tu restes surtout à l'hôtel.",
+    "Paye en pesos : les prix en dollars sont rarement avantageux."
+   ],
+   "meta": {
+    "updatedAt": "2026-11-18",
+    "confidence": "estimation",
+    "sources": [
+     "estimation tamia à partir de prix moyens publics (comparateurs de vols et d'hôtels, sites officiels des sites touristiques)"
+    ]
+   }
   }
  ],
  "unexpectedRate": 0.05,

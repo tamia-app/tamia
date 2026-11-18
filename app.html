@@ -917,6 +917,12 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-tips li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.08); font-size: .86rem; line-height: 1.4; }
 .v-tips li:first-child { border-top: none; }
 .v-tips li .ico { width: 20px; height: 20px; color: #f0a432; margin-top: 1px; }
+.v-tile { padding: 14px; gap: 8px; }
+.v-big { display: flex; align-items: baseline; gap: 5px; }
+.v-big input { background: none; border: none; border-bottom: 2px solid rgba(240,164,50,.8); color: #f2f2ef; font-family: var(--font-display); font-weight: 800; font-size: 2.3rem; letter-spacing: -.04em; line-height: 1; padding: 0 0 2px; min-width: 1.2ch; outline: none; -moz-appearance: textfield; }
+.v-big input::-webkit-inner-spin-button, .v-big input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.v-big input:focus { border-bottom-color: #f0a432; }
+.v-big em { font-style: normal; font-size: .9rem; font-weight: 600; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -1558,7 +1564,7 @@ function render() {
   renderValidBox();
   [["tab-finances", ["finances"]], ["tab-rapports", ["rapports"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (page === "objectifs") { mainEl.innerHTML = goalsSoonView(); return; }
-  if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); return; }
+  if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); mainEl.querySelectorAll("[data-vn]").forEach(vfit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mainEl.querySelectorAll("[data-vn]").forEach(vfit)); return; }
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
   maybeAskBilan();
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
@@ -2368,7 +2374,8 @@ function voyEstimate(d) {
   rows.push({ ic: "train", t: "Transports sur place", v: d.daily.transport[st] * days * P });
   rows.push({ ic: "target", t: "Activités & visites", v: d.daily.activities[st] * days * P });
   const fees = d.fees.cityTaxPerPersonNight[st] * nights * P + d.fees.perPerson * P;
-  if (fees) rows.push({ ic: "receipt", t: d.fees.perPerson ? "Taxes & " + d.fees.perPersonLabel : "Taxe de séjour", v: fees });
+  const ctax = d.fees.cityTaxPerPersonNight[st] > 0;
+  if (fees) rows.push({ ic: "receipt", t: d.fees.perPerson ? (ctax ? "Taxes & " + d.fees.perPersonLabel.toLowerCase() : d.fees.perPersonLabel) : "Taxe de séjour", v: fees });
   const mg = 1 + (DEST.margin || .1);
   rows.forEach(r => { r.v = vr10(r.v * mg); });
   rows.push({ ic: "warning", t: "Imprévus", v: vr10(rows.reduce((a, r) => a + r.v, 0) * (DEST.unexpectedRate || .05)) });
@@ -2376,6 +2383,12 @@ function voyEstimate(d) {
   return { rows, season, nights, low: vr50(total * .92), high: vr50(total * 1.08), perDay: Math.round(total / days / P) };
 }
 const vnum = n => Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " ");
+// the big number fields are as wide as their digits, so the unit sits right next to them
+function vfit(el) {
+  const c = vfit.c || (vfit.c = document.createElement("canvas").getContext("2d")), cs = getComputedStyle(el);
+  c.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+  el.style.width = Math.ceil(c.measureText(el.value || "0").width + parseFloat(cs.fontSize) * .04 * (el.value || "0").length * -1 + 2) + "px";
+}
 function vtop(t, right) { return '<div class="v-top"><button type="button" class="v-back vg" data-voy="back" aria-label="Retour">‹</button><span>' + esc(t) + '</span>' + (right || '') + '</div>'; }
 function vprog(k) { return '<div class="v-prog">' + [1, 2, 3, 4].map(i => '<i' + (i <= k ? ' class="on"' : '') + '></i>').join("") + '</div>'; }
 function vrecap() { return '<div class="vg v-recap"><span><b>' + voy.days + '</b> jours</span><span><b>' + voy.people + '</b> voyageur' + (voy.people > 1 ? 's' : '') + '</span><span><b>' + esc(label(voy.month, true).replace(".", "")) + '</b></span></div>'; }
@@ -2449,7 +2462,7 @@ function voyView() {
   }
   if (voy.step === "when") {
     const opts = voyMonths().map(id => '<option value="' + id + '"' + (id === voy.month ? ' selected' : '') + '>' + esc(label(id)) + '</option>').join("");
-    const stp = (k, v, unit, min, max) => '<label class="vg v-field"><small>' + unit[0] + '</small><span class="v-amt"><input data-vn="' + k + '" type="number" inputmode="numeric" min="' + min + '" max="' + max + '" value="' + v + '" aria-label="' + unit[0] + '"><em>' + unit[2] + '</em></span></label>';
+    const stp = (k, v, unit, min, max) => '<label class="vg v-field v-tile"><small>' + unit[0] + '</small><span class="v-big"><input data-vn="' + k + '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="' + min + '" max="' + max + '" value="' + v + '" aria-label="' + unit[0] + '" style="width:' + (String(v).length + .15) + 'ch"><em>' + unit[2] + '</em></span></label>';
     const se = voy.month ? '<p class="v-sub">' + esc(label(voy.month).split(" ")[0]) + ' à ' + esc(d.name) + ' : ' + DEST.seasonNames[vseason(d, voy.month)] + '. Meilleure période : ' + esc(d.info.bestMonths.charAt(0).toLowerCase() + d.info.bestMonths.slice(1)) + '.</p>' : '';
     return '<div class="voy">' + vtop(d.name + ' · 1 sur 4') + vprog(1) + '<h2 class="v-q">Quand et combien de temps ?</h2>' +
       '<label class="vg v-field"><small>Mois de départ</small><select id="voyMonth"><option value=""' + (voy.month ? '' : ' selected') + ' disabled>Choisir un mois</option>' + opts + '</select></label>' + se +
@@ -2501,8 +2514,7 @@ function voyView() {
     '<p class="v-note">Estimation indicative, à partir de prix moyens relevés en ' + esc(upd) + '.</p>' +
     modeNote + (vtrip() ? vprojBox(vtrip()) : '') +
 
-    (tips.length ? '<div class="vg v-info v-tips"><h3>Pour dépenser moins</h3><ul>' + tips.map(t => '<li>' + ICON("piggy") + '<span>' + esc(t) + '</span></li>').join("") + '</ul></div>' : '') +
-    '<div class="vg v-info"><h3>Bon à savoir</h3><dl>' + info.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + esc(v) + '</dd></div>').join("") + '</dl></div>' +
+    (tips.length ? '<div class="vg v-info v-tips"><h3>Pour dépenser moins</h3><ul>' + tips.slice(0, 5).map(t => '<li>' + ICON("piggy") + '<span>' + esc(t) + '</span></li>').join("") + '</ul></div>' : '') +
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }
 $("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") return; e.preventDefault(); voy = VOY0(); voyGo("search"); });
@@ -2513,7 +2525,7 @@ function voyThink() {
 function voyGo(step) { voy.step = step; render(); scrollTo(0, 0); }
 mainEl.addEventListener("input", e => {
   const t = e.target;
-  if (t.dataset.vn) { voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
+  if (t.dataset.vn) { vfit(t); voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
   if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
   if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) go.disabled = !vplan().ok; return; }
   if (t.id !== "voyQ") return;
