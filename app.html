@@ -923,6 +923,32 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-big input::-webkit-inner-spin-button, .v-big input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .v-big input:focus { border-bottom-color: #f0a432; }
 .v-big em { font-style: normal; font-size: .9rem; font-weight: 600; color: var(--muted); }
+
+/* Accueil */
+.home { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.hm-date { margin: 4px 2px 0; font-size: .82rem; font-weight: 600; color: var(--muted); }
+.hm-hi { margin: 0 2px 4px; font-family: var(--font-display); font-weight: 800; font-size: 1.7rem; letter-spacing: -.035em; }
+.hm-ink { background: #121212; color: #f2f2ef; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 28px -16px rgba(0,0,0,.6); }
+.hm-lbl { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: #b9b9b2; }
+.hm-big { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; letter-spacing: -.035em; color: #f0a432; line-height: 1.1; }
+.hm-sub { font-size: .86rem; color: #c9c9c2; }
+.hm-card { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; }
+.hm-lbl2 { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); margin-bottom: 4px; }
+.hm-step { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: .92rem; font-weight: 700; }
+.hm-step:first-of-type { border-top: none; }
+.hm-step.ok { font-weight: 500; color: var(--muted); }
+.hm-step small { font-size: .74rem; color: var(--muted); font-weight: 500; }
+.hm-ck { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; box-sizing: border-box; }
+.hm-step.ok .hm-ck { background: #5fb67f; border-color: #5fb67f; color: #121212; }
+.hm-ck .ico { width: 12px; height: 12px; stroke-width: 3; }
+.hm-cta { margin-top: 8px; justify-content: center; padding: 12px; }
+.hm-trip { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px 0; color: inherit; text-decoration: none; border-top: 1px solid var(--line); }
+.hm-trip:first-of-type { border-top: none; }
+.hm-dc { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: .8rem; }
+.hm-tb { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hm-tt { display: flex; justify-content: space-between; gap: 8px; } .hm-tt b { font-family: var(--font-display); } .hm-tb small { font-size: .76rem; color: var(--muted); } .hm-tb small b { color: var(--ink); }
+.hm-bar { height: 6px; border-radius: 3px; background: var(--sunk); overflow: hidden; } .hm-bar i { display: block; height: 100%; border-radius: 3px; background: #8d97a3; }
+.hm-empty { margin: 2px 0; font-size: .88rem; color: var(--muted); } .hm-empty a { color: var(--ink); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -967,6 +993,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
   </header>
   <div class="subnav">
     <nav class="tabs" aria-label="Pages">
+      <a href="#accueil" id="tab-accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11l8.5-7 8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg><span>Accueil</span></a>
       <a href="#finances" id="tab-finances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8V6.5A2.5 2.5 0 0 1 7.5 4H16v4"/><rect x="3.5" y="8" width="17" height="12" rx="2.2"/><path d="M15.5 14h2"/></svg><span>Finances</span></a>
       <a href="#objectifs" id="tab-objectifs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5c0-3.3 3.1-5.5 7-5.5 1.6 0 3.1.3 4.3 1l2.7-1.5-.6 3c.9.8 1.5 1.8 1.7 3h1.4v3.5h-1.6c-.5 1.2-1.4 2.2-2.6 2.9V20h-2.6v-1.5c-.8.2-1.7.3-2.7.3s-1.9-.1-2.7-.3V20H6.3v-2.3c-1.1-.9-1.8-2.4-1.8-4.2z"/><path d="M9.5 9.2h3.5"/><circle cx="15.6" cy="10.8" r=".8" fill="currentColor" stroke="none"/></svg><span>Objectifs</span></a>
       <a href="#voyages" id="tab-voyages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path transform="rotate(45 12 12)" d="M12 2.5c.9 0 1.5 1 1.5 2.2V9l7 4.2v2l-7-2.2v4.3l2 1.6v1.6l-3.5-1-3.5 1v-1.6l2-1.6V13l-7 2.2v-2l7-4.2V4.7c0-1.2.6-2.2 1.5-2.2z"/></svg><span>Voyages</span></a>
@@ -1562,7 +1589,7 @@ function render() {
   const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = page === "voyages" ? "#121212" : getComputedStyle(document.body).backgroundColor;
   renderFlame();
   renderValidBox();
-  [["tab-finances", ["finances"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["rapports", "reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  [["tab-accueil", ["accueil"]], ["tab-finances", ["finances"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["rapports", "reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (page === "objectifs") { mainEl.innerHTML = goalsSoonView(); return; }
   if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); mainEl.querySelectorAll("[data-vn]").forEach(vfit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mainEl.querySelectorAll("[data-vn]").forEach(vfit)); return; }
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
@@ -1571,6 +1598,7 @@ function render() {
   if (page === "compte") { mainEl.innerHTML = accountView(); return; }
   if (page === "trophees") { mainEl.innerHTML = trophiesView(); return; }
   if (!profile) { mainEl.innerHTML = onboardingView(); return; }
+  if (page === "accueil") { mainEl.innerHTML = homeView(); return; }
   if (page === "rapports") { mainEl.innerHTML = reportsView(); return; }
   if (!work && wiz) { mainEl.innerHTML = wizView(); return; }
   if (!work) { mainEl.innerHTML = createView(); sizeInput($("#newIncome")); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => sizeInput($("#newIncome"))); return; }
@@ -2302,6 +2330,59 @@ $("#mini").addEventListener("click", e => {
 const onMQ = () => { if (page === "finances" && work) render(); };
 if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
 
+/* ---------- Accueil: savings figures, this month's steps, projects ---------- */
+function homeTarget() {
+  // the month being worked on: last month while its check-in is still open (up to the 10th), otherwise this month
+  const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1);
+  return now.getDate() <= 10 && isPrepared(prev) && !months[prev].bilan ? prev : cur;
+}
+function homeView() {
+  const now = todayDate(), cur = monthIdOf(now), year = cur.slice(0, 4);
+  const name = (user.displayName || (user.email || "").split("@")[0] || "").trim().split(/\s+/)[0];
+  const day = now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  // savings figures
+  const ids = Object.keys(months).filter(id => id.slice(0, 4) === year && id <= cur && hasBudget(id));
+  const saved = ids.reduce((a, id) => a + totals(months[id]).by.epargne, 0);
+  const last = hasBudget(cur) ? cur : Object.keys(months).filter(id => id < cur && hasBudget(id)).sort().pop();
+  let sub = "Prépare ton premier budget pour voir tes chiffres ici.";
+  if (last) { const t = totals(months[last]); sub = (last === cur ? "Ce mois-ci" : "En " + monthName(last)) + " : " + money(t.by.epargne) + ", soit " + pctOf(t.by.epargne, t.income) + " de ta paye"; }
+  // this month's steps
+  const M = homeTarget(), m = months[M], mn = monthName(M);
+  const prepared = hasBudget(M), valid = prepared && !!m.validated, bil = !!(m && m.bilan);
+  const when = d => d ? new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }).replace(".", "") : "";
+  const bilanOpen = M !== cur || now.getDate() >= 25;
+  const steps = [
+    [prepared, "Budget de " + mn + " préparé", prepared ? when(m.createdAt) : ""],
+    [valid, "Budget validé", valid ? when(m.validatedAt) : ""],
+    [bil, "Bilan de fin de mois", bil ? when(m.bilan.at) : bilanOpen ? "" : "dès le 25"]];
+  const cta = !prepared ? ["go", "Préparer mon budget"] : !valid ? ["go", "Valider mon budget"] : !bil && bilanOpen ? ["bilan", "Faire mon bilan"] : ["go", "Voir mon budget"];
+  // projects
+  loadDest();
+  const trips = recurring.filter(r => r.trip);
+  const tripHtml = trips.length ? trips.slice(0, 3).map(r => {
+    const t = r.trip, x = DEST && DEST.destinations.find(y => y.id === t.dest), got = typeof vsavedFor === "function" ? vsavedFor(r) : 0;
+    return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
+  }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
+  return '<div class="home">' +
+    '<p class="hm-date">' + esc(day.charAt(0).toUpperCase() + day.slice(1)) + '</p><h1 class="hm-hi">Salut' + (name ? ' ' + esc(name) : '') + '</h1>' +
+    '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + year + '</span><b class="hm-big">' + money(saved) + '</b><span class="hm-sub">' + esc(sub) + '</span></div>' +
+    '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
+      '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
+    '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
+}
+mainEl.addEventListener("click", e => {
+  const b = e.target.closest("[data-home]"); if (!b || page !== "accueil") return;
+  const a = b.dataset.home;
+  if (a === "go") { goTo(b.dataset.month); location.hash = "finances"; return; }
+  if (a === "bilan") { openBilan(b.dataset.month); return; }
+  if (a === "trip") {
+    e.preventDefault();
+    const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return;
+    voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, mode: r.trip.mode || "avion", from: r.trip.dep, trip: r.id, step: "result" });
+    location.hash = "voyages";
+  }
+});
+
 /* ---------- "tamia réfléchit": a short checklist before showing a budget ---------- */
 let thinkTimer = null;
 function thinkHtml(title, labels, cls) {
@@ -2324,7 +2405,7 @@ function runThink(done) {
 }
 
 /* ---------- Objectifs (coming soon) ---------- */
-const PAGES = ["finances", "objectifs", "voyages", "rapports", "reglages", "trophees", "compte"];
+const PAGES = ["accueil", "finances", "objectifs", "voyages", "rapports", "reglages", "trophees", "compte"];
 function goalsSoonView() {
   return '<div class="soon card"><span class="soon-ic">' + ICON("piggy") + '</span><span class="soon-tag">Pas encore disponible</span><h2>Objectifs</h2>' +
     '<p>Bientôt, tu pourras créer tes objectifs : un voyage, un apport, un nouvel ordinateur… tamia calculera combien mettre de côté chaque mois et l\'ajoutera à tes budgets.</p></div>';
@@ -2338,7 +2419,7 @@ function loadDest() {
   if (DEST || loadDest.p) return;
   loadDest.p = fetch("data/destinations.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw 0; return r.json(); })
     .then(d => { DEST = d; }).catch(() => { destErr = true; loadDest.p = null; })
-    .finally(() => { if (page === "voyages") render(); });
+    .finally(() => { if (page === "voyages" || page === "accueil") render(); });
   fetch("voyages-map.svg").then(r => r.text()).then(t => { const m = t.match(/ d="([^"]+)"/); MAPD = m ? m[1] : ""; voyMapView(); }).catch(() => {});
 }
 const vnorm = x => String(x).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -2570,7 +2651,7 @@ mainEl.addEventListener("click", e => {
 /* ---------- routing ---------- */
 function route() {
   const h = (location.hash || "").replace("#", "");
-  const next = PAGES.includes(h) ? h : "finances";
+  const next = PAGES.includes(h) ? h : "accueil";
   if (next !== page && saveTimer) flush();
   page = next; confirmDelete = false; confirmAccountDelete = false; settingsMsg = "";
   render();
@@ -2878,7 +2959,7 @@ mainEl.addEventListener("click", e => {
   }
 });
 
-page = PAGES.includes((location.hash || "").replace("#", "")) ? location.hash.slice(1) : "finances";
+page = PAGES.includes((location.hash || "").replace("#", "")) ? location.hash.slice(1) : "accueil";
 </script>
 
 </body>
