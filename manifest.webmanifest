@@ -1,6 +1,6 @@
 {
-  "name": "tamia",
-  "short_name": "tamia",
+  "name": "Tamia",
+  "short_name": "Tamia",
   "description": "Ton petit agent de poche pour planifier ton budget du mois.",
   "start_url": "app.html",
   "scope": "./",
