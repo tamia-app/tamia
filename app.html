@@ -998,7 +998,28 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .newmonth .nm-q { margin: 4px 2px 2px; display: flex; flex-direction: column; gap: 4px; }
 .newmonth .nm-kick { font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
 .newmonth .nm-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 6.2vw, 1.6rem); letter-spacing: -.03em; line-height: 1.15; white-space: nowrap; }
-.hm-av { width: 38px; height: 38px; border-radius: 50%; background: #121212; color: #f2f2ef; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1rem; text-decoration: none; margin-right: auto; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 18px -10px rgba(0,0,0,.5); }
+.hm-head .hm-tipbtn { margin-right: auto; }
+.hm-tipbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 5px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .84rem; color: var(--ink); cursor: pointer;
+  background: var(--glass, var(--surface)); border: 1px solid var(--glass-edge, var(--line)); box-shadow: var(--glass-hi, none), var(--glass-shadow, none); }
+.hm-bi { width: 28px; height: 28px; border-radius: 9px; background: var(--sunk); color: var(--ink); display: grid; place-items: center; }
+.hm-bi .ico { width: 17px; height: 17px; }
+.hm-dot { position: absolute; top: 3px; left: 26px; width: 9px; height: 9px; border-radius: 50%; background: #e0644f; border: 2px solid var(--bg); }
+.tip-ov { position: fixed; inset: 0; z-index: 70; background: rgba(18,18,18,.45); display: flex; align-items: flex-end; justify-content: center; }
+.tip-sheet { width: min(560px, 100%); background: var(--bg); border-radius: 26px 26px 0 0; padding: 10px 20px calc(22px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; animation: tipUp .22s ease; }
+@keyframes tipUp { from { transform: translateY(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .tip-sheet { animation: none; } }
+.tip-sheet .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
+.tip-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; }
+.tip-bi { width: 52px; height: 52px; border-radius: 16px; background: var(--sunk); color: var(--ink); display: grid; place-items: center; }
+.tip-bi .ico { width: 26px; height: 26px; }
+.tip-k { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+.tip-head h3 { margin: 2px 0 0; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; letter-spacing: -.02em; line-height: 1.2; }
+.tip-sheet .hm-tag { align-self: flex-start; }
+.tip-x { margin: 0; font-size: .98rem; line-height: 1.5; }
+.tip-d { font-size: .76rem; color: var(--muted); }
+.tip-act { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.tip-act .linkbtn { color: var(--ink); font-weight: 700; text-decoration: underline; font-size: .9rem; }
+.tip-act .btn { padding: 11px 22px; }
 </style>
 </head>
 <body>
@@ -2384,22 +2405,37 @@ const onMQ = () => { if (page === "finances" && work) render(); };
 if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
 
 /* ---------- conseil du jour ---------- */
-let TIPS = null, tipOpen = false, tipShift = 0;
+let TIPS = null, tipShift = 0;
 function loadTips() {
   if (TIPS || loadTips.p) return;
   loadTips.p = fetch("data/conseils.json", { cache: "no-cache" }).then(r => r.json()).then(d => { TIPS = d; if (page === "accueil") render(); }).catch(() => { loadTips.p = null; });
 }
-function tipHtml() {
+const tipDay = () => { const now = todayDate(); return now.getFullYear() * 1000 + Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000); };
+function tipRead() { try { return localStorage.getItem("tamia-tip-read") === String(tipDay()); } catch (e) { return true; } }
+function tipBtnHtml() {
   loadTips();
-  if (!TIPS || !TIPS.tips.length) return '';
-  const now = todayDate(), day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-  const t = TIPS.tips[(day + tipShift) % TIPS.tips.length];
-  const disc = TIPS.disclaimer && TIPS.disclaimer[t.theme];
-  return '<div class="hm-tip' + (tipOpen ? ' open' : '') + '"><button type="button" class="hm-tip-row" data-home="tip" aria-expanded="' + tipOpen + '">' + ICON("bulb") +
-    '<span><b>' + (tipShift ? 'Un autre conseil' : 'Conseil du jour') + ' · </b>' + esc(t.short) + '</span><span class="hm-chev">›</span></button>' +
-    (tipOpen ? '<div class="hm-tip-body"><span class="hm-tag">' + esc(TIPS.themes[t.theme] || t.theme) + '</span><p>' + esc(t.text) + '</p>' + (disc ? '<small>' + esc(disc) + '</small>' : '') +
-      '<button type="button" class="linkbtn" data-home="tipnext">Un autre conseil</button></div>' : '') + '</div>';
+  return '<button type="button" class="hm-tipbtn" data-home="tip" aria-haspopup="dialog">' + (TIPS && !tipRead() ? '<span class="hm-dot" aria-label="Nouveau conseil"></span>' : '') + '<span class="hm-bi">' + ICON("bulb") + '</span>Conseil du jour</button>';
 }
+function tipOf(shift) { const now = todayDate(), day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000); return TIPS.tips[(day + shift) % TIPS.tips.length]; }
+function openTip(open) {
+  let ov = $("#tipOv");
+  if (!open) { if (ov) ov.remove(); document.body.style.overflow = ""; return; }
+  if (!TIPS) return;
+  try { localStorage.setItem("tamia-tip-read", String(tipDay())); } catch (e) {}
+  if (!ov) { ov = document.createElement("div"); ov.id = "tipOv"; ov.className = "tip-ov"; document.body.appendChild(ov);
+    ov.addEventListener("click", e => {
+      if (e.target === ov || e.target.closest('[data-t="close"]')) { openTip(false); if (page === "accueil") render(); return; }
+      if (e.target.closest('[data-t="next"]')) { tipShift++; openTip(true); }
+    }); }
+  document.body.style.overflow = "hidden";
+  const t = tipOf(tipShift), disc = TIPS.disclaimer && TIPS.disclaimer[t.theme];
+  const d = todayDate().toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  ov.innerHTML = '<div class="tip-sheet" role="dialog" aria-modal="true" aria-labelledby="tipT"><span class="grab"></span>' +
+    '<div class="tip-head"><span class="tip-bi">' + ICON("bulb") + '</span><div><span class="tip-k">' + (tipShift ? 'Un autre conseil' : 'Conseil du jour · ' + esc(d)) + '</span><h3 id="tipT">' + esc(t.short) + '</h3></div></div>' +
+    '<span class="hm-tag">' + esc(TIPS.themes[t.theme] || t.theme) + '</span><p class="tip-x">' + esc(t.text) + '</p>' + (disc ? '<small class="tip-d">' + esc(disc) + '</small>' : '') +
+    '<div class="tip-act"><button type="button" class="linkbtn" data-t="next">Un autre conseil</button><button type="button" class="btn primary" data-t="close">Merci !</button></div></div>';
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#tipOv")) { openTip(false); if (page === "accueil") render(); } });
 
 /* ---------- recherche ---------- */
 function searchItems(q) {
@@ -2475,9 +2511,8 @@ function homeView() {
     return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
-    '<div class="hm-head"><a class="hm-av" href="#compte" aria-label="Mon compte">' + esc(((user.displayName || user.email || "?").trim().charAt(0) || "?").toUpperCase()) + '</a>' +
+    '<div class="hm-head">' + tipBtnHtml() +
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
-    tipHtml() +
     '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
       '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
@@ -2489,8 +2524,7 @@ mainEl.addEventListener("click", e => {
   if (a === "go") { goTo(b.dataset.month); location.hash = "finances"; return; }
   if (a === "bilan") { openBilan(b.dataset.month); return; }
   if (a === "search") { openSearch(true); return; }
-  if (a === "tip") { tipOpen = !tipOpen; render(); return; }
-  if (a === "tipnext") { tipShift++; tipOpen = true; render(); return; }
+  if (a === "tip") { tipShift = 0; openTip(true); return; }
   if (a === "trip") {
     e.preventDefault();
     const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return;
