@@ -949,6 +949,12 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .hm-tt { display: flex; justify-content: space-between; gap: 8px; } .hm-tt b { font-family: var(--font-display); } .hm-tb small { font-size: .76rem; color: var(--muted); } .hm-tb small b { color: var(--ink); }
 .hm-bar { height: 6px; border-radius: 3px; background: var(--sunk); overflow: hidden; } .hm-bar i { display: block; height: 100%; border-radius: 3px; background: #8d97a3; }
 .hm-empty { margin: 2px 0; font-size: .88rem; color: var(--muted); } .hm-empty a { color: var(--ink); font-weight: 700; }
+.rep-btn { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: var(--ink); background: var(--glass, var(--surface)); border: 1px solid var(--glass-edge, var(--line)); box-shadow: var(--glass-hi, none), var(--glass-shadow, none); flex: none; }
+.rep-btn[hidden] { display: none; }
+.rep-btn { margin-left: auto; }
+@media (max-width: 480px) { .subnav .right { width: 100%; } }
+.rep-btn svg { width: 19px; height: 19px; }
+.rep-btn:hover { border-color: var(--ink); }
 </style>
 </head>
 <body>
@@ -1010,6 +1016,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
         </div>
       </div>
       <span id="validBox" class="validbox" hidden></span>
+      <a href="#rapports" class="rep-btn" id="repBtn" aria-label="Voir les rapports" title="Rapports" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16"/><path d="M7.5 15l3.5-3.5 3 3L19 9"/><path d="M15.5 9H19v3.5"/></svg></a>
     </div>
   </div>
   <div class="menu-wrap" id="menu" hidden>
@@ -1586,6 +1593,7 @@ function render() {
   $(".mpick").hidden = page !== "finances" && page !== "rapports";
   $("#monthBar").hidden = !["finances", "rapports", "reglages"].includes(page);
   document.body.dataset.page = page;
+  $("#repBtn").hidden = page !== "finances";
   const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = page === "voyages" ? "#121212" : getComputedStyle(document.body).backgroundColor;
   renderFlame();
   renderValidBox();
@@ -2339,7 +2347,6 @@ function homeTarget() {
 function homeView() {
   const now = todayDate(), cur = monthIdOf(now), year = cur.slice(0, 4);
   const name = (user.displayName || (user.email || "").split("@")[0] || "").trim().split(/\s+/)[0];
-  const day = now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   // savings figures
   const ids = Object.keys(months).filter(id => id.slice(0, 4) === year && id <= cur && hasBudget(id));
   const saved = ids.reduce((a, id) => a + totals(months[id]).by.epargne, 0);
@@ -2364,7 +2371,7 @@ function homeView() {
     return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
-    '<p class="hm-date">' + esc(day.charAt(0).toUpperCase() + day.slice(1)) + '</p><h1 class="hm-hi">Salut' + (name ? ' ' + esc(name) : '') + '</h1>' +
+    '<h1 class="hm-hi">Salut' + (name ? ' ' + esc(name) : '') + '</h1>' +
     '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + year + '</span><b class="hm-big">' + money(saved) + '</b><span class="hm-sub">' + esc(sub) + '</span></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
       '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
