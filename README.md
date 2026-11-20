@@ -10,6 +10,7 @@ Tamia est une appli web de budget prévisionnel par enveloppes : on indique sa p
 - `app.html` : l'application (connexion Firebase, budgets, objectifs, voyages, rapports, réglages)
 - `mentions-legales.html`, `confidentialite.html` : pages légales
 - `data/destinations.json` : destinations de l'onglet Voyages (voir `data/README.md`)
+- `data/conseils.json` : les conseils du jour de l'accueil (thème, titre court, texte)
 - `tools/check_destinations.py` : check-up des destinations, lancé chaque mois par GitHub Actions
 - `voyages-map.svg` : fond de carte de l'onglet Voyages
 - `firestore.rules` : règles de sécurité Firestore (à coller dans la console Firebase)

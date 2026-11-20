@@ -958,6 +958,35 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .hm-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .hm-pct { font-size: .86rem; color: #c9c9c2; font-weight: 600; }
 .hm-sub b { color: #f2f2ef; font-family: var(--font-display); }
+.hm-head { display: flex; align-items: center; gap: 8px; margin: 4px 0 2px; }
+.hm-head .hm-hi { margin: 0 auto 0 2px; }
+.hm-rb { margin-left: 0; cursor: pointer; padding: 0; }
+.hm-rb .ico { width: 19px; height: 19px; }
+.hm-tip { background: var(--glass, var(--surface)); border: 1px solid var(--glass-edge, var(--line)); border-radius: 16px; box-shadow: var(--glass-hi, none), var(--glass-shadow, none); }
+.hm-tip-row { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; background: none; border: none; font: inherit; color: var(--ink); text-align: left; padding: 11px 14px; cursor: pointer; font-size: .88rem; }
+.hm-tip-row .ico { width: 21px; height: 21px; color: #a8650f; }
+.hm-tip-row b { font-family: var(--font-display); }
+.hm-chev { color: var(--muted); font-size: 1.1rem; transition: transform .15s; }
+.hm-tip.open .hm-chev { transform: rotate(90deg); }
+.hm-tip-body { padding: 0 14px 12px 46px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.hm-tip-body p { margin: 0; font-size: .92rem; line-height: 1.45; }
+.hm-tip-body small { font-size: .74rem; color: var(--muted); }
+.hm-tag { font-size: .66rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: #fde9c7; color: #7a4a0a; border-radius: 99px; padding: 3px 9px; }
+.hm-tip-body .linkbtn { color: var(--ink); font-weight: 700; text-decoration: underline; font-size: .84rem; }
+.search-ov { position: fixed; inset: 0; z-index: 70; background: rgba(18,18,18,.4); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px 16px; }
+.search-box { width: min(560px, 100%); display: flex; align-items: center; gap: 12px; }
+.search-box .linkbtn { color: #f2f2ef; font-weight: 700; }
+.search-in { flex: 1; display: flex; align-items: center; gap: 10px; background: var(--bg); border-radius: 99px; padding: 4px 16px; box-shadow: 0 14px 30px -14px rgba(0,0,0,.5); }
+.search-in .ico { width: 19px; height: 19px; color: var(--muted); flex: none; }
+.search-in input { flex: 1; min-width: 0; border: none; background: none; font: inherit; font-size: 1rem; padding: 10px 0; outline: none; color: var(--ink); }
+.search-res { width: min(560px, 100%); margin-top: 10px; background: var(--bg); border-radius: 20px; padding: 6px; display: flex; flex-direction: column; max-height: 70vh; overflow-y: auto; box-shadow: 0 20px 40px -20px rgba(0,0,0,.5); }
+.search-res:has(.search-hint:only-child) { padding: 4px 6px; }
+.search-hint { margin: 10px 12px; font-size: .86rem; color: var(--muted); }
+.search-item { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: center; background: none; border: none; border-radius: 14px; padding: 8px 10px; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+.search-item:hover, .search-item:focus-visible { background: var(--surface); }
+.search-item .sic { width: 38px; height: 38px; border-radius: 12px; background: var(--sunk); display: grid; place-items: center; }
+.search-item .sic .ico { width: 20px; height: 20px; }
+.search-item b { display: block; font-family: var(--font-display); font-size: .95rem; } .search-item small { color: var(--muted); font-size: .78rem; }
 </style>
 </head>
 <body>
@@ -1647,6 +1676,7 @@ ICO.search = '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>';
 ICO.boat = '<path d="M3 15.5h18l-2.5 4.5h-13z"/><path d="M6 15.5V11h12v4.5"/><path d="M9 11V7.5h6V11"/><path d="M12 7.5V4"/>';
 ICO.dots = '<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>';
 ICO.checkmark = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
+ICO.bulb = '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>';
 ICO.note = '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/><path d="M8.5 8.5h7M8.5 11.5h4"/>';
 const ICO_ALIAS = {"hand":"pen","repeat":"loop","sparkles":"sparkle","moneybag":"coins","scale":"balance","bags":"bag","seedling":"sprout","chartup":"trend","rocket":"gem","single":"person","parents":"home","k1":"n1","k2":"n2","k3":"n3","cooking":"pan","sandwich":"bowl","scooter":"takeaway","fork":"cutlery","coin":"euro","metro":"train","pushpin":"pin","coffee":"cup","popper":"party","grimace":"meh","sweat":"sad","fire":"flame","dart":"target","door":"logout","gear":"sliders"};
 const ICON = (n, cls) => '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[ICO_ALIAS[n] || n] || '') + '</svg>';
@@ -2341,6 +2371,65 @@ $("#mini").addEventListener("click", e => {
 const onMQ = () => { if (page === "finances" && work) render(); };
 if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
 
+/* ---------- conseil du jour ---------- */
+let TIPS = null, tipOpen = false, tipShift = 0;
+function loadTips() {
+  if (TIPS || loadTips.p) return;
+  loadTips.p = fetch("data/conseils.json", { cache: "no-cache" }).then(r => r.json()).then(d => { TIPS = d; if (page === "accueil") render(); }).catch(() => { loadTips.p = null; });
+}
+function tipHtml() {
+  loadTips();
+  if (!TIPS || !TIPS.tips.length) return '';
+  const now = todayDate(), day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const t = TIPS.tips[(day + tipShift) % TIPS.tips.length];
+  const disc = TIPS.disclaimer && TIPS.disclaimer[t.theme];
+  return '<div class="hm-tip' + (tipOpen ? ' open' : '') + '"><button type="button" class="hm-tip-row" data-home="tip" aria-expanded="' + tipOpen + '">' + ICON("bulb") +
+    '<span><b>' + (tipShift ? 'Un autre conseil' : 'Conseil du jour') + ' · </b>' + esc(t.short) + '</span><span class="hm-chev">›</span></button>' +
+    (tipOpen ? '<div class="hm-tip-body"><span class="hm-tag">' + esc(TIPS.themes[t.theme] || t.theme) + '</span><p>' + esc(t.text) + '</p>' + (disc ? '<small>' + esc(disc) + '</small>' : '') +
+      '<button type="button" class="linkbtn" data-home="tipnext">Un autre conseil</button></div>' : '') + '</div>';
+}
+
+/* ---------- recherche ---------- */
+function searchItems(q) {
+  const n = vnorm(q); if (!n) return [];
+  const hit = x => vnorm(x).includes(n);
+  const out = [];
+  [["Finances", "finances", "wallet"], ["Voyages", "voyages", "plane"], ["Objectifs", "objectifs", "piggy"], ["Rapports", "rapports", "trend"], ["Réglages", "reglages", "sliders"], ["Trophées", "trophees", "trophy"], ["Mon compte", "compte", "single"]]
+    .forEach(([t, p, ic]) => { if (hit(t)) out.push({ ic, t, s: "Page", go: "page", v: p }); });
+  Object.keys(months).sort().reverse().forEach(id => { if (hasBudget(id) && hit(label(id))) out.push({ ic: "calendar", t: label(id), s: "Budget · " + money(totals(months[id]).income) + " de paye", go: "month", v: id }); });
+  const seen = new Set();
+  Object.keys(months).sort().reverse().forEach(id => (months[id].envelopes || []).forEach(e => {
+    const k = vnorm(e.name || ""); if (!k || seen.has(k) || !hit(e.name)) return; seen.add(k);
+    out.push({ ic: "receipt", t: e.name, s: "Enveloppe · " + label(id) + " · " + money(e.amount), go: "month", v: id });
+  }));
+  if (DEST) DEST.destinations.forEach(d => { if ([d.name, d.country].concat(d.aliases || []).some(hit)) out.push({ ic: "plane", t: d.name, s: "Voyage · " + d.country, go: "dest", v: d.id }); });
+  return out.slice(0, 12);
+}
+function openSearch(open) {
+  let ov = $("#searchOv");
+  if (!open) { if (ov) ov.remove(); document.body.style.overflow = ""; return; }
+  loadDest();
+  ov = document.createElement("div"); ov.id = "searchOv"; ov.className = "search-ov";
+  ov.innerHTML = '<div class="search-box"><label class="search-in">' + ICON("search") + '<input id="searchQ" type="search" placeholder="Enveloppe, mois, voyage, page…" autocomplete="off" aria-label="Rechercher"></label><button type="button" class="linkbtn" data-s="close">Annuler</button></div><div class="search-res" id="searchRes"><p class="search-hint">Cherche une enveloppe (« courses »), un mois (« octobre »), une destination ou une page.</p></div>';
+  document.body.appendChild(ov); document.body.style.overflow = "hidden";
+  const inp = $("#searchQ"); inp.focus();
+  inp.addEventListener("input", () => {
+    const r = searchItems(inp.value);
+    $("#searchRes").innerHTML = !inp.value.trim() ? '<p class="search-hint">Cherche une enveloppe (« courses »), un mois (« octobre »), une destination ou une page.</p>'
+      : r.length ? r.map(x => '<button type="button" class="search-item" data-s="' + x.go + '" data-v="' + esc(x.v) + '"><span class="sic">' + ICON(x.ic) + '</span><span><b>' + esc(x.t) + '</b><small>' + esc(x.s) + '</small></span></button>').join("")
+      : '<p class="search-hint">Aucun résultat pour « ' + esc(inp.value.trim()) + ' ».</p>';
+  });
+  ov.addEventListener("click", e => {
+    const b = e.target.closest("[data-s]"); if (!b) { if (e.target === ov) openSearch(false); return; }
+    const a = b.dataset.s, v = b.dataset.v;
+    openSearch(false);
+    if (a === "page") location.hash = v;
+    if (a === "month") { goTo(v); location.hash = "finances"; }
+    if (a === "dest") { voy = Object.assign(VOY0(), { id: v }); voy.step = "when"; location.hash = "voyages"; if (page === "voyages") render(); }
+  });
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#searchOv")) openSearch(false); });
+
 /* ---------- Accueil: savings figures, this month's steps, projects ---------- */
 function homeTarget() {
   // the month being worked on: last month while its check-in is still open (up to the 10th), otherwise this month
@@ -2349,7 +2438,6 @@ function homeTarget() {
 }
 function homeView() {
   const now = todayDate(), cur = monthIdOf(now), year = cur.slice(0, 4);
-  const name = (user.displayName || (user.email || "").split("@")[0] || "").trim().split(/\s+/)[0];
   // savings figures
   const ids = Object.keys(months).filter(id => id.slice(0, 4) === year && id <= cur && hasBudget(id));
   const saved = ids.reduce((a, id) => a + totals(months[id]).by.epargne, 0);
@@ -2375,7 +2463,9 @@ function homeView() {
     return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
-    '<h1 class="hm-hi">Salut' + (name ? ' ' + esc(name) : '') + '</h1>' +
+    '<div class="hm-head"><h1 class="hm-hi">' + esc(monthName(cur).charAt(0).toUpperCase() + monthName(cur).slice(1)) + '</h1>' +
+      '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
+    tipHtml() +
     '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
       '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
@@ -2386,6 +2476,9 @@ mainEl.addEventListener("click", e => {
   const a = b.dataset.home;
   if (a === "go") { goTo(b.dataset.month); location.hash = "finances"; return; }
   if (a === "bilan") { openBilan(b.dataset.month); return; }
+  if (a === "search") { openSearch(true); return; }
+  if (a === "tip") { tipOpen = !tipOpen; render(); return; }
+  if (a === "tipnext") { tipShift++; tipOpen = true; render(); return; }
   if (a === "trip") {
     e.preventDefault();
     const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return;

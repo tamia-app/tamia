@@ -1,0 +1,377 @@
+{
+ "schemaVersion": 1,
+ "updatedAt": "2026-11-20",
+ "themes": {
+  "budget": "Budget",
+  "epargne": "Épargne",
+  "quotidien": "Au quotidien",
+  "banque": "Banque",
+  "investir": "Investir",
+  "voyage": "Voyage"
+ },
+ "disclaimer": {
+  "investir": "Contenu informatif, pas un conseil en investissement personnalisé."
+ },
+ "tips": [
+  {
+   "id": 1,
+   "theme": "budget",
+   "short": "Le budget avant la paye",
+   "text": "Prépare ton budget dès que ta paye tombe : chaque euro a une mission avant d'être dépensé."
+  },
+  {
+   "id": 2,
+   "theme": "budget",
+   "short": "La règle des 24 h avant un achat plaisir",
+   "text": "Avant un achat plaisir de plus de 50 €, attends 24 heures. Souvent, l'envie passe d'elle-même."
+  },
+  {
+   "id": 3,
+   "theme": "budget",
+   "short": "Une enveloppe pour les imprévus",
+   "text": "Garde une petite enveloppe « Imprévus » chaque mois : une réparation ou un cadeau oublié ne fera plus dérailler ton budget."
+  },
+  {
+   "id": 4,
+   "theme": "budget",
+   "short": "Les dépenses annuelles, par mois",
+   "text": "Assurance, impôts, cadeaux de Noël : divise ces grosses dépenses par 12 et mets-les de côté chaque mois."
+  },
+  {
+   "id": 5,
+   "theme": "budget",
+   "short": "Revois tes abonnements",
+   "text": "Fais le tour de tes abonnements tous les trois mois : on paie souvent pour des services qu'on n'utilise plus."
+  },
+  {
+   "id": 6,
+   "theme": "budget",
+   "short": "Le prix en heures de travail",
+   "text": "Avant un gros achat, calcule combien d'heures de travail il représente. Ça aide à savoir s'il en vaut vraiment la peine."
+  },
+  {
+   "id": 7,
+   "theme": "budget",
+   "short": "Ton budget n'est pas figé",
+   "text": "Un mois ne se passe jamais exactement comme prévu. Ajuster ses enveloppes en cours de route, c'est normal."
+  },
+  {
+   "id": 8,
+   "theme": "budget",
+   "short": "Les petites dépenses comptent",
+   "text": "Un café à 3 € tous les jours ouvrés, c'est environ 60 € par mois. Ce n'est pas interdit, mais autant le savoir."
+  },
+  {
+   "id": 9,
+   "theme": "budget",
+   "short": "Une enveloppe plaisir, sans culpabilité",
+   "text": "Prévois une enveloppe pour te faire plaisir : un budget trop strict se tient rarement longtemps."
+  },
+  {
+   "id": 10,
+   "theme": "budget",
+   "short": "Le bilan de fin de mois",
+   "text": "Prends cinq minutes en fin de mois pour regarder ce qui a débordé : c'est la meilleure façon d'ajuster le mois suivant."
+  },
+  {
+   "id": 11,
+   "theme": "budget",
+   "short": "Les soldes, avec une liste",
+   "text": "Pendant les soldes, fais une liste avant d'y aller. Une remise sur un achat imprévu reste une dépense en plus."
+  },
+  {
+   "id": 12,
+   "theme": "budget",
+   "short": "Paye les grosses factures en premier",
+   "text": "Dès que ta paye arrive, mets de côté le loyer et les factures. Ce qui reste, c'est vraiment ce que tu peux dépenser."
+  },
+  {
+   "id": 13,
+   "theme": "budget",
+   "short": "Un budget à deux",
+   "text": "En couple, une solution simple : un compte commun pour les dépenses partagées, chacun garde un compte pour ses dépenses perso."
+  },
+  {
+   "id": 14,
+   "theme": "budget",
+   "short": "Anticipe les fêtes",
+   "text": "Décembre coûte cher : commence à mettre un peu de côté pour les cadeaux dès septembre."
+  },
+  {
+   "id": 15,
+   "theme": "budget",
+   "short": "La rentrée se prépare",
+   "text": "Fournitures, inscriptions, assurances : la rentrée arrive vite. Une petite enveloppe dès l'été évite le choc de septembre."
+  },
+  {
+   "id": 16,
+   "theme": "epargne",
+   "short": "Épargne en premier",
+   "text": "Programme ton virement d'épargne le jour de ta paye : ce qui part tout de suite ne se dépense pas."
+  },
+  {
+   "id": 17,
+   "theme": "epargne",
+   "short": "L'épargne de précaution d'abord",
+   "text": "Avant tout autre projet, vise une réserve de 3 à 6 mois de dépenses sur un livret, disponible à tout moment."
+  },
+  {
+   "id": 18,
+   "theme": "epargne",
+   "short": "Un peu, mais tous les mois",
+   "text": "Mieux vaut mettre de côté 30 € chaque mois que 300 € une fois de temps en temps. La régularité fait la différence."
+  },
+  {
+   "id": 19,
+   "theme": "epargne",
+   "short": "Un objectif, une enveloppe",
+   "text": "Donne un nom à ton épargne : « Voyage au Japon » motive bien plus que « Épargne »."
+  },
+  {
+   "id": 20,
+   "theme": "epargne",
+   "short": "Les augmentations, à moitié",
+   "text": "Quand tes revenus augmentent, mets-en au moins la moitié de côté avant de t'habituer à dépenser plus."
+  },
+  {
+   "id": 21,
+   "theme": "epargne",
+   "short": "L'argent qui dort",
+   "text": "L'argent laissé sur un compte courant ne rapporte rien. Un livret réglementé reste disponible et rapporte un peu."
+  },
+  {
+   "id": 22,
+   "theme": "epargne",
+   "short": "Arrondis tes dépenses",
+   "text": "Certaines banques proposent d'arrondir chaque paiement à l'euro supérieur et de mettre la différence de côté. Ça s'additionne vite."
+  },
+  {
+   "id": 23,
+   "theme": "epargne",
+   "short": "Les rentrées exceptionnelles",
+   "text": "Prime, remboursement, cadeau : mets-en une partie de côté avant de décider quoi faire du reste."
+  },
+  {
+   "id": 24,
+   "theme": "epargne",
+   "short": "Fixe-toi un montant, pas un reste",
+   "text": "Épargner « ce qui reste en fin de mois » ne marche presque jamais. Décide d'un montant dès le début du mois."
+  },
+  {
+   "id": 25,
+   "theme": "epargne",
+   "short": "Ton taux d'épargne",
+   "text": "Regarde quelle part de ta paye tu mets de côté plutôt que le montant : c'est le meilleur repère pour progresser."
+  },
+  {
+   "id": 26,
+   "theme": "quotidien",
+   "short": "Les courses, le ventre plein",
+   "text": "Fais tes courses après avoir mangé, avec une liste : tu achèteras moins d'impulsion."
+  },
+  {
+   "id": 27,
+   "theme": "quotidien",
+   "short": "Compare au kilo",
+   "text": "Regarde le prix au kilo ou au litre affiché en petit sur l'étiquette : le grand format n'est pas toujours le moins cher."
+  },
+  {
+   "id": 28,
+   "theme": "quotidien",
+   "short": "Cuisine en avance",
+   "text": "Préparer ses repas de la semaine le dimanche évite les livraisons et les sandwichs de dernière minute."
+  },
+  {
+   "id": 29,
+   "theme": "quotidien",
+   "short": "Les marques distributeur",
+   "text": "Pour beaucoup de produits de base, les marques des magasins sont proches des grandes marques, pour moins cher."
+  },
+  {
+   "id": 30,
+   "theme": "quotidien",
+   "short": "Le déjeuner au bureau",
+   "text": "Apporter son déjeuner deux fois par semaine peut faire économiser plusieurs dizaines d'euros par mois."
+  },
+  {
+   "id": 31,
+   "theme": "quotidien",
+   "short": "Désabonne-toi des newsletters",
+   "text": "Les e-mails promotionnels créent des envies. Se désabonner, c'est autant de tentations en moins."
+  },
+  {
+   "id": 32,
+   "theme": "quotidien",
+   "short": "Les retours gratuits ne sont pas gratuits",
+   "text": "Commander « pour essayer » finit souvent par garder. N'achète en ligne que ce que tu achèterais en magasin."
+  },
+  {
+   "id": 33,
+   "theme": "quotidien",
+   "short": "Renégocie tes contrats",
+   "text": "Chaque année, compare ton forfait mobile, ta box et tes assurances : changer ou renégocier fait souvent baisser la facture."
+  },
+  {
+   "id": 34,
+   "theme": "quotidien",
+   "short": "L'occasion d'abord",
+   "text": "Pour l'électronique, les vêtements ou les meubles, regarde d'abord l'occasion ou le reconditionné."
+  },
+  {
+   "id": 35,
+   "theme": "quotidien",
+   "short": "L'énergie qui file",
+   "text": "Éteindre les appareils en veille et baisser le chauffage d'un degré réduit la facture sans changer ton confort."
+  },
+  {
+   "id": 36,
+   "theme": "quotidien",
+   "short": "Les sorties gratuites",
+   "text": "Musées gratuits, concerts en plein air, balades : beaucoup de sorties ne coûtent rien. Regarde l'agenda de ta ville."
+  },
+  {
+   "id": 37,
+   "theme": "quotidien",
+   "short": "Prête et emprunte",
+   "text": "Une perceuse, une tente, un appareil à raclette : ce dont on se sert rarement s'emprunte plutôt que de s'acheter."
+  },
+  {
+   "id": 38,
+   "theme": "quotidien",
+   "short": "Le paiement sans contact",
+   "text": "Payer sans contact rend les petites dépenses presque invisibles. Jette un œil à tes relevés chaque semaine."
+  },
+  {
+   "id": 39,
+   "theme": "banque",
+   "short": "Les frais bancaires",
+   "text": "Vérifie les frais de ta banque une fois par an : certaines banques en ligne ne facturent presque rien pour un usage courant."
+  },
+  {
+   "id": 40,
+   "theme": "banque",
+   "short": "Évite le découvert",
+   "text": "Le découvert coûte cher en agios. Une petite réserve sur ton compte courant t'en protège."
+  },
+  {
+   "id": 41,
+   "theme": "banque",
+   "short": "Le crédit à la consommation",
+   "text": "Avant de payer en plusieurs fois, regarde le coût total : les frais peuvent rendre l'achat bien plus cher."
+  },
+  {
+   "id": 42,
+   "theme": "banque",
+   "short": "Paye en monnaie locale",
+   "text": "À l'étranger, quand on te propose de payer en euros, choisis la monnaie locale : la conversion proposée est presque toujours plus chère."
+  },
+  {
+   "id": 43,
+   "theme": "banque",
+   "short": "Lis tes relevés",
+   "text": "Parcourir son relevé chaque mois permet de repérer un abonnement oublié ou une erreur."
+  },
+  {
+   "id": 44,
+   "theme": "banque",
+   "short": "Les virements automatiques",
+   "text": "Automatise ce qui doit l'être : loyer, épargne, factures. Moins d'oublis, moins de frais."
+  },
+  {
+   "id": 45,
+   "theme": "investir",
+   "short": "Investir, c'est du long terme",
+   "text": "L'argent que tu pourrais utiliser dans les prochaines années ne devrait pas être investi en bourse : il peut baisser au mauvais moment."
+  },
+  {
+   "id": 46,
+   "theme": "investir",
+   "short": "Diversifier",
+   "text": "Ne pas mettre tous ses œufs dans le même panier : répartir son argent entre plusieurs placements limite les risques."
+  },
+  {
+   "id": 47,
+   "theme": "investir",
+   "short": "C'est quoi un ETF ?",
+   "text": "Un ETF, ou fonds indiciel, suit un indice boursier entier. Il permet d'investir dans beaucoup d'entreprises à la fois, souvent avec peu de frais."
+  },
+  {
+   "id": 48,
+   "theme": "investir",
+   "short": "Les frais comptent",
+   "text": "Sur plusieurs années, quelques points de frais par an peuvent coûter une grande partie des gains. Compare-les avant d'investir."
+  },
+  {
+   "id": 49,
+   "theme": "investir",
+   "short": "Investir petit à petit",
+   "text": "Investir un petit montant chaque mois lisse les hauts et les bas de la bourse et évite de chercher le « bon moment »."
+  },
+  {
+   "id": 50,
+   "theme": "investir",
+   "short": "Méfie-toi des promesses",
+   "text": "Un placement qui promet de gros gains sans risque est presque toujours une arnaque. Vérifie qu'un intermédiaire est autorisé par l'AMF."
+  },
+  {
+   "id": 51,
+   "theme": "investir",
+   "short": "Le temps travaille pour toi",
+   "text": "Grâce aux intérêts composés, les gains produisent à leur tour des gains. Commencer tôt, même petit, fait une vraie différence."
+  },
+  {
+   "id": 52,
+   "theme": "investir",
+   "short": "La crypto, avec prudence",
+   "text": "Les cryptomonnaies sont très volatiles. N'y mets que l'argent que tu es prêt à voir baisser fortement."
+  },
+  {
+   "id": 53,
+   "theme": "investir",
+   "short": "Comprendre avant d'investir",
+   "text": "N'investis jamais dans un produit que tu ne saurais pas expliquer simplement à un ami."
+  },
+  {
+   "id": 54,
+   "theme": "investir",
+   "short": "Garde ton sang-froid",
+   "text": "Quand la bourse baisse, vendre dans la panique fige les pertes. Un investissement long terme se juge sur plusieurs années."
+  },
+  {
+   "id": 55,
+   "theme": "voyage",
+   "short": "Réserve tôt",
+   "text": "Pour les vols et les logements, réserver plusieurs mois à l'avance est souvent la meilleure façon de payer moins cher."
+  },
+  {
+   "id": 56,
+   "theme": "voyage",
+   "short": "Voyage hors saison",
+   "text": "Partir juste avant ou juste après la haute saison, c'est souvent des prix bien plus doux et moins de monde."
+  },
+  {
+   "id": 57,
+   "theme": "voyage",
+   "short": "Le budget voyage par jour",
+   "text": "Divise ton budget voyage par le nombre de jours : c'est le repère le plus simple pour ne pas dépasser sur place."
+  },
+  {
+   "id": 58,
+   "theme": "voyage",
+   "short": "Les bagages en soute",
+   "text": "Sur les compagnies à petits prix, un bagage en soute peut coûter cher. Voyage léger ou ajoute-le dès la réservation."
+  },
+  {
+   "id": 59,
+   "theme": "voyage",
+   "short": "Mange local",
+   "text": "Les restaurants où mangent les habitants sont souvent meilleurs et moins chers que ceux des rues touristiques."
+  },
+  {
+   "id": 60,
+   "theme": "voyage",
+   "short": "Les transports en commun",
+   "text": "Dans la plupart des grandes villes, les pass de transport reviennent bien moins cher que les taxis."
+  }
+ ]
+}
