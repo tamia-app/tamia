@@ -995,6 +995,9 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .hm-tip-row { grid-template-columns: 34px minmax(0, 1fr) auto; }
 .hm-tip-row .ico { width: 34px; height: 34px; padding: 7px; box-sizing: border-box; border-radius: 50%; background: #ebebe7; }
 .hm-tip-body { padding-left: 58px; }
+.newmonth .nm-q { margin: 4px 2px 2px; display: flex; flex-direction: column; gap: 4px; }
+.newmonth .nm-kick { font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+.newmonth .nm-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 6.2vw, 1.6rem); letter-spacing: -.03em; line-height: 1.15; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -1700,7 +1703,7 @@ function createView() {
       '<div class="income-field"><input id="newIncome" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(show(inc)) + '"><span>€</span></div>' +
       '<div id="nmSplit">' + nmSplitHtml(inc) + '</div>' +
     '</div>' +
-    '<p class="nm-q">Comment prépare-t-on le budget ce mois-ci ?</p>' +
+    '<div class="nm-q"><span class="nm-kick">Budget de ' + esc(monthName(current)) + '</span><h2 class="nm-title">Comment le prépare‑t‑on ?</h2></div>' +
     '<div class="startlist">' +
       '<button type="button" data-act="create" data-from="manual"><span class="sic">' + EMO('brain') + '</span><span class="t"><b>Je le fais moi-même</b><small>Enveloppes de base à remplir</small></span><span class="arr">›</span></button>' +
       (pm ? '<button type="button" data-act="create" data-from="' + p + '"><span class="sic">' + EMO('duplicate') + '</span><span class="t"><b>Copier le mois dernier</b><small>Le même budget que ' + esc(monthName(p)) + '</small></span><span class="arr">›</span></button>' : '') +
