@@ -955,6 +955,9 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 @media (max-width: 480px) { .subnav .right { width: 100%; } }
 .rep-btn svg { width: 19px; height: 19px; }
 .rep-btn:hover { border-color: var(--ink); }
+.hm-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.hm-pct { font-size: .86rem; color: #c9c9c2; font-weight: 600; }
+.hm-sub b { color: #f2f2ef; font-family: var(--font-display); }
 </style>
 </head>
 <body>
@@ -2350,9 +2353,10 @@ function homeView() {
   // savings figures
   const ids = Object.keys(months).filter(id => id.slice(0, 4) === year && id <= cur && hasBudget(id));
   const saved = ids.reduce((a, id) => a + totals(months[id]).by.epargne, 0);
-  const last = hasBudget(cur) ? cur : Object.keys(months).filter(id => id < cur && hasBudget(id)).sort().pop();
-  let sub = "Prépare ton premier budget pour voir tes chiffres ici.";
-  if (last) { const t = totals(months[last]); sub = (last === cur ? "Ce mois-ci" : "En " + monthName(last)) + " : " + money(t.by.epargne) + ", soit " + pctOf(t.by.epargne, t.income) + " de ta paye"; }
+  const tc = hasBudget(cur) ? totals(months[cur]) : null;
+  const big = tc ? money(tc.by.epargne) : "–";
+  const pct = tc && tc.income ? '<span class="hm-pct">' + pctOf(tc.by.epargne, tc.income) + ' de ta paye</span>' : '';
+  const sub = tc || saved ? "Depuis le début de l'année : <b>" + money(saved) + "</b>" : "Prépare ton budget pour voir ton épargne ici.";
   // this month's steps
   const M = homeTarget(), m = months[M], mn = monthName(M);
   const prepared = hasBudget(M), valid = prepared && !!m.validated, bil = !!(m && m.bilan);
@@ -2372,7 +2376,7 @@ function homeView() {
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
     '<h1 class="hm-hi">Salut' + (name ? ' ' + esc(name) : '') + '</h1>' +
-    '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + year + '</span><b class="hm-big">' + money(saved) + '</b><span class="hm-sub">' + esc(sub) + '</span></div>' +
+    '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
       '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
