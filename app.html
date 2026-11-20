@@ -1020,6 +1020,8 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .tip-act { display: flex; justify-content: flex-end; align-items: center; margin-top: 4px; }
 .tip-act .linkbtn { color: var(--ink); font-weight: 700; text-decoration: underline; font-size: .9rem; }
 .tip-act .btn { padding: 11px 22px; }
+/* same spacing under the month bar as under the home header */
+.subnav:not(:has(> #monthBar[hidden])) { margin-bottom: -6.8px; }
 </style>
 </head>
 <body>
