@@ -999,7 +999,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .newmonth .nm-kick { font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
 .newmonth .nm-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 6.2vw, 1.6rem); letter-spacing: -.03em; line-height: 1.15; white-space: nowrap; }
 .hm-head .hm-tipbtn { margin-right: auto; }
-.hm-tipbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 5px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .84rem; color: var(--ink); cursor: pointer;
+.hm-tipbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 5px; border-radius: 12px; font: inherit; font-weight: 700; font-size: .84rem; color: var(--ink); cursor: pointer;
   background: var(--glass, var(--surface)); border: 1px solid var(--glass-edge, var(--line)); box-shadow: var(--glass-hi, none), var(--glass-shadow, none); }
 .hm-bi { width: 28px; height: 28px; border-radius: 9px; background: var(--sunk); color: var(--ink); display: grid; place-items: center; }
 .hm-bi .ico { width: 17px; height: 17px; }
@@ -1017,7 +1017,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .tip-sheet .hm-tag { align-self: flex-start; }
 .tip-x { margin: 0; font-size: .98rem; line-height: 1.5; }
 .tip-d { font-size: .76rem; color: var(--muted); }
-.tip-act { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.tip-act { display: flex; justify-content: flex-end; align-items: center; margin-top: 4px; }
 .tip-act .linkbtn { color: var(--ink); font-weight: 700; text-decoration: underline; font-size: .9rem; }
 .tip-act .btn { padding: 11px 22px; }
 </style>
@@ -2431,9 +2431,9 @@ function openTip(open) {
   const t = tipOf(tipShift), disc = TIPS.disclaimer && TIPS.disclaimer[t.theme];
   const d = todayDate().toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
   ov.innerHTML = '<div class="tip-sheet" role="dialog" aria-modal="true" aria-labelledby="tipT"><span class="grab"></span>' +
-    '<div class="tip-head"><span class="tip-bi">' + ICON("bulb") + '</span><div><span class="tip-k">' + (tipShift ? 'Un autre conseil' : 'Conseil du jour · ' + esc(d)) + '</span><h3 id="tipT">' + esc(t.short) + '</h3></div></div>' +
+    '<div class="tip-head"><span class="tip-bi">' + ICON("bulb") + '</span><div><span class="tip-k">' + 'Conseil du jour · ' + esc(d) + '</span><h3 id="tipT">' + esc(t.short) + '</h3></div></div>' +
     '<span class="hm-tag">' + esc(TIPS.themes[t.theme] || t.theme) + '</span><p class="tip-x">' + esc(t.text) + '</p>' + (disc ? '<small class="tip-d">' + esc(disc) + '</small>' : '') +
-    '<div class="tip-act"><button type="button" class="linkbtn" data-t="next">Un autre conseil</button><button type="button" class="btn primary" data-t="close">Merci !</button></div></div>';
+    '<div class="tip-act"><button type="button" class="btn primary" data-t="close">Merci !</button></div></div>';
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#tipOv")) { openTip(false); if (page === "accueil") render(); } });
 
