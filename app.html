@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<script>try { var t = localStorage.getItem("tamia-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tamia</title>
@@ -1022,6 +1023,19 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .tip-act .btn { padding: 11px 22px; }
 /* same spacing under the month bar as under the home header */
 .subnav:not(:has(> #monthBar[hidden])) { margin-bottom: -6.8px; }
+/* dark mode: ink blocks a step lighter than the page, panels lifted */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band: #20201e; --band-line: rgba(255,255,255,.08); }
+  :root:not([data-theme="light"]) .hm-ink { background: var(--band); border: 1px solid var(--band-line); }
+  :root:not([data-theme="light"]) .menu-panel, :root:not([data-theme="light"]) .tip-sheet, :root:not([data-theme="light"]) .search-res, :root:not([data-theme="light"]) .search-in, :root:not([data-theme="light"]) .bil-sheet { background: #1c1c1b; } }
+:root[data-theme="dark"] { --band: #20201e; --band-line: rgba(255,255,255,.08); }
+:root[data-theme="dark"] .hm-ink { background: var(--band); border: 1px solid var(--band-line); }
+:root[data-theme="dark"] .menu-panel, :root[data-theme="dark"] .tip-sheet, :root[data-theme="dark"] .search-res, :root[data-theme="dark"] .search-in, :root[data-theme="dark"] .bil-sheet { background: #1c1c1b; }
+.mn-tools { display: flex; gap: 8px; }
+.mn-theme .ico { width: 18px; height: 18px; }
+.theme-seg { display: flex; background: var(--sunk); border-radius: 14px; padding: 4px; gap: 4px; max-width: 420px; }
+.theme-seg button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; border: none; background: none; border-radius: 10px; padding: 10px 4px; font: inherit; font-weight: 700; font-size: .84rem; color: var(--muted); cursor: pointer; }
+.theme-seg button i { width: 36px; height: 24px; border-radius: 7px; border: 1.5px solid var(--line); }
+.theme-seg button[aria-checked="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(0,0,0,.25); }
 </style>
 </head>
 <body>
@@ -1603,7 +1617,7 @@ function openMenu(open) {
   document.body.style.overflow = open ? "hidden" : "";
   if (!open) return;
   const name = user.displayName || (user.email || "").split("@")[0];
-  $("#menuPanel").innerHTML = '<div class="mn-top"><span class="brand">' + $(".top .brand a").innerHTML + '</span><button type="button" class="mn-close" data-menu="close" aria-label="Fermer le menu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>' +
+  $("#menuPanel").innerHTML = '<div class="mn-top"><span class="brand">' + $(".top .brand a").innerHTML + '</span><span class="mn-tools"><button type="button" class="mn-close mn-theme" data-menu="theme" aria-label="' + (isDark() ? 'Passer en mode clair' : 'Passer en mode sombre') + '">' + ICON(isDark() ? "sun" : "moon") + '</button><button type="button" class="mn-close" data-menu="close" aria-label="Fermer le menu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></span></div>' +
     '<div class="mn-who"><span class="av">' + esc((name.trim().charAt(0) || "?").toUpperCase()) + '</span><div><b>' + esc(name) + '</b><span>' + esc(user.email || "") + '</span></div></div>' +
     (() => { const n = streakInfo(); return '<button type="button" class="mn-flame' + (n ? '' : ' zero') + '" data-menu="flame" aria-expanded="false" aria-controls="mnFp"><span class="sic">' + ICON("fire") + '</span><span><b>' + n + ' mois d\'affilée</b><small>Ma flamme · voir le détail</small></span><span class="arr">›</span></button><div class="mn-fp" id="mnFp" hidden></div>'; })() +
     '<nav class="mn-nav" aria-label="Pages">' + MENU.map(m => '<a href="#' + m.p + '" data-menu="go"' + ((m.group || [m.p]).includes(page) ? ' aria-current="page"' : '') + '><span class="sic">' + ICON(m.ic) + '</span><span><b>' + m.t + '</b><small>' + esc(typeof m.s === "function" ? m.s() : m.s) + '</small></span><span class="arr">›</span></a>').join("") + '</nav>' +
@@ -1612,6 +1626,7 @@ function openMenu(open) {
 }
 $("#menuBtn").addEventListener("click", e => { e.preventDefault(); openMenu(true); });
 $("#menu").addEventListener("click", e => {
+  if (e.target.closest('[data-menu="theme"]')) { setTheme(isDark() ? "light" : "dark"); openMenu(true); return; }
   const fp = e.target.closest('[data-fp="bilan"]');
   if (fp) { const now = todayDate(), cur = monthIdOf(now), prev = shiftMonth(cur, -1); openMenu(false); openBilan(now.getDate() <= 10 && isPrepared(prev) && !months[prev].bilan ? prev : cur); return; }
   const b = e.target.closest("[data-menu]"); if (!b) return;
@@ -1712,6 +1727,8 @@ ICO.boat = '<path d="M3 15.5h18l-2.5 4.5h-13z"/><path d="M6 15.5V11h12v4.5"/><pa
 ICO.dots = '<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>';
 ICO.checkmark = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
 ICO.bulb = '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>';
+ICO.moon = '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
+ICO.sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>';
 ICO.note = '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/><path d="M8.5 8.5h7M8.5 11.5h4"/>';
 const ICO_ALIAS = {"hand":"pen","repeat":"loop","sparkles":"sparkle","moneybag":"coins","scale":"balance","bags":"bag","seedling":"sprout","chartup":"trend","rocket":"gem","single":"person","parents":"home","k1":"n1","k2":"n2","k3":"n3","cooking":"pan","sandwich":"bowl","scooter":"takeaway","fork":"cutlery","coin":"euro","metro":"train","pushpin":"pin","coffee":"cup","popper":"party","grimace":"meh","sweat":"sad","fire":"flame","dart":"target","door":"logout","gear":"sliders"};
 const ICON = (n, cls) => '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[ICO_ALIAS[n] || n] || '') + '</svg>';
@@ -2147,6 +2164,9 @@ function settingsView() {
   const provider = (user.providerData[0] && user.providerData[0].providerId) === "google.com" ? "Compte Google" : "E-mail et mot de passe";
   return '<div class="settings">' +
     (settingsMsg ? '<div class="msg ok">' + esc(settingsMsg) + '</div>' : '') +
+    '<div class="card panel"><h2>Apparence</h2><div class="theme-seg" role="radiogroup" aria-label="Apparence">' +
+      [["auto", "Auto", "linear-gradient(135deg,#f2f2ef 50%,#121212 50%)"], ["light", "Clair", "#f2f2ef"], ["dark", "Sombre", "#121212"]].map(([v, t, bg]) => '<button type="button" role="radio" data-theme-set="' + v + '" aria-checked="' + (themePref() === v) + '"><i style="background:' + bg + '"></i>' + t + '</button>').join("") +
+      '</div><p style="font-size:.8rem;margin-top:8px">« Auto » suit le réglage de ton téléphone. Le choix est mémorisé sur cet appareil.</p></div>' +
     '<div class="card panel"><div class="panel-head"><h2>Mes dépenses récurrentes</h2><button type="button" class="btn" data-act="rec-new" data-group="fixe">+ Ajouter</button></div><p>Ce qui revient tous les mois. Elles sont ajoutées automatiquement à chaque nouveau mois. Pour un montant qui varie (électricité), indique une estimation.</p>' +
       recGroupsView() +
       (recurring.length ? '<div class="rectotal"><span>Total par mois</span><b>' + money(recTotal()) + '</b></div>' : '') + '</div>' +
@@ -2405,6 +2425,17 @@ $("#mini").addEventListener("click", e => {
 });
 const onMQ = () => { if (page === "finances" && work) render(); };
 if (mobileMQ.addEventListener) mobileMQ.addEventListener("change", onMQ); else mobileMQ.addListener(onMQ);
+
+/* ---------- apparence : auto, clair ou sombre ---------- */
+const themePref = () => { try { const t = localStorage.getItem("tamia-theme"); return t === "light" || t === "dark" ? t : "auto"; } catch (e) { return "auto"; } };
+const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+function setTheme(v) {
+  try { if (v === "auto") localStorage.removeItem("tamia-theme"); else localStorage.setItem("tamia-theme", v); } catch (e) {}
+  if (v === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = v;
+  render();
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-theme-set]"); if (b) setTheme(b.dataset.themeSet); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (themePref() === "auto" && user) render(); });
 
 /* ---------- conseil du jour ---------- */
 let TIPS = null, tipShift = 0;
