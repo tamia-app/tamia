@@ -987,6 +987,9 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .search-item .sic { width: 38px; height: 38px; border-radius: 12px; background: var(--sunk); display: grid; place-items: center; }
 .search-item .sic .ico { width: 20px; height: 20px; }
 .search-item b { display: block; font-family: var(--font-display); font-size: .95rem; } .search-item small { color: var(--muted); font-size: .78rem; }
+/* when the month bar is hidden, the sub-navigation holds only the floating tabs: no empty row above the page */
+.subnav:has(> #monthBar[hidden]) { display: contents; }
+.hm-head { margin-top: 0; }
 </style>
 </head>
 <body>
