@@ -998,6 +998,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .newmonth .nm-q { margin: 4px 2px 2px; display: flex; flex-direction: column; gap: 4px; }
 .newmonth .nm-kick { font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
 .newmonth .nm-title { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 6.2vw, 1.6rem); letter-spacing: -.03em; line-height: 1.15; white-space: nowrap; }
+.hm-av { width: 38px; height: 38px; border-radius: 50%; background: #121212; color: #f2f2ef; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1rem; text-decoration: none; margin-right: auto; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 18px -10px rgba(0,0,0,.5); }
 </style>
 </head>
 <body>
@@ -2474,7 +2475,7 @@ function homeView() {
     return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
-    '<div class="hm-head">' +
+    '<div class="hm-head"><a class="hm-av" href="#compte" aria-label="Mon compte">' + esc(((user.displayName || user.email || "?").trim().charAt(0) || "?").toUpperCase()) + '</a>' +
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
     tipHtml() +
     '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
