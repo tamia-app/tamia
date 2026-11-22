@@ -1,8 +1,8 @@
-# Tamia
+# Hollis
 
 Ton petit agent de poche pour planifier ton budget du mois.
 
-Tamia est une appli web de budget prévisionnel par enveloppes : on indique sa paye, on la répartit entre ses enveloppes (épargne, loyer, abonnements…), on associe chaque enveloppe à une banque, puis on valide le mois.
+Hollis est une appli web de budget prévisionnel par enveloppes : on indique sa paye, on la répartit entre ses enveloppes (épargne, loyer, abonnements…), on associe chaque enveloppe à une banque, puis on valide le mois.
 
 ## Fichiers
 
