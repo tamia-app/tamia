@@ -1,6 +1,6 @@
 {
-  "name": "Hollis",
-  "short_name": "Hollis",
+  "name": "Whitley",
+  "short_name": "Whitley",
   "description": "Ton petit agent de poche pour planifier ton budget du mois.",
   "start_url": "app.html",
   "scope": "./",
