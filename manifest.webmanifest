@@ -1,6 +1,6 @@
 {
-  "name": "Whitley",
-  "short_name": "Whitley",
+  "name": "Arvic",
+  "short_name": "Arvic",
   "description": "Ton petit agent de poche pour planifier ton budget du mois.",
   "start_url": "app.html",
   "scope": "./",
