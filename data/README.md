@@ -1,6 +1,6 @@
 # Destinations de voyage
 
-`destinations.json` alimente l'onglet Voyages d'Arvic. Tous les montants sont en euros.
+`destinations.json` alimente l'onglet Voyages de Loucio. Tous les montants sont en euros.
 
 ## Structure
 

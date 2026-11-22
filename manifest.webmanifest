@@ -1,6 +1,6 @@
 {
-  "name": "Arvic",
-  "short_name": "Arvic",
+  "name": "Loucio",
+  "short_name": "Loucio",
   "description": "Ton petit agent de poche pour planifier ton budget du mois.",
   "start_url": "app.html",
   "scope": "./",
