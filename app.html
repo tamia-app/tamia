@@ -464,9 +464,22 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xp-chips button.on { border-color: #f0a432; background: rgba(240,164,50,.12); } .xp-chips .sw, .xs-envs .sw { width: 9px; height: 9px; border-radius: 3px; }
 .xp-day { padding: 6px 4px 0; }
 .xp-list { padding: 2px 14px; }
-.xp-it { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; background: none; border: none; border-top: 1px solid var(--line); padding: 11px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.xp-it { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; background: none; border: none; border-top: 1px solid var(--line); padding: 11px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .xp-it:first-child { border-top: none; }
-.xp-dot { width: 10px; height: 10px; border-radius: 50%; }
+.xp-ic, .xs-pi { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
+.xp-ic .ico, .xs-pi .ico { width: 18px; height: 18px; }
+.xs { position: relative; }
+.xs-title { text-align: center; font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); margin-top: -4px; }
+.xs-x { position: absolute; top: 14px; right: 14px; }
+.xs-pick { display: flex; align-items: center; gap: 12px; width: 100%; border: 1px solid var(--line); background: var(--sunk); color: var(--ink); border-radius: 16px; padding: 10px 12px; font: inherit; text-align: left; cursor: pointer; }
+.xs-pick.open { border-color: #f0a432; }
+.xs-pn { display: flex; flex-direction: column; min-width: 0; flex: 1; } .xs-pn b { font-weight: 700; font-size: .95rem; } .xs-pn small { font-size: .76rem; color: var(--muted); }
+.xs-chev { color: var(--muted); font-size: 1.3rem; transition: transform .15s; } .xs-pick.open .xs-chev { transform: rotate(90deg); }
+.xs-list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; max-height: 40vh; overflow-y: auto; margin-top: -6px; }
+.xs-list button { display: flex; align-items: center; gap: 12px; border: none; border-top: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 12px; font: inherit; text-align: left; cursor: pointer; }
+.xs-list button:first-child { border-top: none; } .xs-list button.on { background: rgba(240,164,50,.1); }
+.xs-left { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+
 .xp-n { display: flex; flex-direction: column; min-width: 0; } .xp-n b { font-weight: 700; font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .xp-n small { font-size: .74rem; color: var(--muted); }
 .xp-a { font-family: var(--font-display); font-weight: 700; font-size: .95rem; }
 .xp-empty { padding: 18px; display: flex; flex-direction: column; gap: 4px; } .xp-empty span { font-size: .86rem; color: var(--muted); }
@@ -476,8 +489,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xs-grab { width: 40px; height: 5px; border-radius: 9px; background: var(--line); align-self: center; }
 .xs-top { display: flex; align-items: center; justify-content: space-between; } .xs-top .hm-lbl2 { margin: 0; }
 .xs-x { border: none; background: var(--sunk); color: var(--ink); width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
-.xs-amt { display: flex; align-items: baseline; justify-content: center; gap: 6px; }
-.xs-amt input { width: 7ch; border: none; background: none; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 3rem; letter-spacing: -.04em; text-align: right; outline: none; padding: 0; }
+.xs-amt { display: flex; align-items: baseline; justify-content: center; gap: 6px; padding: 6px 0 2px; }
+.xs-amt input { min-width: 1.2em; max-width: 80%; border: none; background: none; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 3.2rem; letter-spacing: -.04em; text-align: center; outline: none; padding: 0; }
 .xs-amt span { font-family: var(--font-display); font-weight: 800; font-size: 1.8rem; color: var(--muted); }
 .xs-envs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
 .xs-envs button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 8px 12px; font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer; }
@@ -1960,6 +1973,13 @@ const expOf = id => (months[id] && Array.isArray(months[id].expenses)) ? months[
 const SPEND_GROUPS = ["courant", "plaisir", "imprevu", "fixe", "abonnement", "projets"];
 const spendEnvs = id => ((id === current && work ? work.envelopes : months[id] && months[id].envelopes) || []).filter(e => SPEND_GROUPS.includes(groupOf(e.group).id))
   .sort((a, b) => SPEND_GROUPS.indexOf(groupOf(a.group).id) - SPEND_GROUPS.indexOf(groupOf(b.group).id));
+const ENV_ICONS = [[/courses|supermarch|aliment|epicer|marche|drive/, "bag"], [/livraison|uber eats|deliveroo|fast/, "takeaway"], [/restau|resto|cantine|dejeuner|diner|repas/, "cutlery"], [/cafe|bar|boisson|sortie|apero/, "cup"],
+  [/fete|soiree|loisir|plaisir|cinema|concert|jeu|sport/, "party"], [/cadeau|anniv|noel/, "gift"], [/essence|carbur|voiture|auto|parking|peage|garage/, "car"], [/velo|trott/, "bike"], [/transport|navigo|train|metro|bus|taxi|vtc|sncf/, "train"],
+  [/loyer|logement|immo|copro|charges/, "home"], [/netflix|spotify|abonnement|disney|prime|canal|youtube|apple|deezer|icloud|streaming/, "loop"], [/electric|edf|engie|eau|gaz|internet|box|telephone|forfait|mobile|facture|assurance|impot|banque|frais/, "receipt"],
+  [/sante|pharma|medecin|mutuelle|dentiste|optique/, "pill"], [/voyage|vacances|avion|week/, "plane"], [/meuble|maison|deco|bricol/, "couch"], [/vetement|shopping|habit|chaussure/, "bag"], [/epargne|livret|placement/, "coins"], [/animal|chat|chien|veto/, "sprout"], [/enfant|creche|ecole|nounou/, "family"]];
+const GROUP_ICON = { courant: "bag", plaisir: "party", imprevu: "warning", fixe: "home", abonnement: "loop", projets: "target", epargne: "coins" };
+function envIcon(e) { if (!e) return "receipt"; const n = vnorm(e.name || ""); const hit = ENV_ICONS.find(([re]) => re.test(n)); return hit ? hit[1] : GROUP_ICON[groupOf(e.group).id] || "wallet"; }
+const envLeft = (month, env, skipId, extra) => { const spent = expOf(month).filter(x => x.env === env.id && x.id !== skipId).reduce((a, x) => a + (x.amount || 0), 0); return (env.amount || 0) - spent - (extra || 0); };
 function saveExpenses(id, list) {
   const at = new Date().toISOString();
   months[id] = Object.assign({}, months[id], { expenses: list, updatedAt: at });
@@ -2003,7 +2023,7 @@ function expensesView() {
     const st = g.items.reduce((a, x) => a + (x.amount || 0), 0);
     html += '<div class="xp-day"><span class="hm-lbl2">' + esc(expDayLabel(g.d)) + ' · ' + money2(st) + '</span></div><div class="card xp-list">' + g.items.map(x => {
       const e = envById[x.env], gg = gOf(x);
-      return '<button type="button" class="xp-it" data-act="xp-edit" data-xid="' + esc(x.id) + '"><span class="xp-dot" style="background:' + (gg ? gg.color : 'var(--line)') + '"></span><span class="xp-n"><b>' + esc(x.note || (e ? e.name : "Dépense")) + '</b><small>' + esc(e ? (x.note ? e.name + ' · ' : '') + (gg ? gg.label : '') : 'Enveloppe supprimée') + '</small></span><span class="xp-a num">− ' + money2(x.amount) + '</span></button>';
+      return '<button type="button" class="xp-it" data-act="xp-edit" data-xid="' + esc(x.id) + '"><span class="xp-ic" style="--c:' + (gg ? gg.color : 'var(--muted)') + '">' + ICON(envIcon(e)) + '</span><span class="xp-n"><b>' + esc(x.note || (e ? e.name : "Dépense")) + '</b><small>' + esc(e ? (x.note ? e.name + ' · ' : '') + (gg ? gg.label : '') : 'Enveloppe supprimée') + '</small></span><span class="xp-a num">− ' + money2(x.amount) + '</span></button>';
     }).join("") + '</div>';
   });
   return html + '</div>';
@@ -2021,15 +2041,19 @@ function renderExpSheet() {
   if (!expSheet) { if (ov) ov.remove(); document.body.classList.remove("xs-open"); return; }
   if (!ov) { ov = document.createElement("div"); ov.id = "xsOv"; ov.className = "xs-ov"; document.body.appendChild(ov); ov.addEventListener("click", expSheetClick); ov.addEventListener("input", expSheetInput); }
   document.body.classList.add("xs-open");
-  const S = expSheet, envs = spendEnvs(S.month), [Y, M] = S.month.split("-").map(Number);
-  const left = S.env ? (() => { const e = envs.find(x => x.id === S.env); if (!e) return null; const spent = expOf(S.month).filter(x => x.env === S.env && x.id !== S.id).reduce((a, x) => a + (x.amount || 0), 0); return e.amount - spent - parse(S.amount); })() : null;
+  const S = expSheet, envs = spendEnvs(S.month), [Y, M] = S.month.split("-").map(Number), cur = envs.find(x => x.id === S.env);
+  const amt = parse(S.amount), left = cur ? envLeft(S.month, cur, S.id, amt) : null;
+  const w = Math.max(1, (S.amount || "0").length);
+  const pick = cur ? '<span class="xs-pi" style="--c:' + groupOf(cur.group).color + '">' + ICON(envIcon(cur)) + '</span><span class="xs-pn"><b>' + esc(cur.name || "Sans nom") + '</b><small>' + esc(groupOf(cur.group).label) + ' · reste ' + money2(envLeft(S.month, cur, S.id, 0)) + '</small></span>' : '<span class="xs-pn"><b>Choisir une enveloppe</b></span>';
   ov.innerHTML = '<div class="xs" role="dialog" aria-modal="true" aria-label="' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '"><span class="xs-grab"></span>' +
-    '<div class="xs-top"><span class="hm-lbl2">' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + ' · ' + esc(monthName(S.month)) + '</span><button type="button" class="xs-x" data-xs="close" aria-label="Fermer">×</button></div>' +
-    '<label class="xs-amt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(S.amount) + '"><span>€</span></label>' +
-    (envs.length ? '<div class="xs-envs">' + envs.map(e => '<button type="button" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><i class="sw" style="background:' + groupOf(e.group).color + '"></i>' + esc(e.name || "Sans nom") + '</button>').join("") + '</div>'
+    '<button type="button" class="xs-x" data-xs="close" aria-label="Fermer">×</button>' +
+    '<span class="xs-title">' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '</span>' +
+    '<label class="xs-amt" for="xsAmt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" style="width:' + (w * .58 + .05).toFixed(2) + 'em" value="' + esc(S.amount) + '"><span>€</span></label>' +
+    (envs.length ? '<button type="button" class="xs-pick' + (S.pickOpen ? ' open' : '') + '" data-xs="pick" aria-expanded="' + !!S.pickOpen + '">' + pick + '<span class="xs-chev">›</span></button>' +
+      (S.pickOpen ? '<div class="xs-list" role="listbox">' + envs.map(e => '<button type="button" role="option" aria-selected="' + (S.env === e.id) + '" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + groupOf(e.group).color + '">' + ICON(envIcon(e)) + '</span><span class="xs-pn"><b>' + esc(e.name || "Sans nom") + '</b><small>' + esc(groupOf(e.group).label) + '</small></span><span class="xs-left">reste ' + money2(envLeft(S.month, e, S.id, 0)) + '</span></button>').join("") + '</div>' : '')
       : '<p class="xs-warn">Ajoute d\'abord des enveloppes à ton budget de ' + esc(monthName(S.month)) + '.</p>') +
-    '<div class="xs-row"><input id="xsNote" maxlength="60" placeholder="Note (facultatif) · ex. Boulangerie" value="' + esc(S.note) + '"><input id="xsDate" type="date" min="' + S.month + '-01" max="' + S.month + '-' + pad2(new Date(Y, M, 0).getDate()) + '" value="' + esc(S.date) + '"></div>' +
-    '<button type="button" class="xs-save" data-xs="save"' + (parse(S.amount) > 0 && S.env ? '' : ' disabled') + '>' + (S.isNew ? 'Ajouter' : 'Enregistrer') + (left !== null && parse(S.amount) > 0 ? ' · ' + (left >= 0 ? 'il restera ' + money2(left) : 'dépasse de ' + money2(-left)) : '') + '</button>' +
+    '<div class="xs-row"><input id="xsNote" maxlength="60" placeholder="Note (facultatif) · ex. Boulangerie" value="' + esc(S.note) + '"><input id="xsDate" type="date" aria-label="Date" min="' + S.month + '-01" max="' + S.month + '-' + pad2(new Date(Y, M, 0).getDate()) + '" value="' + esc(S.date) + '"></div>' +
+    '<button type="button" class="xs-save" data-xs="save"' + (amt > 0 && S.env ? '' : ' disabled') + '>' + (S.isNew ? 'Ajouter' : 'Enregistrer') + (left !== null && amt > 0 ? ' · ' + (left >= 0 ? (cur.name || "l'enveloppe") + ' : reste ' + money2(left) : 'dépasse de ' + money2(-left)) : '') + '</button>' +
     (S.isNew ? '' : '<button type="button" class="xs-del" data-xs="del">Supprimer la dépense</button>') + '</div>';
 }
 function expSheetInput(e) {
@@ -2041,10 +2065,11 @@ function expSheetInput(e) {
 function expSheetClick(e) {
   if (e.target.id === "xsOv") { expSheet = null; renderExpSheet(); return; }
   const env = e.target.closest("[data-xenv]");
-  if (env) { expSheet.env = env.dataset.xenv; renderExpSheet(); return; }
+  if (env) { expSheet.env = env.dataset.xenv; expSheet.pickOpen = false; renderExpSheet(); return; }
   const b = e.target.closest("[data-xs]"); if (!b) return;
   const a = b.dataset.xs, S = expSheet;
   if (a === "close") { expSheet = null; renderExpSheet(); return; }
+  if (a === "pick") { S.pickOpen = !S.pickOpen; renderExpSheet(); return; }
   const list = expOf(S.month).slice();
   if (a === "del") { saveExpenses(S.month, list.filter(x => x.id !== S.id)); expSheet = null; renderExpSheet(); render(); return; }
   if (a === "save") {
