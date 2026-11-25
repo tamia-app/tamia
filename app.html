@@ -933,6 +933,18 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .hm-lbl { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: #b9b9b2; }
 .hm-big { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; letter-spacing: -.035em; color: #f0a432; line-height: 1.1; }
 .hm-sub { font-size: .86rem; color: #c9c9c2; }
+.hm-next { position: relative; overflow: hidden; background: #121212; color: #f2f2ef; border: 1px solid #3a3a37; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 14px 28px -16px rgba(0,0,0,.45); }
+.hm-glow { position: absolute; right: -50px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: radial-gradient(circle, rgba(240,164,50,.28), transparent 70%); pointer-events: none; }
+.hm-kick { color: #f0a432; }
+.hm-nt { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -.035em; line-height: 1.15; margin-top: 4px; text-wrap: balance; }
+.hm-nl { font-size: .86rem; color: #b9b9b2; margin-bottom: 10px; }
+.hm-go { position: relative; border: none; border-radius: 99px; background: #f0a432; color: #121212; font: inherit; font-weight: 800; font-size: .95rem; padding: 13px 16px; cursor: pointer; }
+.hm-go:active { transform: scale(.98); }
+.hm-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hm-tile { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; }
+.hm-tv { font-family: var(--font-display); font-weight: 800; font-size: 1.55rem; letter-spacing: -.035em; line-height: 1.2; margin-top: 2px; }
+.hm-am { color: #d98a14; } :root[data-theme="dark"] .hm-am { color: #f0a432; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hm-am { color: #f0a432; } }
+.hm-tile small { font-size: .76rem; color: var(--muted); }
 .hm-card { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; }
 .hm-lbl2 { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; color: var(--muted); margin-bottom: 4px; }
 .hm-step { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: .92rem; font-weight: 700; }
@@ -2526,38 +2538,29 @@ function homeView() {
   const big = tc ? money(tc.by.epargne) : "–";
   const pct = tc && tc.income ? '<span class="hm-pct">' + pctOf(tc.by.epargne, tc.income) + ' de ta paye</span>' : '';
   const sub = tc || saved ? "Depuis le début de l'année : <b>" + money(saved) + "</b>" : "Prépare ton budget pour voir ton épargne ici.";
-  // this month's steps
+  // next step — one big action card
   // Cycle: budget of month N prepared from the 27th of N-1, validated by the 5th of N; bilan of N from the 25th of N.
-  // Once the bilan of the month is open (from the 25th, or still pending early next month), the card switches to
-  // "bilan of this month → budget of next month to prepare (from the 27th) → to validate (by the 5th)".
   const when = d => d ? new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }).replace(".", "") : "";
   const dayOf = (id, d) => { const [y, mo] = id.split("-").map(Number); return new Date(y, mo - 1, d); };
+  const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const inDays = d => { const n = Math.round((midnight(d) - midnight(now)) / 864e5); return n <= 0 ? "maintenant" : n === 1 ? "demain" : "dans " + n + " jours"; };
   const H = homeTarget();
   const endPhase = H !== cur || now.getDate() >= 25;
-  let M, steps, cta, title;
+  let M, cta, kick, head, line;
   if (endPhase) {
     const B = H, N = shiftMonth(B, 1), mb = months[B], mN = months[N];
     const bil = !!(mb && mb.bilan), prepN = hasBudget(N), validN = prepN && !!mN.validated;
-    const prepOpen = todayDate() >= dayOf(B, 27);
-    const nn = monthName(N);
-    steps = [
-      [bil, "Bilan de " + monthName(B), bil ? when(mb.bilan.at) : "maintenant"],
-      [prepN, "Budget de " + nn + (prepN ? " préparé" : " à préparer"), prepN ? when(mN.createdAt) : prepOpen ? "maintenant" : "dès le " + when(dayOf(B, 27))],
-      [validN, "Budget de " + nn + (validN ? " validé" : " à valider"), validN ? when(mN.validatedAt) : "avant le " + when(dayOf(N, 5))]];
-    title = "À faire";
-    if (!bil) { M = B; cta = ["bilan", "Faire mon bilan"]; }
-    else if (!prepN) { M = prepOpen ? N : B; cta = prepOpen ? ["go", "Préparer mon budget de " + nn] : ["go", "Voir mon budget"]; }
-    else if (!validN) { M = N; cta = ["go", "Valider mon budget de " + nn]; }
-    else { M = N; cta = ["go", "Voir mon budget"]; }
+    const prepAt = dayOf(B, 27), prepOpen = now >= prepAt, nn = monthName(N);
+    if (!bil) { M = B; kick = "maintenant"; head = "Fais le bilan de " + monthName(B); line = "Une minute pour voir comment s'est passé ton mois."; cta = ["bilan", "Faire mon bilan"]; }
+    else if (!prepN) { M = prepOpen ? N : B; kick = inDays(prepAt); head = "Prépare ton budget de " + nn; line = prepOpen ? "À valider avant le " + when(dayOf(N, 5)) + " · environ 2 minutes" : "Disponible dès le " + when(prepAt) + " · environ 2 minutes"; cta = prepOpen ? ["go", "Préparer mon budget"] : ["go", "Voir mon budget de " + monthName(B)]; }
+    else if (!validN) { M = N; kick = now > dayOf(N, 5) ? "en retard" : "avant le " + when(dayOf(N, 5)); head = "Valide ton budget de " + nn; line = "Un dernier coup d'œil, puis c'est parti pour " + nn + "."; cta = ["go", "Valider mon budget"]; }
+    else { M = N; kick = "tout est prêt"; head = "Ton budget de " + nn + " est prêt"; line = "Prochain rendez-vous : le bilan, le " + when(dayOf(N, 25)) + "."; cta = ["go", "Voir mon budget"]; }
   } else {
     M = cur; const m = months[M], mn = monthName(M);
     const prepared = hasBudget(M), valid = prepared && !!m.validated;
-    steps = [
-      [prepared, "Budget de " + mn + (prepared ? " préparé" : " à préparer"), prepared ? when(m.createdAt) : "maintenant"],
-      [valid, valid ? "Budget validé" : "Budget à valider", valid ? when(m.validatedAt) : "avant le " + when(dayOf(M, 5))],
-      [false, "Bilan de fin de mois", "dès le " + when(dayOf(M, 25))]];
-    title = "Ce mois-ci";
-    cta = !prepared ? ["go", "Préparer mon budget"] : !valid ? ["go", "Valider mon budget"] : ["go", "Voir mon budget"];
+    if (!prepared) { kick = "maintenant"; head = "Prépare ton budget de " + mn; line = "À valider avant le " + when(dayOf(M, 5)) + " · environ 2 minutes"; cta = ["go", "Préparer mon budget"]; }
+    else if (!valid) { kick = now > dayOf(M, 5) ? "en retard" : "avant le " + when(dayOf(M, 5)); head = "Valide ton budget de " + mn; line = "Un dernier coup d'œil, puis c'est parti pour " + mn + "."; cta = ["go", "Valider mon budget"]; }
+    else { kick = inDays(dayOf(M, 25)); head = "Bilan de " + mn; line = "Disponible dès le " + when(dayOf(M, 25)) + ". D'ici là, suis ton budget."; cta = ["go", "Voir mon budget"]; }
   }
   // projects
   loadDest();
@@ -2569,9 +2572,10 @@ function homeView() {
   return '<div class="home">' +
     '<div class="hm-head">' + tipBtnHtml() +
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
-    '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
-    '<div class="card hm-card"><span class="hm-lbl2">' + title + '</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
-      '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
+    '<div class="hm-next"><span class="hm-glow"></span><span class="hm-lbl hm-kick">Prochaine étape · ' + esc(kick) + '</span><b class="hm-nt">' + esc(head) + '</b><span class="hm-nl">' + esc(line) + '</span>' +
+      '<button type="button" class="hm-go" data-home="' + cta[0] + '" data-month="' + M + '">' + esc(cta[1]) + '</button></div>' +
+    '<div class="hm-tiles"><div class="card hm-tile"><span class="hm-lbl2">Épargné en ' + esc(monthName(cur)) + '</span><b class="hm-tv hm-am">' + big + '</b><small>' + (tc && tc.income ? pctOf(tc.by.epargne, tc.income) + ' de ta paye' : 'Prépare ton budget') + '</small></div>' +
+      '<div class="card hm-tile"><span class="hm-lbl2">Depuis janvier</span><b class="hm-tv">' + money(saved) + '</b><small>' + (ids.length ? ids.length + ' mois de budget' : 'C\'est parti !') + '</small></div></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
 }
 mainEl.addEventListener("click", e => {
