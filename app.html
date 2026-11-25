@@ -447,6 +447,30 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (max-width: 860px) { .reports { grid-template-columns: minmax(0, 1fr); } }
 .panel { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .panel h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0; letter-spacing: -0.01em; }
+.rp { gap: 12px; }
+.rp-seg { grid-column: 1 / -1; display: flex; background: var(--sunk); border-radius: 99px; padding: 3px; }
+.rp-seg button { flex: 1; border: none; background: none; font: inherit; font-weight: 700; font-size: .86rem; color: var(--muted); padding: 8px 0; border-radius: 99px; cursor: pointer; }
+.rp-seg button.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.rp-hero, .rp-card { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px; padding: 16px 18px; }
+.rp-big { font-family: var(--font-display); font-weight: 800; font-size: 2.2rem; letter-spacing: -.04em; color: #d98a14; line-height: 1.15; }
+:root[data-theme="dark"] .rp-big { color: #f0a432; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .rp-big { color: #f0a432; } }
+.rp-sub { font-size: .84rem; color: var(--muted); } .rp-sub b { color: var(--ink); }
+.rp-line { width: 100%; height: auto; margin-top: 12px; display: block; }
+.rp-axis { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); margin-top: 4px; }
+.rp-li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto 64px; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: .9rem; }
+.rp-li:nth-child(2), .rp-stack + .rp-li { border-top: none; }
+.rp-li .sw { width: 10px; height: 10px; border-radius: 3px; }
+.rp-n small { display: block; font-size: .72rem; color: var(--muted); }
+.rp-li b { font-family: var(--font-display); }
+.rp-d { text-align: right; font-size: .82rem; color: var(--muted); font-weight: 700; }
+.rp-d.up { color: #3f9a62; } .rp-d.down { color: #d9574a; }
+.rp-stack { display: flex; gap: 2px; height: 10px; border-radius: 9px; overflow: hidden; margin: 8px 0 6px; }
+.rp-v { margin: 4px 0 10px; font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: -.02em; line-height: 1.3; }
+.rp-cmp { display: grid; grid-template-columns: 70px minmax(0, 1fr) 52px; gap: 10px; align-items: center; font-size: .84rem; padding: 4px 0; }
+.rp-cmp b { text-align: right; font-family: var(--font-display); }
+.rp-cmp .bar { height: 8px; border-radius: 9px; background: var(--sunk); overflow: hidden; } .rp-cmp .bar i { display: block; height: 100%; border-radius: 9px; }
+.rp-src { margin-top: 8px; font-size: .72rem; color: var(--muted); line-height: 1.4; }
+.reports.rp .chartwrap svg { min-width: 0; }
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 600px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .kpi { display: flex; flex-direction: column; gap: 2px; }
@@ -2004,49 +2028,77 @@ function renderLive() {
   });
 }
 
+// Insee Focus n° 338 (nov. 2024), données 2022 : taux d'épargne nette par cinquième de niveau de vie.
+// Revenu disponible net moyen par UC et par an : 14 400 / 23 000 / 28 900 / 35 700 / 58 800 €. Bornes mensuelles = milieux entre les moyennes.
+const FR_SAVE = [{ max: 1560, rate: 0, raw: -29 }, { max: 2160, rate: 0, raw: 0 }, { max: 2690, rate: 6, raw: 6 }, { max: 3940, rate: 10, raw: 10 }, { max: Infinity, rate: 27, raw: 27 }];
+let repTab = "mois";
 function reportsView() {
   const m = months[current] || null;
   const allIds = Object.keys(months).sort();
   const bl = bankList();
-  let html = '<div class="reports">';
-  if (!m) {
-    html += '<div class="card panel wide"><h2>' + esc(label(current)) + '</h2><p class="empty">Aucun budget pour ce mois. <a class="inline" href="#finances">Le créer dans Finances</a>.</p></div>';
-  } else {
-    const t = totals(m);
-    const rest = t.income - t.total;
-    const st = stateOf(Math.round(rest * 100) / 100);
-    html += '<div class="card panel wide"><h2>Répartition de ' + esc(label(current).toLowerCase()) + '</h2>' +
-      '<div class="kpis">' +
-      kpi("Paye", money(t.income), "") +
-      kpi("Réparti", money(t.total), pctOf(t.total, t.income) + " de la paye") +
-      kpi(st === "bad" ? "Dépassement" : "Non réparti", money(Math.abs(rest)), '<span class="pill" data-state="' + st + '" style="margin:0">' + (st === "ok" ? "Tout est réparti" : st === "warn" ? "À répartir" : "Au-delà de la paye") + '</span>') +
-      kpi("Épargne & placements", money(t.by.epargne), pctOf(t.by.epargne, t.income) + " de la paye") +
-      '</div><div class="bar thick">' + barHtml(t) + '</div><ul class="legend">' +
-      GROUPS.map(g => '<li><span class="sw" style="background:' + g.color + '"></span><span>' + esc(g.label) + '<span class="n">' + t.count[g.id] + ' env.</span></span><span class="v num">' + money(t.by[g.id]) + '</span><span class="p num">' + pctOf(t.by[g.id], t.income) + '</span></li>').join("") +
-      '</ul></div>';
-    if (bl.length) {
-      const env = (m.envelopes || []).filter(e => e.amount > 0).slice().sort((a, b) => b.amount - a.amount);
-      const cols = bl.concat(t.bank.none > 0 ? [{ id: "none", name: "Sans banque", color: "var(--line)" }] : []);
-      html += '<div class="card panel wide"><h2>Virements par banque</h2><div class="bankcols">' + cols.map(b => {
-        const list = env.filter(e => (bl.some(x => x.id === e.bank) ? e.bank : "none") === b.id);
-        return '<div class="bankcol"><h3><span class="sw" style="background:' + b.color + ';border-radius:50%"></span>' + esc(b.name) + '</h3><span class="big num">' + money(t.bank[b.id]) + '</span>' +
-          '<span class="sub" style="font-size:.78rem;color:var(--muted)">' + pctOf(t.bank[b.id], t.income) + ' de la paye · ' + list.length + ' enveloppe' + (list.length > 1 ? 's' : '') + '</span>' +
-          (list.length ? '<ul>' + list.map(e => '<li><span>' + esc(e.name || "Sans nom") + '</span><span>' + money(e.amount) + '</span></li>').join("") + '</ul>' : '') + '</div>';
-      }).join("") + '</div></div>';
-    }
+  const tabs = '<div class="rp-seg" role="tablist">' + [["mois", "Mois"], ["annee", "Année"], ["historique", "Historique"]].map(([k, l]) => '<button type="button" role="tab" aria-selected="' + (repTab === k) + '" data-reptab="' + k + '"' + (repTab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
+  let html = '<div class="reports rp">' + tabs;
+  if (repTab === "annee") {
+    const ids = allIds.filter(id => id <= current).slice(-12);
+    html += '<div class="card panel wide"><h2>Évolution sur 12 mois</h2>' + (ids.length ? chartSvg(ids) : '<p class="empty">Le graphique apparaîtra dès ton premier budget.</p>') + '</div>';
+    return html + '</div>';
   }
-  const ids = allIds.filter(id => id <= current).slice(-12);
-  html += '<div class="card panel wide"><h2>Évolution sur 12 mois</h2>' + (ids.length ? chartSvg(ids) : '<p class="empty">Le graphique apparaîtra dès ton premier budget.</p>') + '</div>';
-  if (allIds.length) {
+  if (repTab === "historique") {
+    if (!allIds.length) return html + '<div class="card panel wide"><p class="empty">Aucun budget pour l\'instant.</p></div></div>';
     let rows = "";
     allIds.slice().reverse().forEach(id => {
-      const mm = months[id];
-      const t = totals(mm);
-      rows += '<tr data-month="' + id + '"' + (id === current ? ' class="cur"' : '') + '><td>' + esc(label(id)) + '</td><td>' + money(t.income) + '</td><td>' + money(t.total) + '</td><td>' + money(t.by.epargne) + ' <span style="color:var(--muted)">(' + pctOf(t.by.epargne, t.income) + ')</span></td><td>' + money(t.by.abonnement) + '</td>' +
-        bl.map(b => '<td>' + money(t.bank[b.id]) + '</td>').join("") +
-        '<td>' + money(t.income - t.total) + '</td><td>' + (mm.validated ? '<span class="pill" data-state="ok" style="margin:0">Validé</span>' : '<span class="pill" data-state="warn" style="margin:0">Brouillon</span>') + '</td></tr>';
+      const mm = months[id], t = totals(mm);
+      rows += '<tr data-month="' + id + '"' + (id === current ? ' class="cur"' : '') + '><td>' + esc(label(id)) + '</td><td>' + money(t.income) + '</td><td>' + money(t.by.epargne) + ' <span style="color:var(--muted)">(' + pctOf(t.by.epargne, t.income) + ')</span></td><td>' + money(t.total) + '</td><td>' + (mm.validated ? '<span class="pill" data-state="ok" style="margin:0">Validé</span>' : '<span class="pill" data-state="warn" style="margin:0">Brouillon</span>') + '</td></tr>';
     });
-    html += '<div class="card panel wide"><h2>Historique</h2><div class="tablewrap"><table><thead><tr><th>Mois</th><th>Paye</th><th>Réparti</th><th>Épargne & placements</th><th>Abonnements</th>' + bl.map(b => '<th>' + esc(b.name) + '</th>').join("") + '<th>Non réparti</th><th>Statut</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    return html + '<div class="card panel wide"><h2>Historique</h2><div class="tablewrap"><table><thead><tr><th>Mois</th><th>Paye</th><th>Épargne</th><th>Réparti</th><th>État</th></tr></thead><tbody>' + rows + '</tbody></table></div></div></div>';
+  }
+  if (!m || !hasBudget(current)) return html + '<div class="card panel wide"><h2>' + esc(label(current)) + '</h2><p class="empty">Aucun budget pour ce mois. <a class="inline" href="#finances">Le créer dans Finances</a>.</p></div></div>';
+  const t = totals(m), mn = monthName(current), year = current.slice(0, 4);
+  // 1. savings since January, with a cumulative line
+  const yIds = allIds.filter(id => id.slice(0, 4) === year && id <= current && hasBudget(id));
+  let acc = 0; const pts = yIds.map(id => (acc += totals(months[id]).by.epargne));
+  const W = 320, Hh = 110, top = Math.max(1, acc), n = pts.length;
+  const xy = pts.map((v, i) => [n > 1 ? 6 + i * (W - 12) / (n - 1) : W - 6, Hh - 6 - (Hh - 16) * v / top]);
+  const line = xy.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+  const area = n > 1 ? '<path d="M' + xy.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L") + " L" + xy[n - 1][0].toFixed(1) + " " + Hh + " L" + xy[0][0].toFixed(1) + " " + Hh + 'Z" fill="url(#rpG)"/>' : '';
+  const last = xy[n - 1] || [W - 6, Hh - 6];
+  html += '<div class="card rp-hero"><span class="hm-lbl2">Mis de côté depuis janvier</span><b class="rp-big">' + money(acc) + '</b>' +
+    '<span class="rp-sub">dont <b>' + money(t.by.epargne) + '</b> en ' + esc(mn) + ' · ' + pctOf(t.by.epargne, t.income) + ' de ta paye</span>' +
+    '<svg class="rp-line" viewBox="0 0 ' + W + ' ' + Hh + '" aria-hidden="true"><defs><linearGradient id="rpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a432" stop-opacity=".32"/><stop offset="1" stop-color="#f0a432" stop-opacity="0"/></linearGradient></defs>' + area +
+    (n > 1 ? '<polyline points="' + line + '" fill="none" stroke="#f0a432" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>' : '') + '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="5" fill="#f0a432"/></svg>' +
+    '<div class="rp-axis">' + yIds.map(id => '<span>' + esc(label(id, true).replace(".", "").toLowerCase()) + '</span>').join("") + '</div></div>';
+  // 2. vs previous month
+  const pv = shiftMonth(current, -1);
+  if (hasBudget(pv)) {
+    const tp = totals(months[pv]), pn = monthName(pv);
+    const rowsC = GROUPS.filter(g => t.by[g.id] || tp.by[g.id]).map(g => {
+      const d = Math.round((t.by[g.id] - tp.by[g.id]) * 100) / 100;
+      const good = g.id === "epargne" ? d > 0 : d < 0;
+      return '<div class="rp-li"><span class="sw" style="background:' + g.color + '"></span><span class="rp-n">' + esc(g.label) + '</span><b>' + money(t.by[g.id]) + '</b><span class="rp-d' + (d ? good ? ' up' : ' down' : '') + '">' + (d ? (d > 0 ? "+ " : "− ") + money(Math.abs(d)) : "=") + '</span></div>';
+    }).join("");
+    html += '<div class="card rp-card"><span class="hm-lbl2">Par rapport à ' + esc(pn) + '</span>' + rowsC + '</div>';
+  }
+  // 3. by bank
+  const cols = bl.concat(t.bank.none > 0 ? [{ id: "none", name: "Sans banque", color: "var(--line)" }] : []);
+  if (cols.length && t.total > 0) {
+    const env = (m.envelopes || []).filter(e => e.amount > 0);
+    html += '<div class="card rp-card"><span class="hm-lbl2">Répartition par banque</span><div class="rp-stack">' +
+      cols.filter(b => t.bank[b.id] > 0).map(b => '<i style="flex:' + t.bank[b.id] + ';background:' + b.color + '"></i>').join("") + '</div>' +
+      cols.map(b => { const k = env.filter(e => (bl.some(x => x.id === e.bank) ? e.bank : "none") === b.id).length;
+        return '<div class="rp-li"><span class="sw" style="background:' + b.color + ';border-radius:50%"></span><span class="rp-n">' + esc(b.name) + '<small>' + k + ' enveloppe' + (k > 1 ? 's' : '') + '</small></span><b>' + money(t.bank[b.id]) + '</b><span class="rp-d">' + pctOf(t.bank[b.id], t.total) + '</span></div>'; }).join("") + '</div>';
+  }
+  // 4. vs France, same income bracket (Insee 2022)
+  if (t.income > 0) {
+    const q = FR_SAVE.find(x => t.income < x.max), mine = Math.round(t.by.epargne / t.income * 100), avg = q.rate;
+    const scale = Math.max(30, mine, avg), wMe = Math.max(2, mine / scale * 100), wFr = Math.max(2, avg / scale * 100);
+    const lo = FR_SAVE.indexOf(q) === 0 ? 0 : FR_SAVE[FR_SAVE.indexOf(q) - 1].max, hi = q.max;
+    const range = hi === Infinity ? "de plus de " + eur0.format(lo) : lo ? "entre " + eur0.format(lo) + " et " + eur0.format(hi) : "de moins de " + eur0.format(hi);
+    const verdict = avg <= 0 ? (mine > 0 ? "Bravo : dans ta tranche, la plupart des ménages n'arrivent pas à épargner." : "Dans ta tranche, la plupart des ménages n'arrivent pas à épargner.")
+      : mine >= avg * 1.5 ? "Tu épargnes " + (Math.round(mine / avg * 10) / 10).toString().replace(".", ",") + " fois plus que la moyenne de ta tranche." : mine >= avg ? "Tu épargnes un peu plus que la moyenne de ta tranche." : "Tu épargnes un peu moins que la moyenne de ta tranche.";
+    html += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' +
+      '<div class="rp-cmp"><span>Toi</span><div class="bar"><i style="width:' + wMe + '%;background:#f0a432"></i></div><b>' + mine + ' %</b></div>' +
+      '<div class="rp-cmp"><span>Moyenne</span><div class="bar"><i style="width:' + wFr + '%;background:var(--muted)"></i></div><b>' + (avg <= 0 ? "≈ 0 %" : avg + " %") + '</b></div>' +
+      '<small class="rp-src">Part du revenu mise de côté, ménages avec un revenu ' + esc(range) + ' par mois et par personne. Source : Insee, 2022. Comparaison indicative.</small></div>';
   }
   return html + '</div>';
 }
@@ -3051,6 +3103,8 @@ mainEl.addEventListener("click", e => {
   if (popt) { const btn = popt.closest(".psel-wrap").querySelector(".psel"); pickPmenu(btn, popt.dataset.v); return; }
   const pbtn = e.target.closest(".psel");
   if (pbtn) { const open = pbtn.getAttribute("aria-expanded") === "true"; closePmenus(); if (!open) openPmenu(pbtn); return; }
+  const rt = e.target.closest("[data-reptab]");
+  if (rt && page === "rapports") { repTab = rt.dataset.reptab; render(); return; }
   const tr = e.target.closest("tr[data-month]");
   if (tr) { goTo(tr.dataset.month); location.hash = "finances"; return; }
   const b = e.target.closest("[data-act]");
