@@ -906,6 +906,9 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .v-field small { color: var(--muted); font-size: .76rem; font-weight: 600; }
 .v-field select { background: none; border: none; color: #f2f2ef; font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; padding: 2px 0; outline: none; }
 .v-field select option { color: #121212; }
+.v-field > input { background: none; border: none; color: #f2f2ef; font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; padding: 2px 0; outline: none; width: 100%; min-width: 0; }
+.v-field > input::placeholder { color: rgba(242,242,239,.4); font-weight: 600; }
+.v-two > .v-field { min-width: 0; }
 .v-sub { margin: 0 4px; font-size: .82rem; color: var(--muted); }
 .v-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .v-step { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
@@ -947,6 +950,13 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 
 .recitem .ru { display: block; font-size: 0.74rem; color: var(--muted); font-weight: 500; }
 .v-novol { align-self: flex-start; }
+.v-kick { margin: 8px 4px -8px; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; color: #b9c3d6; }
+.v-start { display: flex; flex-direction: column; gap: 8px; }
+.voy .v-sl { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: center; border-radius: 18px; padding: 13px 16px; text-align: left; font: inherit; cursor: pointer; }
+.voy .v-sl.star { background: rgba(8,8,8,.78); border-color: #3a3a37; }
+.v-sl b { display: block; font-family: var(--font-display); font-size: 1.02rem; letter-spacing: -.01em; } .v-sl small { display: block; color: var(--muted); font-size: .8rem; }
+.v-arr { color: var(--muted); font-size: 1.3rem; }
+.v-pb.ok i { background: #5fb67f !important; } .v-ok { font-style: normal; color: #7fcf9a; font-weight: 700; }
 .v-lbl { margin: 12px 4px 0; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
 .v-trip { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; border-radius: 18px; padding: 12px 14px; text-align: left; font: inherit; cursor: pointer; }
 .v-trip-b { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -1285,7 +1295,7 @@ const INVEST = [
 // Typical envelopes used by the proposal, with each goal's share of what is left after recurring expenses.
 let newGoalTouched = false;
 const recActive = (r, id) => (!r.from || (id || current) >= r.from) && (!r.until || (id || current) <= r.until);
-const recEnvelopes = () => recurring.filter(r => (r.name || r.amount) && recActive(r)).map(r => ({ id: uid(), rid: r.id, name: r.name || "", group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank || "", amount: parse(r.amount), est: !!r.est }));
+const recEnvelopes = () => recurring.filter(r => !r.ready && (r.name || r.amount) && recActive(r)).map(r => ({ id: uid(), rid: r.id, name: r.name || "", group: GROUPS.some(g => g.id === r.group) ? r.group : "fixe", bank: r.bank || "", amount: parse(r.amount), est: !!r.est }));
 const recTotal = () => recurring.filter(r => recActive(r)).reduce((a, r) => a + parse(r.amount), 0);
 function lastBankFor(name) {
   const ids = Object.keys(months).filter(id => id < current).sort().reverse();
@@ -1977,8 +1987,7 @@ const SPEND_GROUPS = ["courant", "plaisir", "imprevu", "fixe", "abonnement", "pr
 // but are paid by the trip savings, so they don't reduce the budget's « reste ».
 const TRIP_G = { id: "voyage", label: "Voyage", color: "#f0a432" };
 const tripEnvs = id => recurring.filter(r => r.trip && r.trip.month === id).map(r => {
-  const x = DEST && DEST.destinations.find(y => y.id === r.trip.dest);
-  return { id: "trip:" + r.id, name: "Voyage · " + (x ? x.name : (r.name || "voyage")), group: "voyage", trip: true, amount: r.trip.budget || 0 };
+  return { id: "trip:" + r.id, name: tripInfo(r.trip).name, group: "voyage", trip: true, amount: r.trip.budget || 0 };
 });
 const gOfEnv = e => e && e.trip ? TRIP_G : groupOf(e && e.group);
 const spendEnvs = id => ((id === current && work ? work.envelopes : months[id] && months[id].envelopes) || []).filter(e => SPEND_GROUPS.includes(groupOf(e.group).id))
@@ -2383,10 +2392,10 @@ function chartSvg(ids) {
 const REC_DEFAULT_GROUPS = ["epargne", "fixe", "abonnement"];
 const REC_PLACEHOLDER = { epargne: "Ex. Livret A", fixe: "Ex. Loyer", abonnement: "Ex. Spotify" };
 function recGroupsView() {
-  const ids = REC_DEFAULT_GROUPS.concat(GROUPS.map(g => g.id).filter(id => !REC_DEFAULT_GROUPS.includes(id) && recurring.some(r => (r.group || "fixe") === id)));
+  const ids = REC_DEFAULT_GROUPS.concat(GROUPS.map(g => g.id).filter(id => !REC_DEFAULT_GROUPS.includes(id) && recurring.some(r => !r.ready && (r.group || "fixe") === id)));
   return ids.map(id => {
     const g = GROUPS.find(x => x.id === id);
-    const list = recurring.filter(r => (r.group || "fixe") === id);
+    const list = recurring.filter(r => !r.ready && (r.group || "fixe") === id);
     const sub = list.reduce((a, r) => a + parse(r.amount), 0);
     return '<div class="recgroup"><div class="recgroup-head"><i class="sw" style="background:' + g.color + '"></i><b>' + esc(g.label) + '</b><span>' + (list.length ? money(sub) : '') + '</span></div>' +
       (list.length ? '<div class="reclist">' + list.map(r => recItemView(r)).join("") + '</div>' : '') +
@@ -2857,7 +2866,7 @@ function homeView() {
   loadDest();
   const trips = recurring.filter(r => r.trip);
   const tripHtml = trips.length ? trips.slice(0, 3).map(r => {
-    const t = r.trip, x = DEST && DEST.destinations.find(y => y.id === t.dest), got = typeof vsavedFor === "function" ? vsavedFor(r) : 0;
+    const t = r.trip, x = tripInfo(t), got = vsavedFor(r);
     return '<a class="hm-trip" href="#voyages" data-home="trip" data-rid="' + esc(r.id) + '"><span class="hm-dc" style="background:' + (x ? x.color : "#8d97a3") + '">' + (x ? x.countryCode : "✈") + '</span><span class="hm-tb"><span class="hm-tt"><b>' + esc(x ? x.name : r.name) + '</b><small>' + esc(label(t.month).toLowerCase()) + '</small></span><span class="hm-bar"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><small><b>' + money(got) + '</b> sur ' + money(t.budget) + '</small></span></a>';
   }).join("") : '<p class="hm-empty">Aucun projet pour l\'instant. <a href="#voyages">Estimer un voyage</a></p>';
   return '<div class="home">' +
@@ -2916,7 +2925,7 @@ function goalsSoonView() {
 
 /* ---------- Voyages: travel budget estimate from data/destinations.json ---------- */
 let DEST = null, destErr = false, MAPD = null;
-const VOY0 = () => ({ step: "search", q: "", fq: "", id: null, month: "", days: 7, people: 2, style: "", mode: "", from: "", all: false, trip: null, budget: 0, saved: 0 });
+const VOY0 = () => ({ step: "home", cname: "", q: "", fq: "", id: null, month: "", days: 7, people: 2, style: "", mode: "", from: "", all: false, trip: null, budget: 0, saved: 0 });
 let voy = VOY0();
 function loadDest() {
   if (DEST || loadDest.p) return;
@@ -2996,7 +3005,13 @@ function vfromResults() {
 }
 // a trip becomes a recurring expense limited to the months before departure (from → until), in "Projets personnels"
 const vtrip = () => voy.trip && recurring.find(r => r.id === voy.trip && r.trip);
-const vtrips = () => recurring.filter(r => r.trip && DEST.destinations.some(d => d.id === r.trip.dest));
+const vtrips = () => recurring.filter(r => r.trip && (r.trip.custom || (DEST && DEST.destinations.some(d => d.id === r.trip.dest)))).sort((a, b) => a.trip.month.localeCompare(b.trip.month));
+function tripInfo(t) {
+  const x = !t.custom && DEST && DEST.destinations.find(y => y.id === t.dest);
+  if (x) return { name: x.name, code: x.countryCode, color: x.color };
+  const n = (t.name || "Voyage").trim();
+  return { name: n, code: n.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2).toUpperCase() || "✈", color: "#8d97a3" };
+}
 function vmonthsBetween(a, b) { const [y1, m1] = a.split("-").map(Number), [y2, m2] = b.split("-").map(Number); return (y2 - y1) * 12 + m2 - m1 + 1; }
 function vplan() {
   const now = monthIdOf(todayDate());
@@ -3012,6 +3027,7 @@ function vcalcHtml() {
 }
 function vprojBox(r) {
   const t = r.trip, got = vsavedFor(r);
+  if (r.ready) return '<div class="vg v-proj"><div class="v-proj-top"><span class="v-ic sm">' + ICON("check") + '</span><div><b>Voyage enregistré · budget prêt</b><small>Une catégorie « ' + esc(tripInfo(t).name) + ' » apparaîtra dans tes dépenses en ' + esc(monthName(t.month)) + '.</small></div></div><button type="button" class="linkbtn" data-voy="unproject">Supprimer ce voyage</button></div>';
   return '<div class="vg v-proj"><div class="v-proj-top"><span class="v-ic sm">' + ICON("target") + '</span><div><b>Projet en cours</b><small>' + vnum(parse(r.amount)) + ' € par mois dans tes budgets, jusqu\'en ' + esc(label(r.until).toLowerCase()) + '</small></div></div>' +
     '<div class="v-pb"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></div>' +
     '<div class="v-proj-num"><span><b>' + vnum(got) + ' €</b> de côté</span><span>sur ' + vnum(t.budget) + ' €</span></div>' +
@@ -3020,27 +3036,62 @@ function vprojBox(r) {
 // what is already put aside: the amount given at the start + the envelope of this trip in each month's budget so far
 function vsavedFor(r) {
   const now = monthIdOf(todayDate());
+  if (r.ready) return Math.max(r.trip.saved || 0, r.trip.budget || 0);
   return (r.trip.saved || 0) + Object.keys(months).filter(id => id <= now).reduce((a, id) => a + (months[id].envelopes || []).filter(x => x.rid === r.id).reduce((b, x) => b + parse(x.amount), 0), 0);
 }
 function voySave() {
-  const d = vdest(), p = vplan(); if (!d || !p.ok) return;
-  const name = "Voyage à " + d.name;
-  const item = { id: uid(), name, amount: p.monthly, group: "projets", bank: lastBankFor(name), est: false, from: p.start, until: voy.month,
+  const d = vdest(), p = vplan(); if (!d || !(voy.budget > 0)) return;
+  const name = "Voyage à " + d.name, ready = !p.ok || !!voy.ready;
+  const item = { id: uid(), name, amount: ready ? 0 : p.monthly, group: "projets", bank: lastBankFor(name), est: false, from: p.start, until: voy.month, ready,
     trip: { dest: d.id, month: voy.month, days: voy.days, people: voy.people, style: voy.style, dep: voy.from, mode: voy.mode || "avion", budget: voy.budget, saved: voy.saved, createdAt: new Date().toISOString() } };
-  saveRecurring(recurring.concat([item])).then(() => { voy.trip = item.id; voyGo("result"); setSync("Projet ajouté à tes budgets"); });
+  saveRecurring(recurring.concat([item])).then(() => { voy.trip = item.id; voyGo("result"); setSync(ready ? "Voyage enregistré" : "Projet ajouté à tes budgets"); });
+}
+function voyCustomSave() {
+  const name = (voy.cname || "").trim().slice(0, 40); if (!name || !voy.month || !(voy.budget > 0)) return;
+  const p = vplan(), ready = !p.ok, old = voy.trip && recurring.find(r => r.id === voy.trip);
+  const item = { id: old ? old.id : uid(), name: "Voyage à " + name, amount: ready ? 0 : p.monthly, group: "projets", bank: old ? old.bank : lastBankFor("Voyage à " + name), est: false, from: p.start, until: voy.month, ready,
+    trip: { custom: true, name, dest: null, month: voy.month, days: voy.days, people: voy.people, budget: voy.budget, saved: voy.saved, createdAt: old ? old.trip.createdAt : new Date().toISOString() } };
+  saveRecurring(old ? recurring.map(r => r.id === old.id ? item : r) : recurring.concat([item])).then(() => { voy = VOY0(); voyGo("home"); setSync(ready ? "Voyage enregistré" : "Voyage ajouté à tes budgets"); });
+}
+function vtripsHtml() {
+  const L = vtrips(); if (!L.length) return '<p class="v-hint" style="margin-top:6px">Tes voyages apparaîtront ici.</p>';
+  return '<p class="v-lbl">Mes voyages</p>' + L.map(r => { const t = r.trip, x = tripInfo(t), got = vsavedFor(r), done = got >= t.budget;
+    return '<button type="button" class="vg v-trip" data-voy="trip" data-rid="' + esc(r.id) + '"><span class="v-dc" style="background:' + x.color + '">' + esc(x.code) + '</span><span class="v-trip-b"><b>' + esc(x.name) + ' · ' + t.days + ' jours</b><small>Départ en ' + esc(label(t.month).toLowerCase()) + ' · ' + (t.people > 1 ? t.people + ' voyageurs' : 'en solo') + '</small>' +
+      '<span class="v-pb' + (done ? ' ok' : '') + '"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><span class="v-proj-num"><span><b>' + vnum(got) + ' €</b> ' + (done ? 'prêts' : 'de côté') + '</span><span>' + (done ? '<em class="v-ok">Budget prêt ✓</em>' : 'sur ' + vnum(t.budget) + ' €') + '</span></span></span></button>'; }).join("");
 }
 function voyView() {
   loadDest();
   if (!DEST) return '<div class="voy"><div class="vg v-none">' + (destErr ? 'Impossible de charger les destinations. Vérifie ta connexion et réessaie.' : 'Chargement des destinations…') + '</div></div>';
   const d = vdest();
+  if (voy.step === "home") {
+    return '<div class="voy"><div class="v-kick">Nouveau voyage</div><h1 class="v-h v-h2">Où part-on ?</h1><div class="v-start">' +
+      '<button type="button" class="vg v-sl star" data-voy="estimate"><span class="v-ic">' + ICON("sparkle") + '</span><span><b>Estimer un voyage</b><small>Loucio calcule le budget pour toi</small></span><span class="v-arr">›</span></button>' +
+      '<button type="button" class="vg v-sl" data-voy="custom"><span class="v-ic">' + ICON("pen") + '</span><span><b>Créer un voyage</b><small>Tu choisis toi-même les montants</small></span><span class="v-arr">›</span></button></div>' +
+      vtripsHtml() + '</div>';
+  }
+  if (voy.step === "custom") {
+    const opts = voyMonths().map(id => '<option value="' + id + '"' + (id === voy.month ? ' selected' : '') + '>' + esc(label(id)) + '</option>').join("");
+    const fld = (k, t) => '<label class="vg v-field"><small>' + t + '</small><span class="v-amt"><input data-vp="' + k + '" inputmode="decimal" autocomplete="off" value="' + (voy[k] ? vnum(voy[k]) : '') + '" placeholder="0"><em>€</em></span></label>';
+    const num = (k, t, max) => '<label class="vg v-field"><small>' + t + '</small><input data-vc="' + k + '" type="text" inputmode="numeric" maxlength="2" value="' + voy[k] + '" style="font-weight:700"></label>';
+    const okc = (voy.cname || "").trim() && voy.month && voy.budget > 0;
+    return '<div class="voy">' + vtop(voy.trip ? 'Modifier le voyage' : 'Nouveau voyage') + '<h2 class="v-q">Ton voyage</h2>' +
+      '<label class="vg v-field"><small>Destination</small><input id="voyName" maxlength="40" autocomplete="off" placeholder="Ex. Lisbonne, Bretagne, road trip…" value="' + esc(voy.cname || "") + '" style="font-weight:700"></label>' +
+      '<label class="vg v-field"><small>Mois de départ</small><select id="voyCMonth"><option value=""' + (voy.month ? '' : ' selected') + ' disabled>Choisir un mois</option>' + opts + '</select></label>' +
+      '<div class="v-two">' + num("days", "Durée (jours)") + num("people", "Voyageurs") + '</div>' +
+      '<div class="v-two">' + fld("budget", "Budget du voyage") + fld("saved", "Déjà mis de côté") + '</div>' +
+      '<div class="v-calc" id="vcalc">' + (voy.month ? vcalcHtml() : '<span>À mettre de côté</span><small>Choisis le mois de départ.</small>') + '</div>' +
+      '<p class="v-sub">' + (voy.month ? 'En ' + esc(monthName(voy.month)) + ', une catégorie « ' + esc((voy.cname || "").trim() || "ta destination") + ' » apparaîtra dans tes dépenses pour suivre le voyage.' : 'Le mois du départ, une catégorie à ton nom de destination apparaîtra dans tes dépenses.') + '</p>' +
+      '<button type="button" class="btn primary v-cta" data-voy="csave"' + (okc ? '' : ' disabled') + '>' + (voy.trip ? 'Enregistrer' : 'Créer le voyage') + '</button>' +
+      (voy.trip ? '<button type="button" class="linkbtn" data-voy="unproject" style="align-self:center;color:#f2f2ef;opacity:.8">Supprimer ce voyage</button>' : '') + '</div>';
+  }
   if (voy.step === "search" || !d) {
-    return '<div class="voy"><h1 class="v-h">Où part-on ?</h1>' +
+    return '<div class="voy">' + vtop('Estimer un voyage') + '<h1 class="v-h">Où part-on ?</h1>' +
       '<label class="vg v-search">' + ICON("search") + '<input id="voyQ" type="search" placeholder="Ville ou pays…" autocomplete="off" aria-label="Rechercher une destination" value="' + esc(voy.q) + '"></label>' +
       '<div id="voyRes">' + voyResults() + '</div>' +
-      (!vtrips().length && !voy.q.trim() ? '<div class="vg v-how"><p class="v-lbl" style="margin:0">Comment ça marche</p>' +
+      (!voy.q.trim() ? '<div class="vg v-how"><p class="v-lbl" style="margin:0">Comment ça marche</p>' +
         [["search", "Choisis ta destination", "Une ville ou un pays parmi nos " + DEST.destinations.length + " destinations"], ["receipt", "Réponds à quelques questions", "Dates, durée, style de voyage, ville de départ"], ["piggy", "Mets de côté chaque mois", "Loucio ajoute une enveloppe à tes budgets jusqu\'au départ"]]
           .map(([ic, t, sub]) => '<div class="v-how-step"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></div>').join("") + '</div>' : '') +
-      (vtrips().length ? '<p class="v-lbl">Mes voyages</p>' + vtrips().map(r => { const t = r.trip, x = DEST.destinations.find(y => y.id === t.dest), got = vsavedFor(r);
+      (false ? vtrips().map(r => { const t = r.trip, x = DEST.destinations.find(y => y.id === t.dest), got = vsavedFor(r);
         return '<button type="button" class="vg v-trip" data-voy="trip" data-rid="' + esc(r.id) + '"><span class="v-dc" style="background:' + x.color + '">' + x.countryCode + '</span><span class="v-trip-b"><b>' + esc(x.name) + ' · ' + t.days + ' jours</b><small>Départ en ' + esc(label(t.month).toLowerCase()) + ' · ' + (t.people > 1 ? t.people + ' voyageurs' : 'en solo') + '</small>' +
           '<span class="v-pb"><i style="width:' + Math.min(100, Math.max(3, Math.round(got / Math.max(1, t.budget) * 100))) + '%"></i></span><span class="v-proj-num"><span><b>' + vnum(got) + ' €</b> de côté</span><span>sur ' + vnum(t.budget) + ' €</span></span></span></button>'; }).join("") : '') + '</div>';
   }
@@ -3083,7 +3134,7 @@ function voyView() {
       '<div class="v-two">' + fld("budget", "Budget du voyage") + fld("saved", "Déjà mis de côté") + '</div>' +
       '<div class="v-calc" id="vcalc">' + vcalcHtml() + '</div>' +
       '<p class="v-sub">Loucio ajoute une enveloppe « Voyage à ' + esc(d.name) + ' » à tes prochains budgets, dans Projets personnels, jusqu\'à ton départ. Tu la retrouves aussi dans Réglages, avec tes dépenses récurrentes.</p>' +
-      '<button type="button" class="btn primary v-cta" data-voy="save"' + (vplan().ok ? '' : ' disabled') + '>Ajouter à mes budgets</button></div>';
+      '<button type="button" class="btn primary v-cta" data-voy="save"' + (voy.budget > 0 ? '' : ' disabled') + '>' + (vplan().ok ? 'Ajouter à mes budgets' : 'Enregistrer le voyage') + '</button></div>';
   }
   const e = voyEstimate(d), max = Math.max(...e.rows.map(r => r.v));
   const styleName = { malin: "malin", confort: "confort", plaisir: "plaisir" }[voy.style];
@@ -3092,16 +3143,19 @@ function voyView() {
   const G = DEST.generalTips || {}, tips = (d.tips || []).concat(d.currency === "EUR" || /Euro/.test(I.currency) ? [] : G.foreignCurrency || [], G.all || []);
   const MODE = { train: "en train", voiture: "en voiture", bateau: "en bateau", autre: "" };
   const modeNote = voy.mode && voy.mode !== "avion" ? '<p class="v-note">Le trajet' + (MODE[voy.mode] ? ' ' + MODE[voy.mode] : '') + ' n\'est pas encore estimé par Loucio : pense à l\'ajouter au budget du projet.</p>' : '';
-  return '<div class="voy">' + vtop(d.name + ' · ' + styleName, vtrip() ? '' : '<button type="button" class="v-proj-btn" data-voy="project">En faire un projet</button>') +
+  return '<div class="voy">' + vtop(d.name + ' · ' + styleName) +
     '<div class="vg v-total"><small>À prévoir pour ' + voy.people + ' · ' + voy.days + ' jours</small><b>' + vnum(e.low) + ' – ' + vnum(e.high) + ' €</b><span>Environ ' + vnum(e.perDay) + ' € par jour et par personne · ' + esc(monthName(voy.month)) + ', ' + DEST.seasonNames[e.season] + '</span></div>' +
     '<div class="vg v-posts">' + e.rows.map(r => '<div class="v-post"><span class="v-ic sm">' + ICON(r.ic) + '</span><div><div class="v-pl"><span>' + esc(r.t) + '</span><b>' + vnum(r.v) + ' €</b></div><div class="v-pb"><i style="width:' + Math.max(3, Math.round(r.v / max * 100)) + '%"></i></div></div></div>').join("") + '</div>' +
     '<p class="v-note">Estimation indicative, à partir de prix moyens relevés en ' + esc(upd) + '.</p>' +
-    modeNote + (vtrip() ? vprojBox(vtrip()) : '') +
+    modeNote + (vtrip() ? vprojBox(vtrip()) : '<p class="v-lbl">Enregistrer ce voyage</p><div class="v-start">' +
+      '<button type="button" class="vg v-sl star" data-voy="project"><span class="v-ic">' + ICON("coins") + '</span><span><b>Mettre de côté chaque mois</b><small>Loucio l\'ajoute à tes budgets jusqu\'au départ</small></span><span class="v-arr">›</span></button>' +
+      '<button type="button" class="vg v-sl" data-voy="ready"><span class="v-ic">' + ICON("check") + '</span><span><b>J\'ai déjà le budget</b><small>Le voyage est enregistré, sans épargne mensuelle</small></span><span class="v-arr">›</span></button></div>' +
+      '<p class="v-sub">Dans les deux cas, une catégorie « ' + esc(d.name) + ' » apparaîtra dans tes dépenses en ' + esc(monthName(voy.month)) + '.</p>') +
 
     (tips.length ? '<div class="vg v-info v-tips"><h3>Pour dépenser moins</h3><ul>' + tips.slice(0, 5).map(t => '<li>' + ICON("piggy") + '<span>' + esc(t) + '</span></li>').join("") + '</ul></div>' : '') +
     '<div class="v-btns"><button type="button" class="btn vg" data-voy="edit">Modifier</button><button type="button" class="btn vg" data-voy="reset">Autre destination</button></div></div>';
 }
-$("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") return; e.preventDefault(); voy = VOY0(); voyGo("search"); });
+$("#tab-voyages").addEventListener("click", e => { if (page !== "voyages") return; e.preventDefault(); voy = VOY0(); voyGo("home"); });
 function voyThink() {
   voy.step = "thinking"; render(); scrollTo(0, 0);
   runThink(() => { if (page === "voyages" && voy.step === "thinking") voyGo("result"); });
@@ -3111,7 +3165,10 @@ mainEl.addEventListener("input", e => {
   const t = e.target;
   if (t.dataset.vn) { vfit(t); voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
   if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
-  if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) go.disabled = !vplan().ok; return; }
+  if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) { go.disabled = !(voy.budget > 0); go.textContent = vplan().ok ? "Ajouter à mes budgets" : "Enregistrer le voyage"; } const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !((voy.cname || "").trim() && voy.month && voy.budget > 0); return; }
+  if (t.id === "voyName") { voy.cname = t.value; const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !(voy.cname.trim() && voy.month && voy.budget > 0); return; }
+  if (t.id === "voyCMonth") { voy.month = t.value; const pos = 0; render(); return; }
+  if (t.dataset.vc) { const n = parseInt(t.value, 10); if (n > 0 && n < 100) voy[t.dataset.vc] = n; return; }
   if (t.id !== "voyQ") return;
   voy.q = t.value; const r = $("#voyRes"); if (r) r.innerHTML = voyResults();
   const how = mainEl.querySelector(".v-how"); if (how) how.hidden = !!voy.q.trim();
@@ -3132,11 +3189,16 @@ mainEl.addEventListener("click", e => {
   const a = b.dataset.voy;
   if (a === "all") { voy.all = !voy.all; $("#voyRes").innerHTML = voyResults(); return; }
   if (a === "pick") { voy.id = b.dataset.id; voy.month = ""; voy.style = ""; voy.from = ""; voy.fq = ""; voy.trip = null; voyGo("when"); return; }
-  if (a === "trip") { const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return; voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, mode: r.trip.mode || "avion", from: r.trip.dep, trip: r.id }); voyGo("result"); return; }
+  if (a === "trip") { const r = recurring.find(x => x.id === b.dataset.rid); if (!r || !r.trip) return;
+    if (r.trip.custom) { voy = Object.assign(VOY0(), { trip: r.id, cname: r.trip.name, month: r.trip.month, days: r.trip.days, people: r.trip.people, budget: r.trip.budget, saved: r.trip.saved || 0 }); voyGo("custom"); return; } voy = Object.assign(VOY0(), { id: r.trip.dest, month: r.trip.month, days: r.trip.days, people: r.trip.people, style: r.trip.style, mode: r.trip.mode || "avion", from: r.trip.dep, trip: r.id }); voyGo("result"); return; }
+  if (a === "estimate") { voy = VOY0(); voyGo("search"); return; }
+  if (a === "custom") { voy = Object.assign(VOY0(), { month: "", days: 7, people: 2 }); voyGo("custom"); return; }
+  if (a === "csave") { voyCustomSave(); return; }
+  if (a === "ready") { const e = voyEstimate(vdest()); voy.budget = vr50((e.low + e.high) / 2); voy.saved = voy.budget; voy.ready = true; voySave(); return; }
   if (a === "project") { const e = voyEstimate(vdest()); voy.budget = vr50((e.low + e.high) / 2); voy.saved = 0; voyGo("project"); return; }
   if (a === "save") { voySave(); return; }
-  if (a === "unproject") { const id = voy.trip; saveRecurring(recurring.filter(x => x.id !== id)).then(() => { voy.trip = null; render(); setSync("Projet retiré de tes budgets"); }); return; }
-  if (a === "back") { voyGo(voy.trip && voy.step === "result" ? "search" : { when: "search", style: "when", how: "style", from: "how", thinking: "from", result: "from", project: "result" }[voy.step] || "search"); return; }
+  if (a === "unproject") { const id = voy.trip, wasCustom = voy.step === "custom"; saveRecurring(recurring.filter(x => x.id !== id)).then(() => { voy.trip = null; if (wasCustom) { voy = VOY0(); voyGo("home"); } else render(); setSync("Voyage retiré"); }); return; }
+  if (a === "back") { if (voy.step === "custom" || voy.step === "search" || (voy.trip && voy.step === "result")) { voy = VOY0(); voyGo("home"); return; } voyGo({ when: "search", style: "when", how: "style", from: "how", thinking: "from", result: "from", project: "result" }[voy.step] || "home"); return; }
   if (a === "next") {
     const bad = ["days", "people"].find(k => { const n = voy[k], lim = k === "days" ? [2, 30] : [1, 9]; return !(n >= lim[0] && n <= lim[1]); });
     if (bad) { const er = $("#vnErr"); if (er) { er.hidden = false; er.textContent = bad === "days" ? "Indique une durée entre 2 et 30 jours." : "Indique entre 1 et 9 voyageurs."; } return; }
