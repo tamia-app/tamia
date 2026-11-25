@@ -2983,7 +2983,7 @@ function vfit(el) {
   el.style.width = Math.ceil(c.measureText(el.value || "0").width + parseFloat(cs.fontSize) * .04 * (el.value || "0").length * -1 + 2) + "px";
 }
 function vtop(t, right) { return '<div class="v-top"><button type="button" class="v-back vg" data-voy="back" aria-label="Retour">‹</button><span>' + esc(t) + '</span>' + (right || '') + '</div>'; }
-function vprog(k) { return '<div class="v-prog">' + [1, 2, 3, 4].map(i => '<i' + (i <= k ? ' class="on"' : '') + '></i>').join("") + '</div>'; }
+function vprog(k) { return '<div class="v-prog">' + [1, 2, 3, 4, 5].map(i => '<i' + (i <= k ? ' class="on"' : '') + '></i>').join("") + '</div>'; }
 function vrecap() { return '<div class="vg v-recap"><span><b>' + voy.days + '</b> jours</span><span><b>' + voy.people + '</b> voyageur' + (voy.people > 1 ? 's' : '') + '</span><span><b>' + esc(label(voy.month, true).replace(".", "")) + '</b></span></div>'; }
 function vdestBtn(d) {
   return '<button type="button" class="vg v-dest" data-voy="pick" data-id="' + d.id + '"><span class="v-dc" style="background:' + d.color + '">' + d.countryCode + '</span><span><b>' + esc(d.name) + '</b><small>' + esc(d.country) + ' · ' + esc(d.info.flightTime) + '</small></span><span class="arr">›</span></button>';
@@ -3085,10 +3085,10 @@ function voyView() {
       (voy.trip ? '<button type="button" class="linkbtn" data-voy="unproject" style="align-self:center;color:#f2f2ef;opacity:.8">Supprimer ce voyage</button>' : '') + '</div>';
   }
   if (voy.step === "search" || !d) {
-    return '<div class="voy">' + vtop('Estimer un voyage') + '<h1 class="v-h">Où part-on ?</h1>' +
+    return '<div class="voy">' + vtop('Estimer un voyage · 1 sur 5') + vprog(1) + '<h2 class="v-q">Où part-on ?</h2>' +
       '<label class="vg v-search">' + ICON("search") + '<input id="voyQ" type="search" placeholder="Ville ou pays…" autocomplete="off" aria-label="Rechercher une destination" value="' + esc(voy.q) + '"></label>' +
       '<div id="voyRes">' + voyResults() + '</div>' +
-      (!voy.q.trim() ? '<div class="vg v-how"><p class="v-lbl" style="margin:0">Comment ça marche</p>' +
+      (false ? '<div class="vg v-how"><p class="v-lbl" style="margin:0">Comment ça marche</p>' +
         [["search", "Choisis ta destination", "Une ville ou un pays parmi nos " + DEST.destinations.length + " destinations"], ["receipt", "Réponds à quelques questions", "Dates, durée, style de voyage, ville de départ"], ["piggy", "Mets de côté chaque mois", "Loucio ajoute une enveloppe à tes budgets jusqu\'au départ"]]
           .map(([ic, t, sub]) => '<div class="v-how-step"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></div>').join("") + '</div>' : '') +
       (false ? vtrips().map(r => { const t = r.trip, x = DEST.destinations.find(y => y.id === t.dest), got = vsavedFor(r);
@@ -3099,14 +3099,14 @@ function voyView() {
     const opts = voyMonths().map(id => '<option value="' + id + '"' + (id === voy.month ? ' selected' : '') + '>' + esc(label(id)) + '</option>').join("");
     const stp = (k, v, unit, min, max) => '<label class="vg v-field v-tile"><small>' + unit[0] + '</small><span class="v-big"><input data-vn="' + k + '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" min="' + min + '" max="' + max + '" value="' + v + '" aria-label="' + unit[0] + '" style="width:' + (String(v).length + .15) + 'ch"><em>' + unit[2] + '</em></span></label>';
     const se = voy.month ? '<p class="v-sub">' + esc(label(voy.month).split(" ")[0]) + ' à ' + esc(d.name) + ' : ' + DEST.seasonNames[vseason(d, voy.month)] + '. Meilleure période : ' + esc(d.info.bestMonths.charAt(0).toLowerCase() + d.info.bestMonths.slice(1)) + '.</p>' : '';
-    return '<div class="voy">' + vtop(d.name + ' · 1 sur 4') + vprog(1) + '<h2 class="v-q">Quand et combien de temps ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 2 sur 5') + vprog(2) + '<h2 class="v-q">Quand et combien de temps ?</h2>' +
       '<label class="vg v-field"><small>Mois de départ</small><select id="voyMonth"><option value=""' + (voy.month ? '' : ' selected') + ' disabled>Choisir un mois</option>' + opts + '</select></label>' + se +
       '<div class="v-two">' + stp("days", voy.days, ["Durée", "jour", "jours"], 2, 30) + stp("people", voy.people, ["Voyageurs", "personne", "personnes"], 1, 9) + '</div>' +
       '<p class="v-sub v-err" id="vnErr" hidden></p><button type="button" class="btn primary v-cta" data-voy="next"' + (voy.month ? '' : ' disabled') + '>Continuer</button></div>';
   }
   if (voy.step === "style") {
     const S = [["malin", "coins", "Malin", "Auberges ou guesthouses, street food, transports en commun"], ["confort", "home", "Confort", "Hôtels 3 étoiles, restos, quelques activités"], ["plaisir", "sparkle", "Plaisir", "Beaux hôtels, bonnes tables, sorties"]];
-    return '<div class="voy">' + vtop(d.name + ' · 2 sur 4') + vprog(2) + vrecap() + '<h2 class="v-q">Quel style de voyage ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 3 sur 5') + vprog(3) + vrecap() + '<h2 class="v-q">Quel style de voyage ?</h2>' +
       S.map(([v, ic, t, sub]) => '<button type="button" class="vg v-opt' + (voy.style === v ? ' on' : '') + '" data-voy="style" data-v="' + v + '"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b><small>' + sub + '</small></span></button>').join("") + '</div>';
   }
   if (voy.step === "thinking") {
@@ -3119,11 +3119,11 @@ function voyView() {
   }
   if (voy.step === "how") {
     const M = [["avion", "plane", "En avion"], ["train", "train", "En train"], ["voiture", "car", "En voiture"], ["bateau", "boat", "En bateau"], ["autre", "dots", "Autre"]];
-    return '<div class="voy">' + vtop(d.name + ' · 3 sur 4') + vprog(3) + vrecap() + '<h2 class="v-q">Comment voyages-tu ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 4 sur 5') + vprog(4) + vrecap() + '<h2 class="v-q">Comment voyages-tu ?</h2>' +
       M.map(([v, ic, t]) => '<button type="button" class="vg v-opt' + (voy.mode === v ? ' on' : '') + '" data-voy="mode" data-v="' + v + '"><span class="v-ic">' + ICON(ic) + '</span><span><b>' + t + '</b></span></button>').join("") + '</div>';
   }
   if (voy.step === "from") {
-    return '<div class="voy">' + vtop(d.name + ' · 4 sur 4') + vprog(4) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
+    return '<div class="voy">' + vtop(d.name + ' · 5 sur 5') + vprog(5) + vrecap() + '<h2 class="v-q">D\'où pars-tu ?</h2>' +
       '<label class="vg v-search">' + ICON("search") + '<input id="voyFrom" type="search" placeholder="Ta ville de départ…" autocomplete="off" aria-label="Rechercher une ville de départ" value="' + esc(voy.fq) + '"></label>' +
       '<div id="voyFromRes">' + vfromResults() + '</div></div>';
   }
