@@ -2036,13 +2036,9 @@ function reportsView() {
   const m = months[current] || null;
   const allIds = Object.keys(months).sort();
   const bl = bankList();
-  const tabs = '<div class="rp-seg" role="tablist">' + [["mois", "Mois"], ["annee", "Année"], ["historique", "Historique"]].map(([k, l]) => '<button type="button" role="tab" aria-selected="' + (repTab === k) + '" data-reptab="' + k + '"' + (repTab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
+  const tabs = '<div class="rp-seg" role="tablist">' + [["mois", "Mois"], ["historique", "Historique"]].map(([k, l]) => '<button type="button" role="tab" aria-selected="' + (repTab === k) + '" data-reptab="' + k + '"' + (repTab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
   let html = '<div class="reports rp">' + tabs;
-  if (repTab === "annee") {
-    const ids = allIds.filter(id => id <= current).slice(-12);
-    html += '<div class="card panel wide"><h2>Évolution sur 12 mois</h2>' + (ids.length ? chartSvg(ids) : '<p class="empty">Le graphique apparaîtra dès ton premier budget.</p>') + '</div>';
-    return html + '</div>';
-  }
+  if (repTab !== "historique") repTab = "mois";
   if (repTab === "historique") {
     if (!allIds.length) return html + '<div class="card panel wide"><p class="empty">Aucun budget pour l\'instant.</p></div></div>';
     let rows = "";
@@ -2062,7 +2058,8 @@ function reportsView() {
   const line = xy.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
   const area = n > 1 ? '<path d="M' + xy.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L") + " L" + xy[n - 1][0].toFixed(1) + " " + Hh + " L" + xy[0][0].toFixed(1) + " " + Hh + 'Z" fill="url(#rpG)"/>' : '';
   const last = xy[n - 1] || [W - 6, Hh - 6];
-  html += '<div class="card rp-hero"><span class="hm-lbl2">Mis de côté depuis janvier</span><b class="rp-big">' + money(acc) + '</b>' +
+  let hero = '', cmpPrev = '', byBank = '', france = '';
+  hero += '<div class="card rp-hero"><span class="hm-lbl2">Mis de côté depuis janvier</span><b class="rp-big">' + money(acc) + '</b>' +
     '<span class="rp-sub">dont <b>' + money(t.by.epargne) + '</b> en ' + esc(mn) + ' · ' + pctOf(t.by.epargne, t.income) + ' de ta paye</span>' +
     '<svg class="rp-line" viewBox="0 0 ' + W + ' ' + Hh + '" aria-hidden="true"><defs><linearGradient id="rpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a432" stop-opacity=".32"/><stop offset="1" stop-color="#f0a432" stop-opacity="0"/></linearGradient></defs>' + area +
     (n > 1 ? '<polyline points="' + line + '" fill="none" stroke="#f0a432" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>' : '') + '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="5" fill="#f0a432"/></svg>' +
@@ -2076,13 +2073,13 @@ function reportsView() {
       const good = g.id === "epargne" ? d > 0 : d < 0;
       return '<div class="rp-li"><span class="sw" style="background:' + g.color + '"></span><span class="rp-n">' + esc(g.label) + '</span><b>' + money(t.by[g.id]) + '</b><span class="rp-d' + (d ? good ? ' up' : ' down' : '') + '">' + (d ? (d > 0 ? "+ " : "− ") + money(Math.abs(d)) : "=") + '</span></div>';
     }).join("");
-    html += '<div class="card rp-card"><span class="hm-lbl2">Par rapport à ' + esc(pn) + '</span>' + rowsC + '</div>';
+    cmpPrev += '<div class="card rp-card"><span class="hm-lbl2">Par rapport à ' + esc(pn) + '</span>' + rowsC + '</div>';
   }
   // 3. by bank
   const cols = bl.concat(t.bank.none > 0 ? [{ id: "none", name: "Sans banque", color: "var(--line)" }] : []);
   if (cols.length && t.total > 0) {
     const env = (m.envelopes || []).filter(e => e.amount > 0);
-    html += '<div class="card rp-card"><span class="hm-lbl2">Répartition par banque</span><div class="rp-stack">' +
+    byBank += '<div class="card rp-card"><span class="hm-lbl2">Répartition par banque</span><div class="rp-stack">' +
       cols.filter(b => t.bank[b.id] > 0).map(b => '<i style="flex:' + t.bank[b.id] + ';background:' + b.color + '"></i>').join("") + '</div>' +
       cols.map(b => { const k = env.filter(e => (bl.some(x => x.id === e.bank) ? e.bank : "none") === b.id).length;
         return '<div class="rp-li"><span class="sw" style="background:' + b.color + ';border-radius:50%"></span><span class="rp-n">' + esc(b.name) + '<small>' + k + ' enveloppe' + (k > 1 ? 's' : '') + '</small></span><b>' + money(t.bank[b.id]) + '</b><span class="rp-d">' + pctOf(t.bank[b.id], t.total) + '</span></div>'; }).join("") + '</div>';
@@ -2095,12 +2092,12 @@ function reportsView() {
     const range = hi === Infinity ? "de plus de " + eur0.format(lo) : lo ? "entre " + eur0.format(lo) + " et " + eur0.format(hi) : "de moins de " + eur0.format(hi);
     const verdict = avg <= 0 ? (mine > 0 ? "Bravo : dans ta tranche, la plupart des ménages n'arrivent pas à épargner." : "Dans ta tranche, la plupart des ménages n'arrivent pas à épargner.")
       : mine >= avg * 1.5 ? "Tu épargnes " + (Math.round(mine / avg * 10) / 10).toString().replace(".", ",") + " fois plus que la moyenne de ta tranche." : mine >= avg ? "Tu épargnes un peu plus que la moyenne de ta tranche." : "Tu épargnes un peu moins que la moyenne de ta tranche.";
-    html += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' +
+    france += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' +
       '<div class="rp-cmp"><span>Toi</span><div class="bar"><i style="width:' + wMe + '%;background:#f0a432"></i></div><b>' + mine + ' %</b></div>' +
       '<div class="rp-cmp"><span>Moyenne</span><div class="bar"><i style="width:' + wFr + '%;background:var(--muted)"></i></div><b>' + (avg <= 0 ? "≈ 0 %" : avg + " %") + '</b></div>' +
       '<small class="rp-src">Part du revenu mise de côté, ménages avec un revenu ' + esc(range) + ' par mois et par personne. Source : Insee, 2022. Comparaison indicative.</small></div>';
   }
-  return html + '</div>';
+  return html + france + hero + byBank + cmpPrev + '</div>';
 }
 function kpi(lbl, val, sub) {
   return '<div class="kpi"><span class="eyebrow">' + esc(lbl) + '</span><span class="val num">' + val + '</span><span class="sub">' + sub + '</span></div>';
