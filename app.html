@@ -2050,18 +2050,29 @@ function renderExpSheet() {
   document.body.classList.add("xs-open");
   const S = expSheet, envs = spendEnvs(S.month), [Y, M] = S.month.split("-").map(Number), cur = envs.find(x => x.id === S.env);
   const amt = parse(S.amount), left = cur ? envLeft(S.month, cur, S.id, amt) : null;
-  const w = Math.max(1, (S.amount || "0").length);
   const pick = cur ? '<span class="xs-pi" style="--c:' + groupOf(cur.group).color + '">' + ICON(envIcon(cur)) + '</span><span class="xs-pn"><b>' + esc(cur.name || "Sans nom") + '</b><small>' + esc(groupOf(cur.group).label) + ' · reste ' + money2(envLeft(S.month, cur, S.id, 0)) + '</small></span>' : '<span class="xs-pn"><b>Choisir une enveloppe</b></span>';
   ov.innerHTML = '<div class="xs" role="dialog" aria-modal="true" aria-label="' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '"><span class="xs-grab"></span>' +
     '<button type="button" class="xs-x" data-xs="close" aria-label="Fermer">×</button>' +
     '<span class="xs-title">' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '</span>' +
-    '<label class="xs-amt" for="xsAmt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" style="width:' + (w * .58 + .05).toFixed(2) + 'em" value="' + esc(S.amount) + '"><span>€</span></label>' +
+    '<label class="xs-amt" for="xsAmt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(S.amount) + '"><span>€</span></label>' +
     (envs.length ? '<button type="button" class="xs-pick' + (S.pickOpen ? ' open' : '') + '" data-xs="pick" aria-expanded="' + !!S.pickOpen + '">' + pick + '<span class="xs-chev">›</span></button>' +
       (S.pickOpen ? '<div class="xs-list" role="listbox">' + envs.map(e => '<button type="button" role="option" aria-selected="' + (S.env === e.id) + '" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + groupOf(e.group).color + '">' + ICON(envIcon(e)) + '</span><span class="xs-pn"><b>' + esc(e.name || "Sans nom") + '</b><small>' + esc(groupOf(e.group).label) + '</small></span><span class="xs-left">reste ' + money2(envLeft(S.month, e, S.id, 0)) + '</span></button>').join("") + '</div>' : '')
       : '<p class="xs-warn">Ajoute d\'abord des enveloppes à ton budget de ' + esc(monthName(S.month)) + '.</p>') +
     '<div class="xs-row"><input id="xsNote" maxlength="60" placeholder="Note (facultatif) · ex. Boulangerie" value="' + esc(S.note) + '"><input id="xsDate" type="date" aria-label="Date" min="' + S.month + '-01" max="' + S.month + '-' + pad2(new Date(Y, M, 0).getDate()) + '" value="' + esc(S.date) + '"></div>' +
     '<button type="button" class="xs-save" data-xs="save"' + (amt > 0 && S.env ? '' : ' disabled') + '>' + (S.isNew ? 'Ajouter' : 'Enregistrer') + (left !== null && amt > 0 ? ' · ' + (left >= 0 ? (cur.name || "l'enveloppe") + ' : reste ' + money2(left) : 'dépasse de ' + money2(-left)) : '') + '</button>' +
     (S.isNew ? '' : '<button type="button" class="xs-del" data-xs="del">Supprimer la dépense</button>') + '</div>';
+  fitAmt();
+}
+// size the amount field to its text, shrinking the font when the number gets long
+function fitAmt() {
+  const inp = $("#xsAmt"); if (!inp) return;
+  const box = inp.closest(".xs"), maxW = (box ? box.clientWidth : 340) - 90;
+  const ctx = fitAmt.c || (fitAmt.c = document.createElement("canvas").getContext("2d"));
+  let fs = 51.2; inp.style.fontSize = fs + "px";
+  const cs = getComputedStyle(inp), txt = inp.value || inp.placeholder || "0";
+  const meas = f => { ctx.font = cs.fontWeight + " " + f + "px " + cs.fontFamily; return ctx.measureText(txt).width - txt.length * f * .04; };
+  let w = meas(fs); if (w + fs * .45 > maxW) { fs = Math.max(24, fs * maxW / (w + fs * .45)); inp.style.fontSize = fs + "px"; w = meas(fs); }
+  inp.style.width = Math.ceil(w + fs * .45) + "px";
 }
 function expSheetInput(e) {
   if (!expSheet) return;
