@@ -2527,15 +2527,38 @@ function homeView() {
   const pct = tc && tc.income ? '<span class="hm-pct">' + pctOf(tc.by.epargne, tc.income) + ' de ta paye</span>' : '';
   const sub = tc || saved ? "Depuis le début de l'année : <b>" + money(saved) + "</b>" : "Prépare ton budget pour voir ton épargne ici.";
   // this month's steps
-  const M = homeTarget(), m = months[M], mn = monthName(M);
-  const prepared = hasBudget(M), valid = prepared && !!m.validated, bil = !!(m && m.bilan);
+  // Cycle: budget of month N prepared from the 27th of N-1, validated by the 5th of N; bilan of N from the 25th of N.
+  // Once the bilan of the month is open (from the 25th, or still pending early next month), the card switches to
+  // "bilan of this month → budget of next month to prepare (from the 27th) → to validate (by the 5th)".
   const when = d => d ? new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }).replace(".", "") : "";
-  const bilanOpen = M !== cur || now.getDate() >= 25;
-  const steps = [
-    [prepared, "Budget de " + mn + " préparé", prepared ? when(m.createdAt) : ""],
-    [valid, "Budget validé", valid ? when(m.validatedAt) : ""],
-    [bil, "Bilan de fin de mois", bil ? when(m.bilan.at) : bilanOpen ? "" : "dès le 25"]];
-  const cta = !prepared ? ["go", "Préparer mon budget"] : !valid ? ["go", "Valider mon budget"] : !bil && bilanOpen ? ["bilan", "Faire mon bilan"] : ["go", "Voir mon budget"];
+  const dayOf = (id, d) => { const [y, mo] = id.split("-").map(Number); return new Date(y, mo - 1, d); };
+  const H = homeTarget();
+  const endPhase = H !== cur || now.getDate() >= 25;
+  let M, steps, cta, title;
+  if (endPhase) {
+    const B = H, N = shiftMonth(B, 1), mb = months[B], mN = months[N];
+    const bil = !!(mb && mb.bilan), prepN = hasBudget(N), validN = prepN && !!mN.validated;
+    const prepOpen = todayDate() >= dayOf(B, 27);
+    const nn = monthName(N);
+    steps = [
+      [bil, "Bilan de " + monthName(B), bil ? when(mb.bilan.at) : "maintenant"],
+      [prepN, "Budget de " + nn + (prepN ? " préparé" : " à préparer"), prepN ? when(mN.createdAt) : prepOpen ? "maintenant" : "dès le " + when(dayOf(B, 27))],
+      [validN, "Budget de " + nn + (validN ? " validé" : " à valider"), validN ? when(mN.validatedAt) : "avant le " + when(dayOf(N, 5))]];
+    title = "À faire";
+    if (!bil) { M = B; cta = ["bilan", "Faire mon bilan"]; }
+    else if (!prepN) { M = prepOpen ? N : B; cta = prepOpen ? ["go", "Préparer mon budget de " + nn] : ["go", "Voir mon budget"]; }
+    else if (!validN) { M = N; cta = ["go", "Valider mon budget de " + nn]; }
+    else { M = N; cta = ["go", "Voir mon budget"]; }
+  } else {
+    M = cur; const m = months[M], mn = monthName(M);
+    const prepared = hasBudget(M), valid = prepared && !!m.validated;
+    steps = [
+      [prepared, "Budget de " + mn + (prepared ? " préparé" : " à préparer"), prepared ? when(m.createdAt) : "maintenant"],
+      [valid, valid ? "Budget validé" : "Budget à valider", valid ? when(m.validatedAt) : "avant le " + when(dayOf(M, 5))],
+      [false, "Bilan de fin de mois", "dès le " + when(dayOf(M, 25))]];
+    title = "Ce mois-ci";
+    cta = !prepared ? ["go", "Préparer mon budget"] : !valid ? ["go", "Valider mon budget"] : ["go", "Voir mon budget"];
+  }
   // projects
   loadDest();
   const trips = recurring.filter(r => r.trip);
@@ -2547,7 +2570,7 @@ function homeView() {
     '<div class="hm-head">' + tipBtnHtml() +
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
     '<div class="hm-ink"><span class="hm-lbl">Mis de côté en ' + esc(monthName(cur)) + '</span><div class="hm-row"><b class="hm-big">' + big + '</b>' + pct + '</div><span class="hm-sub">' + sub + '</span></div>' +
-    '<div class="card hm-card"><span class="hm-lbl2">Ce mois-ci</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
+    '<div class="card hm-card"><span class="hm-lbl2">' + title + '</span>' + steps.map(([ok, t, w]) => '<div class="hm-step' + (ok ? ' ok' : '') + '"><span class="hm-ck">' + (ok ? ICON("checkmark") : '') + '</span><span>' + esc(t) + '</span><small>' + esc(w) + '</small></div>').join("") +
       '<button type="button" class="btn primary hm-cta" data-home="' + cta[0] + '" data-month="' + M + '">' + cta[1] + '</button></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
 }
