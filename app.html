@@ -951,15 +951,16 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .recitem .ru { display: block; font-size: 0.74rem; color: var(--muted); font-weight: 500; }
 .v-novol { align-self: flex-start; }
 .tb-edit { margin-left: auto; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #f2f2ef; border-radius: 99px; padding: 7px 13px; font: inherit; font-weight: 700; font-size: .82rem; cursor: pointer; }
-.tb-strip { border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-.tb-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
-.tb-top small, .tb-r small { display: block; color: var(--muted); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
-.tb-r { text-align: right; } .tb-r b { font-family: var(--font-display); font-size: 1.2rem; }
-.tb-in { display: inline-flex; align-items: baseline; gap: 4px; } .tb-in input { background: none; border: none; color: #f2f2ef; font-family: var(--font-display); font-weight: 800; font-size: 1.7rem; letter-spacing: -.03em; width: 6.2ch; padding: 0; outline: none; }
-.tb-in em { font-style: normal; color: var(--muted); font-weight: 700; } .tb-in.sm input { font-size: 1rem; font-weight: 700; width: 5ch; text-align: right; }
-.tb-bar { display: flex; gap: 2px; height: 9px; border-radius: 9px; overflow: hidden; background: rgba(255,255,255,.08); }
-.tb-foot { display: flex; justify-content: space-between; font-size: .84rem; color: var(--muted); } .tb-am { color: #f0a432; } .tb-neg { color: #e56b5d; }
-.tb-save { font-size: .8rem; color: var(--muted); border-top: 1px solid rgba(255,255,255,.1); padding-top: 8px; }
+.tb-strip { position: relative; border-radius: 22px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+.tb-ok { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: #5fb67f; color: #121212; display: grid; place-items: center; } .tb-ok .ico { width: 17px; height: 17px; stroke-width: 2.6; }
+.tb-cells { display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: 34px; }
+.tb-cell { display: flex; flex-direction: column; gap: 2px; }
+.tb-cell small { color: var(--muted); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.tb-cell b, .tb-in input, .tb-in em { font-family: var(--font-display); font-weight: 800; font-size: 1.75rem; letter-spacing: -.03em; line-height: 1.15; color: #f2f2ef; }
+.tb-in { display: inline-flex; align-items: baseline; gap: 6px; } .tb-in input { background: none; border: none; padding: 0; outline: none; } .tb-in em { font-style: normal; }
+.tb-bar { display: flex; gap: 3px; height: 12px; border-radius: 9px; overflow: hidden; background: rgba(255,255,255,.08); }
+.tb-cell b.tb-am { color: #f0a432; } .tb-cell b.tb-neg { color: #e56b5d; }
+.tb-save { font-size: .86rem; color: var(--muted); }
 .tb-grp { border-radius: 20px; padding: 12px 14px; display: flex; flex-direction: column; }
 .tb-gh { display: flex; align-items: center; gap: 10px; padding: 2px 0 6px; } .tb-gh .sw { width: 12px; height: 12px; border-radius: 4px; } .tb-gh b { flex: 1; font-family: var(--font-display); font-size: 1.02rem; } .tb-gh span { font-family: var(--font-display); font-weight: 700; }
 .tb-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border: none; border-top: 1px solid rgba(255,255,255,.1); background: none; color: inherit; font: inherit; text-align: left; width: 100%; cursor: pointer; }
@@ -1811,7 +1812,7 @@ function render() {
   renderValidBox();
   [["tab-accueil", ["accueil"]], ["tab-finances", ["finances"]], ["tab-objectifs", ["objectifs"]], ["tab-voyages", ["voyages"]], ["menuBtn", ["rapports", "reglages", "trophees", "compte"]]].forEach(([id, ps]) => { const a = $("#" + id); if (ps.includes(page)) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   if (page === "objectifs") { mainEl.innerHTML = goalsSoonView(); return; }
-  if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); mainEl.querySelectorAll("[data-vn]").forEach(vfit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mainEl.querySelectorAll("[data-vn]").forEach(vfit)); return; }
+  if (page === "voyages") { mainEl.innerHTML = voyView(); voyMapView(); mainEl.querySelectorAll("[data-tb]").forEach(tbFit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mainEl.querySelectorAll("[data-tb]").forEach(tbFit)); mainEl.querySelectorAll("[data-vn]").forEach(vfit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mainEl.querySelectorAll("[data-vn]").forEach(vfit)); return; }
   if (!loaded || !profileLoaded) { mainEl.innerHTML = '<div class="card loading">Chargement de tes budgets…</div>'; return; }
   maybeAskBilan();
   if (page === "reglages") { mainEl.innerHTML = settingsView(); return; }
@@ -3119,11 +3120,13 @@ function tripStripUpdate(r) {
   const n = tripStripNums(r), q = s => mainEl.querySelector(s);
   if (q("#tbTot")) q("#tbTot").textContent = vnum(n.tot) + " €";
   if (q("#tbBar")) q("#tbBar").innerHTML = n.bar;
-  if (q("#tbRest")) { q("#tbRestL").textContent = n.rest < 0 ? "Au-delà du budget" : "Reste à répartir"; q("#tbRest").textContent = vnum(Math.abs(n.rest)) + " €"; q("#tbRest").className = n.rest < 0 ? "tb-neg" : "tb-am"; }
+  if (q("#tbRest")) { q("#tbRest").className = ""; q("#tbRestL").textContent = n.rest < 0 ? "Au-delà du budget" : "Reste à répartir"; q("#tbRest").textContent = vnum(Math.abs(n.rest)) + " €"; q("#tbRest").className = n.rest < 0 ? "tb-neg" : "tb-am"; }
   if (q(".tb-save")) q(".tb-save").innerHTML = tripSaveLine(r);
+  const ok = q(".tb-ok"), st = q(".tb-strip"); if (st && r.ready && !ok) st.insertAdjacentHTML("afterbegin", '<span class="tb-ok" title="Budget prêt">' + ICON("checkmark") + "</span>"); if (ok && !r.ready) ok.remove();
   TCATS.forEach(c => { const el = q('[data-tbc="' + c.id + '"]'); if (el) el.textContent = vnum(tripEnvs0(r).filter(e => e.cat === c.id).reduce((a, e) => a + (e.amount || 0), 0)) + " €"; });
 }
 const tripSaveLine = r => r.ready ? '<span class="v-ok">Budget prêt ✓</span>' : vnum(r.amount) + ' € par mois jusqu\'en ' + esc(monthName(r.trip.month)) + ' · ' + vnum(vsavedFor(r)) + ' € de côté';
+function tbFit(inp) { const c = tbFit.c || (tbFit.c = document.createElement("canvas").getContext("2d")), cs = getComputedStyle(inp); c.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily; const txt = inp.value || inp.placeholder || "0", fs = parseFloat(cs.fontSize); inp.style.width = Math.ceil(c.measureText(txt).width - txt.length * fs * .03 + fs * .15) + "px"; }
 const tbW = v => Math.max(1.6, String(v || "").length * .8 + .3) + "ch";
 function tripBudgetView() {
   const r = tripOf(); if (!r) { voy = VOY0(); return voyView(); }
@@ -3131,9 +3134,11 @@ function tripBudgetView() {
   const save = tripSaveLine(r);
   return '<div class="voy">' + vtop('Mes voyages', '<button type="button" class="tb-edit" data-voy="tedit">' + (t.custom ? 'Modifier' : 'Estimation') + '</button>') +
     '<div class="v-kick">' + esc(label(t.month)) + ' · ' + t.days + ' jours · ' + (t.people > 1 ? t.people + ' voyageurs' : 'en solo') + '</div><h1 class="v-h v-h2">' + esc(x.name) + '</h1>' +
-    '<div class="vg tb-strip"><div class="tb-top"><label><small>Budget du voyage</small><span class="tb-in"><input data-tb="budget" inputmode="decimal" autocomplete="off" style="width:' + tbW(n.b ? vnum(n.b) : '') + '" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><em>€</em></span></label>' +
-      '<div class="tb-r"><small>Réparti</small><b id="tbTot">' + vnum(n.tot) + ' €</b></div></div>' +
-      '<div class="tb-bar" id="tbBar">' + n.bar + '</div><div class="tb-foot"><span id="tbRestL">' + (n.rest < 0 ? 'Au-delà du budget' : 'Reste à répartir') + '</span><b id="tbRest" class="' + (n.rest < 0 ? 'tb-neg' : 'tb-am') + '">' + vnum(Math.abs(n.rest)) + ' €</b></div>' +
+    '<div class="vg tb-strip">' + (r.ready ? '<span class="tb-ok" title="Budget prêt">' + ICON("checkmark") + '</span>' : '') +
+      '<div class="tb-cells"><label class="tb-cell"><small>Budget du voyage</small><span class="tb-in"><input data-tb="budget" inputmode="decimal" autocomplete="off" style="width:' + tbW(n.b ? vnum(n.b) : '') + '" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><em>€</em></span></label>' +
+      '<div class="tb-cell"><small>Réparti</small><b id="tbTot">' + vnum(n.tot) + ' €</b></div></div>' +
+      '<div class="tb-cell"><small id="tbRestL">' + (n.rest < 0 ? 'Au-delà du budget' : 'Reste à répartir') + '</small><b id="tbRest" class="' + (n.rest < 0 ? 'tb-neg' : 'tb-am') + '">' + vnum(Math.abs(n.rest)) + ' €</b></div>' +
+      '<div class="tb-bar" id="tbBar">' + n.bar + '</div>' +
       '<div class="tb-save">' + save + '</div></div>' +
     TCATS.map(c => { const L = env.filter(e => e.cat === c.id);
       return '<div class="vg tb-grp"><div class="tb-gh"><i class="sw" style="background:' + c.color + '"></i><b>' + esc(c.label) + '</b><span data-tbc="' + c.id + '">' + vnum(L.reduce((a, e) => a + (e.amount || 0), 0)) + ' €</span></div>' +
@@ -3262,7 +3267,7 @@ mainEl.addEventListener("input", e => {
   if (t.dataset.vn) { vfit(t); voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
   if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
   if (t.dataset.te) { const r = tripOf(); if (!r) return; const e = tripEnvs0(r).find(x => x.id === t.dataset.eid); if (!e) return; if (t.dataset.te === "name") e.name = t.value.slice(0, 40); else e.amount = Math.max(0, parse(t.value)); tripStripUpdate(r); tripSave(r); return; }
-  if (t.dataset.tb) { const r = tripOf(); if (!r) return; t.style.width = tbW(t.value); r.trip.budget = Math.max(0, parse(t.value)); tripRetarget(r); tripStripUpdate(r); tripSave(r); return; }
+  if (t.dataset.tb) { const r = tripOf(); if (!r) return; tbFit(t); r.trip.budget = Math.max(0, parse(t.value)); tripRetarget(r); tripStripUpdate(r); tripSave(r); return; }
   if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) { go.disabled = !(voy.budget > 0); go.textContent = vplan().ok ? "Ajouter à mes budgets" : "Enregistrer le voyage"; } const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !((voy.cname || "").trim() && voy.month && voy.budget > 0); return; }
   if (t.id === "voyName") { voy.cname = t.value; const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !(voy.cname.trim() && voy.month && voy.budget > 0); return; }
   if (t.id === "voyCMonth") { voy.month = t.value; const pos = 0; render(); return; }
