@@ -2574,7 +2574,7 @@ function homeView() {
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
     '<div class="hm-next"><span class="hm-glow"></span><span class="hm-lbl hm-kick">Prochaine étape · ' + esc(kick) + '</span><b class="hm-nt">' + esc(head) + '</b><span class="hm-nl">' + esc(line) + '</span>' +
       '<button type="button" class="hm-go" data-home="' + cta[0] + '" data-month="' + M + '">' + esc(cta[1]) + '</button></div>' +
-    '<div class="hm-tiles"><div class="card hm-tile"><span class="hm-lbl2">Épargné en ' + esc(monthName(cur)) + '</span><b class="hm-tv hm-am">' + big + '</b><small>' + (tc && tc.income ? pctOf(tc.by.epargne, tc.income) + ' de ta paye' : 'Prépare ton budget') + '</small></div>' +
+    '<div class="hm-tiles"><div class="card hm-tile"><span class="hm-lbl2">Épargné ce mois</span><b class="hm-tv hm-am">' + big + '</b><small>' + (tc && tc.income ? pctOf(tc.by.epargne, tc.income) + ' de ta paye' : 'Prépare ton budget') + '</small></div>' +
       '<div class="card hm-tile"><span class="hm-lbl2">Depuis janvier</span><b class="hm-tv">' + money(saved) + '</b><small>' + (ids.length ? ids.length + ' mois de budget' : 'C\'est parti !') + '</small></div></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
 }
