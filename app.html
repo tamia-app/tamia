@@ -453,7 +453,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xp-head { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
 .xp-ht > div { display: flex; flex-direction: column; gap: 2px; }
 .xp-tot { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -.04em; line-height: 1.15; }
-.xp-sub { font-size: .82rem; color: var(--muted); } .xp-over { color: #d9574a; font-weight: 700; }
+.xp-sub { font-size: .82rem; color: var(--muted); } .xp-trip { display: flex; align-items: center; gap: 6px; margin-top: 2px; } .xp-trip .ico { width: 15px; height: 15px; color: #f0a432; flex: none; } .xp-over { color: #d9574a; font-weight: 700; }
 .xp-bars { width: 100%; height: 44px; display: block; }
 .xp-tools { display: flex; gap: 8px; }
 .xp-filter, .xp-add { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .88rem; padding: 10px 14px; cursor: pointer; }
@@ -1973,14 +1973,22 @@ const money2 = v => { const r = Math.round((v || 0) * 100) / 100; return Number.
 const isoDay = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 const expOf = id => (months[id] && Array.isArray(months[id].expenses)) ? months[id].expenses : [];
 const SPEND_GROUPS = ["courant", "plaisir", "imprevu", "fixe", "abonnement", "projets"];
+// A trip planned in Voyages for month `id` gets its own spending category that month: its expenses count in « Dépensé »
+// but are paid by the trip savings, so they don't reduce the budget's « reste ».
+const TRIP_G = { id: "voyage", label: "Voyage", color: "#f0a432" };
+const tripEnvs = id => recurring.filter(r => r.trip && r.trip.month === id).map(r => {
+  const x = DEST && DEST.destinations.find(y => y.id === r.trip.dest);
+  return { id: "trip:" + r.id, name: "Voyage · " + (x ? x.name : (r.name || "voyage")), group: "voyage", trip: true, amount: r.trip.budget || 0 };
+});
+const gOfEnv = e => e && e.trip ? TRIP_G : groupOf(e && e.group);
 const spendEnvs = id => ((id === current && work ? work.envelopes : months[id] && months[id].envelopes) || []).filter(e => SPEND_GROUPS.includes(groupOf(e.group).id))
-  .sort((a, b) => SPEND_GROUPS.indexOf(groupOf(a.group).id) - SPEND_GROUPS.indexOf(groupOf(b.group).id));
+  .sort((a, b) => SPEND_GROUPS.indexOf(groupOf(a.group).id) - SPEND_GROUPS.indexOf(groupOf(b.group).id)).concat(tripEnvs(id));
 const ENV_ICONS = [[/courses|supermarch|aliment|epicer|marche|drive/, "bag"], [/livraison|uber eats|deliveroo|fast/, "takeaway"], [/restau|resto|cantine|dejeuner|diner|repas/, "cutlery"], [/cafe|bar|boisson|sortie|apero/, "cup"],
   [/fete|soiree|loisir|plaisir|cinema|concert|jeu|sport/, "party"], [/cadeau|anniv|noel/, "gift"], [/essence|carbur|voiture|auto|parking|peage|garage/, "car"], [/velo|trott/, "bike"], [/transport|navigo|train|metro|bus|taxi|vtc|sncf/, "train"],
   [/loyer|logement|immo|copro|charges/, "home"], [/netflix|spotify|abonnement|disney|prime|canal|youtube|apple|deezer|icloud|streaming/, "loop"], [/electric|edf|engie|eau|gaz|internet|box|telephone|forfait|mobile|facture|assurance|impot|banque|frais/, "receipt"],
   [/sante|pharma|medecin|mutuelle|dentiste|optique/, "pill"], [/voyage|vacances|avion|week/, "plane"], [/meuble|maison|deco|bricol/, "couch"], [/vetement|shopping|habit|chaussure/, "bag"], [/epargne|livret|placement/, "coins"], [/animal|chat|chien|veto/, "sprout"], [/enfant|creche|ecole|nounou/, "family"]];
 const GROUP_ICON = { courant: "bag", plaisir: "party", imprevu: "warning", fixe: "home", abonnement: "loop", projets: "target", epargne: "coins" };
-function envIcon(e) { if (!e) return "receipt"; const n = vnorm(e.name || ""); const hit = ENV_ICONS.find(([re]) => re.test(n)); return hit ? hit[1] : GROUP_ICON[groupOf(e.group).id] || "wallet"; }
+function envIcon(e) { if (!e) return "receipt"; if (e.trip) return "plane"; const n = vnorm(e.name || ""); const hit = ENV_ICONS.find(([re]) => re.test(n)); return hit ? hit[1] : GROUP_ICON[groupOf(e.group).id] || "wallet"; }
 const envLeft = (month, env, skipId, extra) => { const spent = expOf(month).filter(x => x.env === env.id && x.id !== skipId).reduce((a, x) => a + (x.amount || 0), 0); return (env.amount || 0) - spent - (extra || 0); };
 function saveExpenses(id, list) {
   const at = new Date().toISOString();
@@ -2000,29 +2008,35 @@ function expDayLabel(day) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 function expensesView() {
+  if (recurring.some(r => r.trip)) loadDest();
   const id = current, envs = spendEnvs(id), all = expOf(id).slice();
-  const envById = {}; (work.envelopes || []).forEach(e => { envById[e.id] = e; });
-  const gOf = x => envById[x.env] ? groupOf(envById[x.env].group) : null;
+  const envById = {}; (work.envelopes || []).concat(tripEnvs(id)).forEach(e => { envById[e.id] = e; });
+  const gOf = x => envById[x.env] ? gOfEnv(envById[x.env]) : null;
+  const isTrip = x => String(x.env).startsWith("trip:");
   const list = all.filter(x => expFilter === "all" || (gOf(x) && gOf(x).id === expFilter)).sort((a, b) => (b.date + (b.at || "")).localeCompare(a.date + (a.at || "")));
   const total = list.reduce((a, x) => a + (x.amount || 0), 0);
-  const planned = envs.filter(e => expFilter === "all" || groupOf(e.group).id === expFilter).reduce((a, e) => a + (e.amount || 0), 0);
+  const tripSpent = list.filter(isTrip).reduce((a, x) => a + (x.amount || 0), 0), budSpent = total - tripSpent;
+  const planned = envs.filter(e => !e.trip && (expFilter === "all" || groupOf(e.group).id === expFilter)).reduce((a, e) => a + (e.amount || 0), 0);
+  const tripPlan = envs.filter(e => e.trip).reduce((a, e) => a + (e.amount || 0), 0);
   // daily bars
   const [Y, M] = id.split("-").map(Number), nd = new Date(Y, M, 0).getDate(), td = todayDate(), isCur = monthIdOf(td) === id;
   const per = Array(nd).fill(0); list.forEach(x => { const d = +x.date.slice(8, 10); if (d >= 1 && d <= nd) per[d - 1] += x.amount || 0; });
   const mx = Math.max(1, ...per), bw = 100 / nd;
   const bars = '<svg class="xp-bars" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">' + per.map((v, i) => '<rect x="' + (i * bw + bw * .18).toFixed(2) + '" y="' + (30 - Math.max(1.2, v / mx * 28)).toFixed(2) + '" width="' + (bw * .64).toFixed(2) + '" height="' + Math.max(1.2, v / mx * 28).toFixed(2) + '" rx=".6" fill="' + (isCur && i + 1 === td.getDate() ? '#f0a432' : 'var(--xp-bar)') + '"/>').join("") + '</svg>';
-  const groupsWith = GROUPS.filter(g => envs.some(e => groupOf(e.group).id === g.id));
-  const fLabel = expFilter === "all" ? "" : (GROUPS.find(g => g.id === expFilter) || {}).label;
+  const groupsWith = GROUPS.filter(g => envs.some(e => !e.trip && groupOf(e.group).id === g.id)).concat(envs.some(e => e.trip) ? [TRIP_G] : []);
+  const fLabel = expFilter === "all" ? "" : (groupsWith.find(g => g.id === expFilter) || {}).label;
   let html = '<div class="xp">' +
     '<div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">' + (fLabel ? esc(fLabel) + ' · ' : '') + 'Dépensé en ' + esc(monthName(id)) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
-      (planned ? '<span class="xp-sub">sur ' + money2(planned) + ' prévus · ' + (planned - total >= 0 ? 'reste ' + money2(planned - total) : '<span class="xp-over">dépassé de ' + money2(total - planned) + '</span>') + '</span>' : '') + '</div></div>' + bars + '</div>' +
+      (expFilter === "voyage" ? (tripPlan ? '<span class="xp-sub">sur ' + money2(tripPlan) + ' de budget voyage · ' + (tripPlan - total >= 0 ? 'reste ' + money2(tripPlan - total) : '<span class="xp-over">dépassé de ' + money2(total - tripPlan) + '</span>') + '</span>' : '')
+       : planned ? '<span class="xp-sub">sur ' + money2(planned) + ' prévus · ' + (planned - budSpent >= 0 ? 'reste ' + money2(planned - budSpent) : '<span class="xp-over">dépassé de ' + money2(budSpent - planned) + '</span>') + '</span>' : '') +
+      (tripSpent && expFilter !== "voyage" ? '<span class="xp-sub xp-trip">' + ICON("plane") + 'dont ' + money2(tripSpent) + ' pour ton voyage, payés par ton épargne voyage</span>' : '') + '</div></div>' + bars + '</div>' +
     '<div class="xp-tools"><button type="button" class="xp-filter' + (expFilter !== "all" ? ' on' : '') + '" data-act="xp-filter" aria-expanded="' + expFilterOpen + '">' + ICON("sliders") + (fLabel ? esc(fLabel) : 'Filtrer') + '<span class="xs-chev xp-chev">›</span></button>' +
       '<button type="button" class="xp-add" data-act="xp-add">＋ Ajouter une dépense</button></div>' +
     (expFilterOpen ? (() => {
       const spentG = gid => all.filter(x => gOf(x) && (gid === "all" || gOf(x).id === gid)).reduce((a, x) => a + (x.amount || 0), 0);
       const row = (gid, lab, color, ic, sub) => '<button type="button" role="option" aria-selected="' + (expFilter === gid) + '" data-xpf="' + gid + '"' + (expFilter === gid ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + color + '">' + ICON(ic) + '</span><span class="xs-pn"><b>' + esc(lab) + '</b><small>' + esc(sub) + '</small></span><span class="xs-left">' + money2(spentG(gid)) + '</span></button>';
       return '<div class="xs-list xp-flist" role="listbox">' + row("all", "Toutes les dépenses", "var(--muted)", "wallet", all.length + " dépense" + (all.length > 1 ? "s" : "")) +
-        groupsWith.map(g => { const n = all.filter(x => gOf(x) && gOf(x).id === g.id).length; return row(g.id, g.label, g.color, GROUP_ICON[g.id] || "wallet", n + " dépense" + (n > 1 ? "s" : "")); }).join("") + '</div>';
+        groupsWith.map(g => { const n = all.filter(x => gOf(x) && gOf(x).id === g.id).length; return row(g.id, g.label, g.color, g.id === "voyage" ? "plane" : GROUP_ICON[g.id] || "wallet", n + " dépense" + (n > 1 ? "s" : "")); }).join("") + '</div>';
     })() : '');
   if (!list.length) html += '<div class="card xp-empty"><b>' + (all.length ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense pour l\'instant.') + '</b><span>Ajoute tes dépenses au fil du mois pour voir ce qu\'il reste dans chaque enveloppe.</span></div>';
   const days = []; list.forEach(x => { const last = days[days.length - 1]; if (last && last.d === x.date) last.items.push(x); else days.push({ d: x.date, items: [x] }); });
@@ -2050,13 +2064,13 @@ function renderExpSheet() {
   document.body.classList.add("xs-open");
   const S = expSheet, envs = spendEnvs(S.month), [Y, M] = S.month.split("-").map(Number), cur = envs.find(x => x.id === S.env);
   const amt = parse(S.amount), left = cur ? envLeft(S.month, cur, S.id, amt) : null;
-  const pick = cur ? '<span class="xs-pi" style="--c:' + groupOf(cur.group).color + '">' + ICON(envIcon(cur)) + '</span><span class="xs-pn"><b>' + esc(cur.name || "Sans nom") + '</b><small>' + esc(groupOf(cur.group).label) + ' · reste ' + money2(envLeft(S.month, cur, S.id, 0)) + '</small></span>' : '<span class="xs-pn"><b>Choisir une enveloppe</b></span>';
+  const pick = cur ? '<span class="xs-pi" style="--c:' + gOfEnv(cur).color + '">' + ICON(envIcon(cur)) + '</span><span class="xs-pn"><b>' + esc(cur.name || "Sans nom") + '</b><small>' + esc(gOfEnv(cur).label) + ' · reste ' + money2(envLeft(S.month, cur, S.id, 0)) + '</small></span>' : '<span class="xs-pn"><b>Choisir une enveloppe</b></span>';
   ov.innerHTML = '<div class="xs" role="dialog" aria-modal="true" aria-label="' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '"><span class="xs-grab"></span>' +
     '<button type="button" class="xs-x" data-xs="close" aria-label="Fermer">×</button>' +
     '<span class="xs-title">' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '</span>' +
     '<label class="xs-amt" for="xsAmt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(S.amount) + '"><span>€</span></label>' +
     (envs.length ? '<button type="button" class="xs-pick' + (S.pickOpen ? ' open' : '') + '" data-xs="pick" aria-expanded="' + !!S.pickOpen + '">' + pick + '<span class="xs-chev">›</span></button>' +
-      (S.pickOpen ? '<div class="xs-list" role="listbox">' + envs.map(e => '<button type="button" role="option" aria-selected="' + (S.env === e.id) + '" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + groupOf(e.group).color + '">' + ICON(envIcon(e)) + '</span><span class="xs-pn"><b>' + esc(e.name || "Sans nom") + '</b><small>' + esc(groupOf(e.group).label) + '</small></span><span class="xs-left">reste ' + money2(envLeft(S.month, e, S.id, 0)) + '</span></button>').join("") + '</div>' : '')
+      (S.pickOpen ? '<div class="xs-list" role="listbox">' + envs.map(e => '<button type="button" role="option" aria-selected="' + (S.env === e.id) + '" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + gOfEnv(e).color + '">' + ICON(envIcon(e)) + '</span><span class="xs-pn"><b>' + esc(e.name || "Sans nom") + '</b><small>' + esc(gOfEnv(e).label) + '</small></span><span class="xs-left">reste ' + money2(envLeft(S.month, e, S.id, 0)) + '</span></button>').join("") + '</div>' : '')
       : '<p class="xs-warn">Ajoute d\'abord des enveloppes à ton budget de ' + esc(monthName(S.month)) + '.</p>') +
     '<div class="xs-row"><input id="xsNote" maxlength="60" placeholder="Note (facultatif) · ex. Boulangerie" value="' + esc(S.note) + '"><input id="xsDate" type="date" aria-label="Date" min="' + S.month + '-01" max="' + S.month + '-' + pad2(new Date(Y, M, 0).getDate()) + '" value="' + esc(S.date) + '"></div>' +
     '<button type="button" class="xs-save" data-xs="save"' + (amt > 0 && S.env ? '' : ' disabled') + '>' + (S.isNew ? 'Ajouter' : 'Enregistrer') + (left !== null && amt > 0 ? ' · ' + (left >= 0 ? (cur.name || "l'enveloppe") + ' : reste ' + money2(left) : 'dépasse de ' + money2(-left)) : '') + '</button>' +
@@ -2908,7 +2922,7 @@ function loadDest() {
   if (DEST || loadDest.p) return;
   loadDest.p = fetch("data/destinations.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw 0; return r.json(); })
     .then(d => { DEST = d; }).catch(() => { destErr = true; loadDest.p = null; })
-    .finally(() => { if (page === "voyages" || page === "accueil") render(); });
+    .finally(() => { if (page === "voyages" || page === "accueil" || (page === "finances" && finTab === "depenses")) render(); if (expSheet) renderExpSheet(); });
   fetch("voyages-map.svg").then(r => r.text()).then(t => { const m = t.match(/ d="([^"]+)"/); MAPD = m ? m[1] : ""; voyMapView(); }).catch(() => {});
 }
 const vnorm = x => String(x).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
