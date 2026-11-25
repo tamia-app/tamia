@@ -991,6 +991,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .rep-btn[hidden] { display: none; }
 .rep-btn { margin-left: auto; }
 @media (max-width: 480px) { .subnav .right { width: 100%; } }
+body[data-page="rapports"] #monthBar { justify-content: flex-start; margin-left: 0; }
 .rep-btn svg { width: 19px; height: 19px; }
 .rep-btn:hover { border-color: var(--ink); }
 .hm-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -2061,9 +2062,9 @@ function reportsView() {
   let hero = '', cmpPrev = '', byBank = '', france = '';
   hero += '<div class="card rp-hero"><span class="hm-lbl2">Mis de côté depuis janvier</span><b class="rp-big">' + money(acc) + '</b>' +
     '<span class="rp-sub">dont <b>' + money(t.by.epargne) + '</b> en ' + esc(mn) + ' · ' + pctOf(t.by.epargne, t.income) + ' de ta paye</span>' +
-    '<svg class="rp-line" viewBox="0 0 ' + W + ' ' + Hh + '" aria-hidden="true"><defs><linearGradient id="rpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a432" stop-opacity=".32"/><stop offset="1" stop-color="#f0a432" stop-opacity="0"/></linearGradient></defs>' + area +
+    (n < 2 ? '<span class="rp-sub" style="margin-top:10px">La courbe apparaîtra dès ton deuxième mois de budget.</span>' : '<svg class="rp-line" viewBox="0 0 ' + W + ' ' + Hh + '" aria-hidden="true"><defs><linearGradient id="rpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a432" stop-opacity=".32"/><stop offset="1" stop-color="#f0a432" stop-opacity="0"/></linearGradient></defs>' + area +
     (n > 1 ? '<polyline points="' + line + '" fill="none" stroke="#f0a432" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>' : '') + '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="5" fill="#f0a432"/></svg>' +
-    '<div class="rp-axis">' + yIds.map(id => '<span>' + esc(label(id, true).replace(".", "").toLowerCase()) + '</span>').join("") + '</div></div>';
+    '<div class="rp-axis">' + yIds.map(id => '<span>' + esc(label(id, true).replace(".", "").toLowerCase()) + '</span>').join("") + '</div>') + '</div>';
   // 2. vs previous month
   const pv = shiftMonth(current, -1);
   if (hasBudget(pv)) {
@@ -2090,7 +2091,7 @@ function reportsView() {
     const scale = Math.max(30, mine, avg), wMe = Math.max(2, mine / scale * 100), wFr = Math.max(2, avg / scale * 100);
     const lo = FR_SAVE.indexOf(q) === 0 ? 0 : FR_SAVE[FR_SAVE.indexOf(q) - 1].max, hi = q.max;
     const range = hi === Infinity ? "de plus de " + eur0.format(lo) : lo ? "entre " + eur0.format(lo) + " et " + eur0.format(hi) : "de moins de " + eur0.format(hi);
-    const verdict = avg <= 0 ? (mine > 0 ? "Bravo : dans ta tranche, la plupart des ménages n'arrivent pas à épargner." : "Dans ta tranche, la plupart des ménages n'arrivent pas à épargner.")
+    const verdict = avg <= 0 ? (mine > 0 ? "Bravo : en moyenne, les ménages de ta tranche n'arrivent pas à mettre de côté. Toi, si." : "En moyenne, les ménages de ta tranche n'arrivent pas à mettre de côté.")
       : mine >= avg * 1.5 ? "Tu épargnes " + (Math.round(mine / avg * 10) / 10).toString().replace(".", ",") + " fois plus que la moyenne de ta tranche." : mine >= avg ? "Tu épargnes un peu plus que la moyenne de ta tranche." : "Tu épargnes un peu moins que la moyenne de ta tranche.";
     france += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' +
       '<div class="rp-cmp"><span>Toi</span><div class="bar"><i style="width:' + wMe + '%;background:#f0a432"></i></div><b>' + mine + ' %</b></div>' +
