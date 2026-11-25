@@ -469,6 +469,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .rp-cmp { display: grid; grid-template-columns: 70px minmax(0, 1fr) 52px; gap: 10px; align-items: center; font-size: .84rem; padding: 4px 0; }
 .rp-cmp b { text-align: right; font-family: var(--font-display); }
 .rp-cmp .bar { height: 8px; border-radius: 9px; background: var(--sunk); overflow: hidden; } .rp-cmp .bar i { display: block; height: 100%; border-radius: 9px; }
+.rp-ring { display: flex; align-items: center; gap: 14px; font-size: .88rem; color: var(--muted); }
+.rp-ring svg { width: 64px; height: 64px; flex: none; } .rp-ring b { color: var(--ink); font-family: var(--font-display); }
+.rp-subs { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 2px 0 4px; } .rp-subs span { font-size: .84rem; color: var(--muted); }
+.rp-big2 { font-family: var(--font-display); font-weight: 800; font-size: 1.7rem; letter-spacing: -.035em; }
+.rp-li3 { grid-template-columns: minmax(0, 1fr) auto 84px; }
 .rp-src { margin-top: 8px; font-size: .72rem; color: var(--muted); line-height: 1.4; }
 .reports.rp .chartwrap svg { min-width: 0; }
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -2085,20 +2090,48 @@ function reportsView() {
       cols.map(b => { const k = env.filter(e => (bl.some(x => x.id === e.bank) ? e.bank : "none") === b.id).length;
         return '<div class="rp-li"><span class="sw" style="background:' + b.color + ';border-radius:50%"></span><span class="rp-n">' + esc(b.name) + '<small>' + k + ' enveloppe' + (k > 1 ? 's' : '') + '</small></span><b>' + money(t.bank[b.id]) + '</b><span class="rp-d">' + pctOf(t.bank[b.id], t.total) + '</span></div>'; }).join("") + '</div>';
   }
-  // 4. vs France, same income bracket (Insee 2022)
+  // 4. vs France — always pick the most flattering TRUE comparison, most recent source first:
+  //  A. national saving rate 2025 (Insee, 17,9 % du RDB) · B. same income bracket (Insee 2022, latest by bracket)
+  //  C. regular savers (AMF 2025 : 36 % épargnent régulièrement, 82 % au moins de temps en temps) · D. nothing saved: encouragement
   if (t.income > 0) {
-    const q = FR_SAVE.find(x => t.income < x.max), mine = Math.round(t.by.epargne / t.income * 100), avg = q.rate;
-    const scale = Math.max(30, mine, avg), wMe = Math.max(2, mine / scale * 100), wFr = Math.max(2, avg / scale * 100);
-    const lo = FR_SAVE.indexOf(q) === 0 ? 0 : FR_SAVE[FR_SAVE.indexOf(q) - 1].max, hi = q.max;
+    const e = t.by.epargne, mine = Math.round(e / t.income * 100);
+    const q = FR_SAVE.find(x => t.income < x.max), qi = FR_SAVE.indexOf(q);
+    const lo = qi === 0 ? 0 : FR_SAVE[qi - 1].max, hi = q.max;
     const range = hi === Infinity ? "de plus de " + eur0.format(lo) : lo ? "entre " + eur0.format(lo) + " et " + eur0.format(hi) : "de moins de " + eur0.format(hi);
-    const verdict = avg <= 0 ? (mine > 0 ? "Bravo : en moyenne, les ménages de ta tranche n'arrivent pas à mettre de côté. Toi, si." : "En moyenne, les ménages de ta tranche n'arrivent pas à mettre de côté.")
-      : mine >= avg * 1.5 ? "Tu épargnes " + (Math.round(mine / avg * 10) / 10).toString().replace(".", ",") + " fois plus que la moyenne de ta tranche." : mine >= avg ? "Tu épargnes un peu plus que la moyenne de ta tranche." : "Tu épargnes un peu moins que la moyenne de ta tranche.";
-    france += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' +
-      '<div class="rp-cmp"><span>Toi</span><div class="bar"><i style="width:' + wMe + '%;background:#f0a432"></i></div><b>' + mine + ' %</b></div>' +
-      '<div class="rp-cmp"><span>Moyenne</span><div class="bar"><i style="width:' + wFr + '%;background:var(--muted)"></i></div><b>' + (avg <= 0 ? "≈ 0 %" : avg + " %") + '</b></div>' +
-      '<small class="rp-src">Part du revenu mise de côté, ménages avec un revenu ' + esc(range) + ' par mois et par personne. Source : Insee, 2022. Comparaison indicative.</small></div>';
+    const pvE = hasBudget(pv) ? totals(months[pv]).by.epargne : 0;
+    const bars = (ref, lab) => { const sc = Math.max(30, mine, ref); return '<div class="rp-cmp"><span>Toi</span><div class="bar"><i style="width:' + Math.max(2, mine / sc * 100) + '%;background:#f0a432"></i></div><b>' + mine + ' %</b></div>' +
+      '<div class="rp-cmp"><span>' + lab + '</span><div class="bar"><i style="width:' + Math.max(2, ref / sc * 100) + '%;background:var(--muted)"></i></div><b>' + (ref <= 0 ? "≈ 0 %" : ref + " %") + '</b></div>'; };
+    const times = (a, b) => (Math.round(a / b * 10) / 10).toString().replace(".", ",");
+    let verdict, body, src;
+    if (mine >= 18) {
+      verdict = mine >= 27 ? "Tu épargnes " + times(mine, 18) + " fois plus que la moyenne des Français." : "Tu épargnes plus que la moyenne des Français.";
+      body = bars(18, "France"); src = "Part du revenu mise de côté. Moyenne nationale en 2025 : 17,9\u00a0%. Source : Insee.";
+    } else if (e > 0 && mine > q.rate) {
+      verdict = q.rate <= 0 ? "Bravo : en moyenne, les ménages de ta tranche n'arrivent pas à mettre de côté. Toi, si." : mine >= q.rate * 1.5 ? "Tu épargnes " + times(mine, q.rate) + " fois plus que la moyenne de ta tranche de revenus." : "Tu épargnes plus que la moyenne de ta tranche de revenus.";
+      body = bars(q.rate, "Ta tranche"); src = "Ménages avec un revenu " + range + " par mois et par personne. Source : Insee (dernières données par tranche : 2022). Comparaison indicative.";
+    } else if (e > 0) {
+      verdict = pvE > 0 ? "Tu mets de côté chaque mois, comme seulement 36 % des Français." : "Tu fais partie des Français qui arrivent à mettre de l'argent de côté.";
+      body = '<div class="rp-ring"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--sunk)" stroke-width="4"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="#f0a432" stroke-width="4" stroke-dasharray="' + (pvE > 0 ? 36 : 82) + ' 100" transform="rotate(-90 18 18)"/></svg><span><b>' + (pvE > 0 ? "36 %" : "82 %") + '</b> des Français ' + (pvE > 0 ? "épargnent régulièrement" : "mettent de côté, au moins de temps en temps") + '</span></div>';
+      src = "Source : baromètre AMF de l'épargne 2025 (2 120 personnes, sept.-oct. 2025).";
+    } else {
+      verdict = "Rien de côté ce mois-ci ? Même 20 € par mois, c'est un vrai début.";
+      body = '<div class="rp-ring"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--sunk)" stroke-width="4"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="#f0a432" stroke-width="4" stroke-dasharray="46 100" transform="rotate(-90 18 18)"/></svg><span><b>46 %</b> des Français épargnent seulement de temps en temps : chaque petit montant compte.</span></div>';
+      src = "Source : baromètre AMF de l'épargne 2025 (2 120 personnes, sept.-oct. 2025).";
+    }
+    france += '<div class="card rp-card"><span class="hm-lbl2">Toi et les Français</span><p class="rp-v">' + esc(verdict) + '</p>' + body + '<small class="rp-src">' + esc(src) + '</small></div>';
   }
-  return html + france + hero + byBank + cmpPrev + '</div>';
+  // 5. subscriptions over a year
+  let subs = "";
+  {
+    const list = (m.envelopes || []).filter(x => groupOf(x.group).id === "abonnement" && x.amount > 0).sort((x, y) => y.amount - x.amount);
+    const mo = list.reduce((a, x) => a + x.amount, 0);
+    subs = '<div class="card rp-card"><span class="hm-lbl2">Tes abonnements sur l\'année</span>' + (list.length
+      ? '<div class="rp-subs"><b class="rp-big2">' + money(mo * 12) + '</b><span>par an · ' + money(mo) + ' par mois</span></div>' +
+        list.slice(0, 5).map(x => '<div class="rp-li rp-li3"><span class="rp-n">' + esc(x.name || "Sans nom") + '</span><b>' + money(x.amount * 12) + '</b><span class="rp-d">' + money(x.amount) + '/mois</span></div>').join("") +
+        (t.by.epargne > 0 ? '<small class="rp-src">Soit ' + pctOf(mo, t.by.epargne) + ' de ce que tu mets de côté chaque mois.</small>' : '')
+      : '<p class="rp-v" style="margin-bottom:0">Aucun abonnement ce mois-ci : 0 € qui part en douce. 👏</p>') + '</div>';
+  }
+  return html + france + hero + byBank + cmpPrev + subs + '</div>';
 }
 function kpi(lbl, val, sub) {
   return '<div class="kpi"><span class="eyebrow">' + esc(lbl) + '</span><span class="val num">' + val + '</span><span class="sub">' + sub + '</span></div>';
