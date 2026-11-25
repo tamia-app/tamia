@@ -964,7 +964,7 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .tb-gh { display: flex; align-items: center; gap: 10px; padding: 2px 0 6px; } .tb-gh .sw { width: 12px; height: 12px; border-radius: 4px; } .tb-gh b { flex: 1; font-family: var(--font-display); font-size: 1.02rem; } .tb-gh span { font-family: var(--font-display); font-weight: 700; }
 .tb-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border: none; border-top: 1px solid rgba(255,255,255,.1); background: none; color: inherit; font: inherit; text-align: left; width: 100%; cursor: pointer; }
 .tb-nm { display: flex; flex-direction: column; min-width: 0; } .tb-nm b { font-weight: 600; font-size: .93rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .tb-nm small { font-size: .72rem; color: var(--muted); }
-.tb-am { font-family: var(--font-display); font-weight: 700; } .tb-am.z { color: var(--muted); }
+.tb-va { font-family: var(--font-display); font-weight: 700; } .tb-va.z { color: var(--muted); }
 .tb-name { background: none; border: none; color: #f2f2ef; font: inherit; font-weight: 600; font-size: .92rem; min-width: 0; outline: none; padding: 4px 0; }
 .tb-name::placeholder, .tb-in input::placeholder { color: rgba(242,242,239,.35); }
 .tb-x { border: none; background: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 0; }
@@ -3137,7 +3137,7 @@ function tripBudgetView() {
       '<div class="tb-save">' + save + '</div></div>' +
     TCATS.map(c => { const L = env.filter(e => e.cat === c.id);
       return '<div class="vg tb-grp"><div class="tb-gh"><i class="sw" style="background:' + c.color + '"></i><b>' + esc(c.label) + '</b><span data-tbc="' + c.id + '">' + vnum(L.reduce((a, e) => a + (e.amount || 0), 0)) + ' €</span></div>' +
-        L.map(e => '<button type="button" class="tb-row" data-voy="topen" data-eid="' + esc(e.id) + '"><span class="xp-ic" style="--c:' + c.color + '">' + ICON(tripEnvIc(e)) + '</span><span class="tb-nm"><b>' + esc(e.name || c.label) + '</b><small>' + esc(c.label) + '</small></span><span class="tb-am' + (e.amount ? '' : ' z') + '">' + vnum(e.amount || 0) + ' €</span></button>').join("") +
+        L.map(e => '<button type="button" class="tb-row" data-voy="topen" data-eid="' + esc(e.id) + '"><span class="xp-ic" style="--c:' + c.color + '">' + ICON(tripEnvIc(e)) + '</span><span class="tb-nm"><b>' + esc(e.name || c.label) + '</b><small>' + esc(c.label) + '</small></span><span class="tb-va' + (e.amount ? '' : ' z') + '">' + vnum(e.amount || 0) + ' €</span></button>').join("") +
         '<button type="button" class="tb-add" data-voy="tadd" data-cat="' + c.id + '">＋ Ajouter une enveloppe</button></div>'; }).join("") +
     '<p class="v-sub">Le mois du départ, une catégorie « ' + esc(x.name) + ' » apparaîtra dans tes dépenses pour suivre le voyage.</p></div>';
 }
