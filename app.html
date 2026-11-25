@@ -447,6 +447,49 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (max-width: 860px) { .reports { grid-template-columns: minmax(0, 1fr); } }
 .panel { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .panel h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0; letter-spacing: -0.01em; }
+.fin-seg { margin-bottom: 12px; }
+.xp { display: flex; flex-direction: column; gap: 10px; --xp-bar: #d8d5ce; }
+:root[data-theme="dark"] .xp { --xp-bar: #3a3a37; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .xp { --xp-bar: #3a3a37; } }
+.xp-head { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.xp-ht > div { display: flex; flex-direction: column; gap: 2px; }
+.xp-tot { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -.04em; line-height: 1.15; }
+.xp-sub { font-size: .82rem; color: var(--muted); } .xp-over { color: #d9574a; font-weight: 700; }
+.xp-bars { width: 100%; height: 44px; display: block; }
+.xp-tools { display: flex; gap: 8px; }
+.xp-filter, .xp-add { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .88rem; padding: 10px 14px; cursor: pointer; }
+.xp-filter { border: 1px solid var(--line); background: var(--surface); color: var(--ink); } .xp-filter .ico { width: 16px; height: 16px; } .xp-filter.on { border-color: #f0a432; }
+.xp-add { flex: 1; justify-content: center; border: none; background: #f0a432; color: #121212; font-weight: 800; }
+.xp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.xp-chips button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 12px; font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
+.xp-chips button.on { border-color: #f0a432; background: rgba(240,164,50,.12); } .xp-chips .sw, .xs-envs .sw { width: 9px; height: 9px; border-radius: 3px; }
+.xp-day { padding: 6px 4px 0; }
+.xp-list { padding: 2px 14px; }
+.xp-it { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; background: none; border: none; border-top: 1px solid var(--line); padding: 11px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.xp-it:first-child { border-top: none; }
+.xp-dot { width: 10px; height: 10px; border-radius: 50%; }
+.xp-n { display: flex; flex-direction: column; min-width: 0; } .xp-n b { font-weight: 700; font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .xp-n small { font-size: .74rem; color: var(--muted); }
+.xp-a { font-family: var(--font-display); font-weight: 700; font-size: .95rem; }
+.xp-empty { padding: 18px; display: flex; flex-direction: column; gap: 4px; } .xp-empty span { font-size: .86rem; color: var(--muted); }
+.hm-add { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 13px 16px; font: inherit; font-weight: 800; font-size: .95rem; cursor: pointer; }
+.xs-ov { position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; }
+.xs { width: 100%; max-width: 560px; background: var(--surface); color: var(--ink); border-radius: 26px 26px 0 0; border: 1px solid var(--line); border-bottom: none; padding: 10px 18px calc(18px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; max-height: 92vh; overflow-y: auto; }
+.xs-grab { width: 40px; height: 5px; border-radius: 9px; background: var(--line); align-self: center; }
+.xs-top { display: flex; align-items: center; justify-content: space-between; } .xs-top .hm-lbl2 { margin: 0; }
+.xs-x { border: none; background: var(--sunk); color: var(--ink); width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
+.xs-amt { display: flex; align-items: baseline; justify-content: center; gap: 6px; }
+.xs-amt input { width: 7ch; border: none; background: none; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 3rem; letter-spacing: -.04em; text-align: right; outline: none; padding: 0; }
+.xs-amt span { font-family: var(--font-display); font-weight: 800; font-size: 1.8rem; color: var(--muted); }
+.xs-envs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.xs-envs button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 8px 12px; font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer; }
+.xs-envs button.on { border-color: #f0a432; color: #c97f12; background: rgba(240,164,50,.12); }
+:root[data-theme="dark"] .xs-envs button.on { color: #f0a432; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .xs-envs button.on { color: #f0a432; } }
+.xs-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.xs-row input { border: 1px solid var(--line); background: var(--sunk); color: var(--ink); border-radius: 12px; padding: 11px 12px; font: inherit; font-size: .92rem; min-width: 0; }
+.xs-save { border: none; border-radius: 99px; background: #f0a432; color: #121212; font: inherit; font-weight: 800; font-size: .98rem; padding: 14px; cursor: pointer; }
+.xs-save:disabled { opacity: .45; cursor: default; }
+.xs-del { border: none; background: none; color: #d9574a; font: inherit; font-weight: 700; padding: 4px; cursor: pointer; }
+.xs-warn { margin: 0; text-align: center; font-size: .88rem; color: var(--muted); }
+body.xs-open { overflow: hidden; }
 .rp { gap: 12px; }
 .rp-seg { grid-column: 1 / -1; display: flex; background: var(--sunk); border-radius: 99px; padding: 3px; }
 .rp-seg button { flex: 1; border: none; background: none; font: inherit; font-weight: 700; font-size: .86rem; color: var(--muted); padding: 8px 0; border-radius: 99px; cursor: pointer; }
@@ -1399,7 +1442,7 @@ const monthId = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2
 const isMonthId = s => /^\d{4}-\d{2}$/.test(s);
 const shift = (id, n) => { const [y, m] = id.split("-").map(Number); return monthId(new Date(y, m - 1 + n, 1)); };
 const label = (id, short) => { const [y, m] = id.split("-").map(Number); const s = new Date(y, m - 1, 1).toLocaleDateString("fr-FR", short ? { month: "short" } : { month: "long", year: "numeric" }); return s.charAt(0).toUpperCase() + s.slice(1); };
-const core = d => d ? JSON.stringify({ i: d.income || 0, e: d.envelopes || [], n: d.note || "", v: !!d.validated }) : "";
+const core = d => d ? JSON.stringify({ i: d.income || 0, e: d.envelopes || [], n: d.note || "", v: !!d.validated, x: d.expenses || [] }) : "";
 const CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>';
 const groupOf = id => GROUPS.find(g => g.id === id) || GROUPS[GROUPS.length - 1];
 const bankColor = i => "var(--b" + ((i % 6) + 1) + ")";
@@ -1735,7 +1778,8 @@ function render() {
   if (page === "rapports") { mainEl.innerHTML = reportsView(); return; }
   if (!work && wiz) { mainEl.innerHTML = wizView(); return; }
   if (!work) { mainEl.innerHTML = createView(); sizeInput($("#newIncome")); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => sizeInput($("#newIncome"))); return; }
-  mainEl.innerHTML = financesView();
+  if (finTab === "depenses") { mainEl.innerHTML = finTabsHtml() + expensesView(); return; }
+  mainEl.innerHTML = finTabsHtml() + financesView();
   if (work.validated) {
     mainEl.querySelectorAll("input, textarea").forEach(el => { el.readOnly = true; });
     mainEl.querySelectorAll("select, .bank button").forEach(el => { el.disabled = true; });
@@ -1905,6 +1949,112 @@ function wizGo(delta) {
   if (w) { w.classList.add("fresh"); w.addEventListener("pointermove", () => w.classList.remove("fresh"), { once: true }); }
   window.scrollTo(0, 0);
 }
+
+/* ---------- Dépenses: journal of real expenses, per month (months[id].expenses) ---------- */
+let finTab = "budgets", expFilter = "all", expFilterOpen = false, expSheet = null;
+const pad2 = n => String(n).padStart(2, "0");
+const eur2 = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const money2 = v => { const r = Math.round((v || 0) * 100) / 100; return Number.isInteger(r) ? money(r) : eur2.format(r); };
+const isoDay = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+const expOf = id => (months[id] && Array.isArray(months[id].expenses)) ? months[id].expenses : [];
+const SPEND_GROUPS = ["courant", "plaisir", "imprevu", "fixe", "abonnement", "projets"];
+const spendEnvs = id => ((id === current && work ? work.envelopes : months[id] && months[id].envelopes) || []).filter(e => SPEND_GROUPS.includes(groupOf(e.group).id))
+  .sort((a, b) => SPEND_GROUPS.indexOf(groupOf(a.group).id) - SPEND_GROUPS.indexOf(groupOf(b.group).id));
+function saveExpenses(id, list) {
+  const at = new Date().toISOString();
+  months[id] = Object.assign({}, months[id], { expenses: list, updatedAt: at });
+  if (id === current && work) work.expenses = clone(list);
+  setDoc(doc(monthsCol(), id), { expenses: list, updatedAt: at }, { merge: true }).then(() => setSync("Enregistré"))
+    .catch(err => notice("La dépense n'a pas pu être enregistrée (" + (err && err.code) + "). Vérifie ta connexion internet."));
+}
+function finTabsHtml() {
+  return '<div class="rp-seg fin-seg" role="tablist">' + [["budgets", "Budgets"], ["depenses", "Dépenses"]].map(([k, l]) =>
+    '<button type="button" role="tab" aria-selected="' + (finTab === k) + '" data-fintab="' + k + '"' + (finTab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
+}
+function expDayLabel(day) {
+  const t = isoDay(todayDate()), y = isoDay(new Date(todayDate().getTime() - 864e5));
+  if (day === t) return "Aujourd'hui"; if (day === y) return "Hier";
+  const [Y, M, D] = day.split("-").map(Number), s = new Date(Y, M - 1, D).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "short" }).replace(".", "");
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function expensesView() {
+  const id = current, envs = spendEnvs(id), all = expOf(id).slice();
+  const envById = {}; (work.envelopes || []).forEach(e => { envById[e.id] = e; });
+  const gOf = x => envById[x.env] ? groupOf(envById[x.env].group) : null;
+  const list = all.filter(x => expFilter === "all" || (gOf(x) && gOf(x).id === expFilter)).sort((a, b) => (b.date + (b.at || "")).localeCompare(a.date + (a.at || "")));
+  const total = list.reduce((a, x) => a + (x.amount || 0), 0);
+  const planned = envs.filter(e => expFilter === "all" || groupOf(e.group).id === expFilter).reduce((a, e) => a + (e.amount || 0), 0);
+  // daily bars
+  const [Y, M] = id.split("-").map(Number), nd = new Date(Y, M, 0).getDate(), td = todayDate(), isCur = monthIdOf(td) === id;
+  const per = Array(nd).fill(0); list.forEach(x => { const d = +x.date.slice(8, 10); if (d >= 1 && d <= nd) per[d - 1] += x.amount || 0; });
+  const mx = Math.max(1, ...per), bw = 100 / nd;
+  const bars = '<svg class="xp-bars" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">' + per.map((v, i) => '<rect x="' + (i * bw + bw * .18).toFixed(2) + '" y="' + (30 - Math.max(1.2, v / mx * 28)).toFixed(2) + '" width="' + (bw * .64).toFixed(2) + '" height="' + Math.max(1.2, v / mx * 28).toFixed(2) + '" rx=".6" fill="' + (isCur && i + 1 === td.getDate() ? '#f0a432' : 'var(--xp-bar)') + '"/>').join("") + '</svg>';
+  const groupsWith = GROUPS.filter(g => envs.some(e => groupOf(e.group).id === g.id));
+  const fLabel = expFilter === "all" ? "" : (GROUPS.find(g => g.id === expFilter) || {}).label;
+  let html = '<div class="xp">' +
+    '<div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">' + (fLabel ? esc(fLabel) + ' · ' : '') + 'Dépensé en ' + esc(monthName(id)) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
+      (planned ? '<span class="xp-sub">sur ' + money2(planned) + ' prévus · ' + (planned - total >= 0 ? 'reste ' + money2(planned - total) : '<span class="xp-over">dépassé de ' + money2(total - planned) + '</span>') + '</span>' : '') + '</div></div>' + bars + '</div>' +
+    '<div class="xp-tools"><button type="button" class="xp-filter' + (expFilter !== "all" ? ' on' : '') + '" data-act="xp-filter" aria-expanded="' + expFilterOpen + '">' + ICON("sliders") + (fLabel ? esc(fLabel) : 'Filtrer') + '</button>' +
+      '<button type="button" class="xp-add" data-act="xp-add">＋ Ajouter une dépense</button></div>' +
+    (expFilterOpen ? '<div class="xp-chips"><button type="button" data-xpf="all"' + (expFilter === "all" ? ' class="on"' : '') + '>Tout</button>' + groupsWith.map(g => '<button type="button" data-xpf="' + g.id + '"' + (expFilter === g.id ? ' class="on"' : '') + '><i class="sw" style="background:' + g.color + '"></i>' + esc(g.label) + '</button>').join("") + '</div>' : '');
+  if (!list.length) html += '<div class="card xp-empty"><b>' + (all.length ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense pour l\'instant.') + '</b><span>Ajoute tes dépenses au fil du mois pour voir ce qu\'il reste dans chaque enveloppe.</span></div>';
+  const days = []; list.forEach(x => { const last = days[days.length - 1]; if (last && last.d === x.date) last.items.push(x); else days.push({ d: x.date, items: [x] }); });
+  days.forEach(g => {
+    const st = g.items.reduce((a, x) => a + (x.amount || 0), 0);
+    html += '<div class="xp-day"><span class="hm-lbl2">' + esc(expDayLabel(g.d)) + ' · ' + money2(st) + '</span></div><div class="card xp-list">' + g.items.map(x => {
+      const e = envById[x.env], gg = gOf(x);
+      return '<button type="button" class="xp-it" data-act="xp-edit" data-xid="' + esc(x.id) + '"><span class="xp-dot" style="background:' + (gg ? gg.color : 'var(--line)') + '"></span><span class="xp-n"><b>' + esc(x.note || (e ? e.name : "Dépense")) + '</b><small>' + esc(e ? (x.note ? e.name + ' · ' : '') + (gg ? gg.label : '') : 'Enveloppe supprimée') + '</small></span><span class="xp-a num">− ' + money2(x.amount) + '</span></button>';
+    }).join("") + '</div>';
+  });
+  return html + '</div>';
+}
+function openExpSheet(month, x) {
+  const td = todayDate(), def = monthIdOf(td) === month ? isoDay(td) : month + "-01";
+  const envs = spendEnvs(month);
+  expSheet = x ? { month, id: x.id, isNew: false, amount: String(x.amount).replace(".", ","), env: x.env, note: x.note || "", date: x.date }
+    : { month, id: uid(), isNew: true, amount: "", env: (envs[0] || {}).id || "", note: "", date: def };
+  renderExpSheet();
+  setTimeout(() => { const a = $("#xsAmt"); if (a) a.focus(); }, 60);
+}
+function renderExpSheet() {
+  let ov = $("#xsOv");
+  if (!expSheet) { if (ov) ov.remove(); document.body.classList.remove("xs-open"); return; }
+  if (!ov) { ov = document.createElement("div"); ov.id = "xsOv"; ov.className = "xs-ov"; document.body.appendChild(ov); ov.addEventListener("click", expSheetClick); ov.addEventListener("input", expSheetInput); }
+  document.body.classList.add("xs-open");
+  const S = expSheet, envs = spendEnvs(S.month), [Y, M] = S.month.split("-").map(Number);
+  const left = S.env ? (() => { const e = envs.find(x => x.id === S.env); if (!e) return null; const spent = expOf(S.month).filter(x => x.env === S.env && x.id !== S.id).reduce((a, x) => a + (x.amount || 0), 0); return e.amount - spent - parse(S.amount); })() : null;
+  ov.innerHTML = '<div class="xs" role="dialog" aria-modal="true" aria-label="' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + '"><span class="xs-grab"></span>' +
+    '<div class="xs-top"><span class="hm-lbl2">' + (S.isNew ? 'Nouvelle dépense' : 'Modifier la dépense') + ' · ' + esc(monthName(S.month)) + '</span><button type="button" class="xs-x" data-xs="close" aria-label="Fermer">×</button></div>' +
+    '<label class="xs-amt"><input id="xsAmt" inputmode="decimal" autocomplete="off" placeholder="0" value="' + esc(S.amount) + '"><span>€</span></label>' +
+    (envs.length ? '<div class="xs-envs">' + envs.map(e => '<button type="button" data-xenv="' + esc(e.id) + '"' + (S.env === e.id ? ' class="on"' : '') + '><i class="sw" style="background:' + groupOf(e.group).color + '"></i>' + esc(e.name || "Sans nom") + '</button>').join("") + '</div>'
+      : '<p class="xs-warn">Ajoute d\'abord des enveloppes à ton budget de ' + esc(monthName(S.month)) + '.</p>') +
+    '<div class="xs-row"><input id="xsNote" maxlength="60" placeholder="Note (facultatif) · ex. Boulangerie" value="' + esc(S.note) + '"><input id="xsDate" type="date" min="' + S.month + '-01" max="' + S.month + '-' + pad2(new Date(Y, M, 0).getDate()) + '" value="' + esc(S.date) + '"></div>' +
+    '<button type="button" class="xs-save" data-xs="save"' + (parse(S.amount) > 0 && S.env ? '' : ' disabled') + '>' + (S.isNew ? 'Ajouter' : 'Enregistrer') + (left !== null && parse(S.amount) > 0 ? ' · ' + (left >= 0 ? 'il restera ' + money2(left) : 'dépasse de ' + money2(-left)) : '') + '</button>' +
+    (S.isNew ? '' : '<button type="button" class="xs-del" data-xs="del">Supprimer la dépense</button>') + '</div>';
+}
+function expSheetInput(e) {
+  if (!expSheet) return;
+  if (e.target.id === "xsAmt") { expSheet.amount = e.target.value; const pos = e.target.selectionStart; renderExpSheet(); const a = $("#xsAmt"); a.focus(); try { a.setSelectionRange(pos, pos); } catch (er) {} }
+  if (e.target.id === "xsNote") expSheet.note = e.target.value;
+  if (e.target.id === "xsDate") expSheet.date = e.target.value;
+}
+function expSheetClick(e) {
+  if (e.target.id === "xsOv") { expSheet = null; renderExpSheet(); return; }
+  const env = e.target.closest("[data-xenv]");
+  if (env) { expSheet.env = env.dataset.xenv; renderExpSheet(); return; }
+  const b = e.target.closest("[data-xs]"); if (!b) return;
+  const a = b.dataset.xs, S = expSheet;
+  if (a === "close") { expSheet = null; renderExpSheet(); return; }
+  const list = expOf(S.month).slice();
+  if (a === "del") { saveExpenses(S.month, list.filter(x => x.id !== S.id)); expSheet = null; renderExpSheet(); render(); return; }
+  if (a === "save") {
+    const amount = Math.round(parse(S.amount) * 100) / 100; if (!(amount > 0) || !S.env) return;
+    const item = { id: S.id, amount, env: S.env, note: (S.note || "").trim().slice(0, 60), date: S.date && S.date.slice(0, 7) === S.month ? S.date : S.month + "-01", at: new Date().toISOString() };
+    const i = list.findIndex(x => x.id === S.id); if (i >= 0) list[i] = item; else list.push(item);
+    saveExpenses(S.month, list); expSheet = null; renderExpSheet(); render();
+  }
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape" && expSheet) { expSheet = null; renderExpSheet(); } });
 
 function financesView() {
   const p = prevMonthId();
@@ -2658,6 +2808,7 @@ function homeView() {
       '<button type="button" class="rep-btn hm-rb" data-home="search" aria-label="Rechercher">' + ICON("search") + '</button><a class="rep-btn hm-rb" href="#rapports" aria-label="Voir les rapports">' + ICON("trend") + '</a></div>' +
     '<div class="hm-next"><span class="hm-lbl hm-kick">Prochaine étape · ' + esc(kick) + '</span><b class="hm-nt">' + esc(head) + '</b><span class="hm-nl">' + esc(line) + '</span>' +
       '<button type="button" class="hm-go" data-home="' + cta[0] + '" data-month="' + M + '">' + esc(cta[1]) + '</button></div>' +
+    (hasBudget(cur) && spendEnvs(cur).length ? '<button type="button" class="hm-add" data-home="expense">＋ Ajouter une dépense</button>' : '') +
     '<div class="hm-tiles"><div class="card hm-tile"><span class="hm-lbl2">Épargné ce mois</span><b class="hm-tv hm-am">' + big + '</b><small>' + (tc && tc.income ? pctOf(tc.by.epargne, tc.income) + ' de ta paye' : 'Prépare ton budget') + '</small></div>' +
       '<div class="card hm-tile"><span class="hm-lbl2">Depuis janvier</span><b class="hm-tv">' + money(saved) + '</b><small>' + (ids.length ? ids.length + ' mois de budget' : 'C\'est parti !') + '</small></div></div>' +
     '<div class="card hm-card"><span class="hm-lbl2">Tes projets</span>' + tripHtml + '</div></div>';
@@ -2668,6 +2819,7 @@ mainEl.addEventListener("click", e => {
   if (a === "go") { goTo(b.dataset.month); location.hash = "finances"; return; }
   if (a === "bilan") { openBilan(b.dataset.month); return; }
   if (a === "search") { openSearch(true); return; }
+  if (a === "expense") { openExpSheet(monthIdOf(todayDate())); return; }
   if (a === "tip") { tipShift = 0; openTip(true); return; }
   if (a === "trip") {
     e.preventDefault();
@@ -3134,6 +3286,18 @@ mainEl.addEventListener("click", e => {
   if (popt) { const btn = popt.closest(".psel-wrap").querySelector(".psel"); pickPmenu(btn, popt.dataset.v); return; }
   const pbtn = e.target.closest(".psel");
   if (pbtn) { const open = pbtn.getAttribute("aria-expanded") === "true"; closePmenus(); if (!open) openPmenu(pbtn); return; }
+  const ft = e.target.closest("[data-fintab]");
+  if (ft && page === "finances") { finTab = ft.dataset.fintab; expFilterOpen = false; render(); return; }
+  const xf = e.target.closest("[data-xpf]");
+  if (xf && page === "finances") { expFilter = xf.dataset.xpf; expFilterOpen = false; render(); return; }
+  const xa = e.target.closest("[data-act^=\"xp-\"]");
+  if (xa && page === "finances") {
+    const a = xa.dataset.act;
+    if (a === "xp-filter") { expFilterOpen = !expFilterOpen; render(); }
+    if (a === "xp-add") openExpSheet(current);
+    if (a === "xp-edit") { const x = expOf(current).find(y => y.id === xa.dataset.xid); if (x) openExpSheet(current, x); }
+    return;
+  }
   const rt = e.target.closest("[data-reptab]");
   if (rt && page === "rapports") { repTab = rt.dataset.reptab; render(); return; }
   const tr = e.target.closest("tr[data-month]");
