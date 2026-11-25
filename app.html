@@ -2044,7 +2044,7 @@ function expensesView() {
     const st = g.items.reduce((a, x) => a + (x.amount || 0), 0);
     html += '<div class="xp-day"><span class="hm-lbl2">' + esc(expDayLabel(g.d)) + ' · ' + money2(st) + '</span></div><div class="card xp-list">' + g.items.map(x => {
       const e = envById[x.env], gg = gOf(x);
-      return '<button type="button" class="xp-it" data-act="xp-edit" data-xid="' + esc(x.id) + '"><span class="xp-ic" style="--c:' + (gg ? gg.color : 'var(--muted)') + '">' + ICON(envIcon(e)) + '</span><span class="xp-n"><b>' + esc(x.note || (e ? e.name : "Dépense")) + '</b><small>' + esc(e ? (x.note ? e.name + ' · ' : '') + (gg ? gg.label : '') : 'Enveloppe supprimée') + '</small></span><span class="xp-a num">− ' + money2(x.amount) + '</span></button>';
+      return '<button type="button" class="xp-it" data-act="xp-edit" data-xid="' + esc(x.id) + '"><span class="xp-ic" style="--c:' + (gg ? gg.color : 'var(--muted)') + '">' + ICON(envIcon(e)) + '</span><span class="xp-n"><b>' + esc(x.note || (e ? e.name : "Dépense")) + '</b><small>' + esc(e ? (e.trip ? (x.note ? e.name : 'Voyage') : (x.note ? e.name + ' · ' : '') + (gg ? gg.label : '')) : 'Enveloppe supprimée') + '</small></span><span class="xp-a num">− ' + money2(x.amount) + '</span></button>';
     }).join("") + '</div>';
   });
   return html + '</div>';
