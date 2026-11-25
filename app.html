@@ -457,6 +457,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xp-bars { width: 100%; height: 44px; display: block; }
 .xp-tools { display: flex; gap: 8px; }
 .xp-filter, .xp-add { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .88rem; padding: 10px 14px; cursor: pointer; }
+.xp-chev { font-size: 1.1rem; margin-left: 2px; display: inline-block; } .xp-filter[aria-expanded="true"] .xp-chev { transform: rotate(90deg); }
 .xp-filter { border: 1px solid var(--line); background: var(--surface); color: var(--ink); } .xp-filter .ico { width: 16px; height: 16px; } .xp-filter.on { border-color: #f0a432; }
 .xp-add { flex: 1; justify-content: center; border: none; background: #f0a432; color: #121212; font-weight: 800; }
 .xp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -477,7 +478,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xs-chev { color: var(--muted); font-size: 1.3rem; transition: transform .15s; } .xs-pick.open .xs-chev { transform: rotate(90deg); }
 .xs-list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; max-height: 40vh; overflow-y: auto; margin-top: -6px; }
 .xs-list button { display: flex; align-items: center; gap: 12px; border: none; border-top: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 12px; font: inherit; text-align: left; cursor: pointer; }
-.xs-list button:first-child { border-top: none; } .xs-list button.on { background: rgba(240,164,50,.1); }
+.xs-list button:first-child { border-top: none; }
+.xp-flist { margin-top: 0; max-height: none; } .xs-list button.on { background: rgba(240,164,50,.1); }
 .xs-left { font-size: .78rem; color: var(--muted); white-space: nowrap; }
 
 .xp-n { display: flex; flex-direction: column; min-width: 0; } .xp-n b { font-weight: 700; font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .xp-n small { font-size: .74rem; color: var(--muted); }
@@ -2014,9 +2016,14 @@ function expensesView() {
   let html = '<div class="xp">' +
     '<div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">' + (fLabel ? esc(fLabel) + ' · ' : '') + 'Dépensé en ' + esc(monthName(id)) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
       (planned ? '<span class="xp-sub">sur ' + money2(planned) + ' prévus · ' + (planned - total >= 0 ? 'reste ' + money2(planned - total) : '<span class="xp-over">dépassé de ' + money2(total - planned) + '</span>') + '</span>' : '') + '</div></div>' + bars + '</div>' +
-    '<div class="xp-tools"><button type="button" class="xp-filter' + (expFilter !== "all" ? ' on' : '') + '" data-act="xp-filter" aria-expanded="' + expFilterOpen + '">' + ICON("sliders") + (fLabel ? esc(fLabel) : 'Filtrer') + '</button>' +
+    '<div class="xp-tools"><button type="button" class="xp-filter' + (expFilter !== "all" ? ' on' : '') + '" data-act="xp-filter" aria-expanded="' + expFilterOpen + '">' + ICON("sliders") + (fLabel ? esc(fLabel) : 'Filtrer') + '<span class="xs-chev xp-chev">›</span></button>' +
       '<button type="button" class="xp-add" data-act="xp-add">＋ Ajouter une dépense</button></div>' +
-    (expFilterOpen ? '<div class="xp-chips"><button type="button" data-xpf="all"' + (expFilter === "all" ? ' class="on"' : '') + '>Tout</button>' + groupsWith.map(g => '<button type="button" data-xpf="' + g.id + '"' + (expFilter === g.id ? ' class="on"' : '') + '><i class="sw" style="background:' + g.color + '"></i>' + esc(g.label) + '</button>').join("") + '</div>' : '');
+    (expFilterOpen ? (() => {
+      const spentG = gid => all.filter(x => gOf(x) && (gid === "all" || gOf(x).id === gid)).reduce((a, x) => a + (x.amount || 0), 0);
+      const row = (gid, lab, color, ic, sub) => '<button type="button" role="option" aria-selected="' + (expFilter === gid) + '" data-xpf="' + gid + '"' + (expFilter === gid ? ' class="on"' : '') + '><span class="xs-pi" style="--c:' + color + '">' + ICON(ic) + '</span><span class="xs-pn"><b>' + esc(lab) + '</b><small>' + esc(sub) + '</small></span><span class="xs-left">' + money2(spentG(gid)) + '</span></button>';
+      return '<div class="xs-list xp-flist" role="listbox">' + row("all", "Toutes les dépenses", "var(--muted)", "wallet", all.length + " dépense" + (all.length > 1 ? "s" : "")) +
+        groupsWith.map(g => { const n = all.filter(x => gOf(x) && gOf(x).id === g.id).length; return row(g.id, g.label, g.color, GROUP_ICON[g.id] || "wallet", n + " dépense" + (n > 1 ? "s" : "")); }).join("") + '</div>';
+    })() : '');
   if (!list.length) html += '<div class="card xp-empty"><b>' + (all.length ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense pour l\'instant.') + '</b><span>Ajoute tes dépenses au fil du mois pour voir ce qu\'il reste dans chaque enveloppe.</span></div>';
   const days = []; list.forEach(x => { const last = days[days.length - 1]; if (last && last.d === x.date) last.items.push(x); else days.push({ d: x.date, items: [x] }); });
   days.forEach(g => {
