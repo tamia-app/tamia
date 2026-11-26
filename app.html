@@ -453,7 +453,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .xp-head { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
 .xp-ht > div { display: flex; flex-direction: column; gap: 2px; }
 .xp-tot { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; letter-spacing: -.04em; line-height: 1.15; }
-.xp-sub { font-size: .82rem; color: var(--muted); } .xp-trip { display: flex; align-items: center; gap: 6px; margin-top: 2px; } .xp-trip .ico { width: 15px; height: 15px; color: #f0a432; flex: none; } .xp-over { color: #d9574a; font-weight: 700; }
+.xp-sub { font-size: .82rem; color: var(--muted); } .xp-trip { align-self: flex-start; max-width: 100%; margin-top: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(240,164,50,.14); color: #b8730c; font-size: .74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:root[data-theme="dark"] .xp-trip { color: #f0b75a; } @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .xp-trip { color: #f0b75a; } } .xp-over { color: #d9574a; font-weight: 700; }
 .xp-bars { width: 100%; height: 44px; display: block; }
 .xp-tools { display: flex; gap: 8px; }
 .xp-filter, .xp-add { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; font: inherit; font-weight: 700; font-size: .88rem; padding: 10px 14px; cursor: pointer; }
@@ -955,6 +956,11 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .ti-when { margin-top: -10px; color: #f0a432; font-weight: 700; font-size: .9rem; }
 .ti-facts { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .88rem; color: var(--muted); } .ti-facts b { color: #f2f2ef; font-family: var(--font-display); }
 .voy .strip { position: static; }
+.voy .strip.vg, .voy .xp-head.vg { box-shadow: none; }
+.tb-fin .strip-row { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 10px 32px; }
+.tb-fin .strip-row > .cell { min-width: 0; }
+.tb-cell b { font-size: 1.45rem !important; font-weight: 700 !important; letter-spacing: -.01em; }
+
 .tb-income { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; letter-spacing: -0.01em; line-height: 1.2; border: none; background: none; color: var(--ink); min-width: 1ch; padding: 0; outline: none; }
 .tb-fin-sub { font-size: .82rem; color: var(--muted); }
 .voy .xp { --xp-bar: rgba(255,255,255,.14); }
@@ -2077,7 +2083,7 @@ function expensesView() {
     '<div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">' + (fLabel ? esc(fLabel) + ' · ' : '') + 'Dépensé en ' + esc(monthName(id)) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
       (expFilter === "voyage" ? (tripPlan ? '<span class="xp-sub">sur ' + money2(tripPlan) + ' de budget voyage · ' + (tripPlan - total >= 0 ? 'reste ' + money2(tripPlan - total) : '<span class="xp-over">dépassé de ' + money2(total - tripPlan) + '</span>') + '</span>' : '')
        : planned ? '<span class="xp-sub">sur ' + money2(planned) + ' prévus · ' + (planned - budSpent >= 0 ? 'reste ' + money2(planned - budSpent) : '<span class="xp-over">dépassé de ' + money2(budSpent - planned) + '</span>') + '</span>' : '') +
-      (tripSpent && expFilter !== "voyage" ? '<span class="xp-sub xp-trip">' + ICON("plane") + 'dont ' + money2(tripSpent) + ' pour ton voyage, payés par ton épargne voyage</span>' : '') + '</div></div>' + bars + '</div>' +
+      (tripSpent && expFilter !== "voyage" ? '<span class="xp-trip">dont ' + money2(tripSpent) + ' de voyage, payés par ton épargne voyage</span>' : '') + '</div></div>' + bars + '</div>' +
     '<div class="xp-tools"><button type="button" class="xp-filter' + (expFilter !== "all" ? ' on' : '') + '" data-act="xp-filter" aria-expanded="' + expFilterOpen + '">' + ICON("sliders") + (fLabel ? esc(fLabel) : 'Filtrer') + '<span class="xs-chev xp-chev">›</span></button>' +
       '<button type="button" class="xp-add" data-act="xp-add">＋ Ajouter une dépense</button></div>' +
     (expFilterOpen ? (() => {
@@ -3150,7 +3156,7 @@ function tripStripNums(r) {
 }
 function tripSaveCard(r) {
   const t = r.trip, part = tripPart(t), got = Math.min(vsavedFor(r), part), left = Math.max(0, part - got);
-  return '<div class="card strip tb-fin"><div class="strip-row"><div class="cell remain" data-state="' + (left > 0 ? 'warn' : 'ok') + '"><span class="eyebrow">Reste à épargner pour le voyage</span><span class="val num">' + money(left) + '</span></div>' +
+  return '<div class="card strip tb-fin vg"><div class="strip-row"><div class="cell remain" data-state="' + (left > 0 ? 'warn' : 'ok') + '"><span class="eyebrow">Reste à épargner pour le voyage</span><span class="val num">' + money(left) + '</span></div>' +
     (left > 0 && !r.ready ? '<div class="cell"><span class="eyebrow">Chaque mois</span><span class="val num">' + money(r.amount) + '</span></div>' : '') + '</div>' +
     '<div class="bar"><span style="width:' + (part ? got / part * 100 : 0) + '%;background:' + (left > 0 ? '#f0a432' : '#5fcf98') + '"></span></div>' +
     '<span class="tb-fin-sub">' + money(got) + ' de côté sur ' + money(part) + (tripShare(t) < 1 ? ' (ta part)' : '') + (left > 0 ? (r.ready ? '' : ' · jusqu\'en ' + esc(monthName(t.month))) : ' · tout est prêt') + '</span></div>';
@@ -3190,8 +3196,8 @@ function tripExpensesHtml(r) {
   list.forEach(e => { const dd = +e.date.slice(8, 10); if (dd >= 1 && dd <= nd) per[dd - 1] += e.amount || 0; });
   const mx = Math.max(1, ...per), bw = 100 / nd;
   const bars = '<svg class="xp-bars" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">' + per.map((v, i) => '<rect x="' + (i * bw + bw * .18).toFixed(2) + '" y="' + (30 - Math.max(1.2, v / mx * 28)).toFixed(2) + '" width="' + (bw * .64).toFixed(2) + '" height="' + Math.max(1.2, v / mx * 28).toFixed(2) + '" rx=".6" fill="' + (v > 0 ? '#f0a432' : 'var(--xp-bar)') + '"/>').join("") + '</svg>';
-  let h = '<div class="xp"><div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">Dépensé · ' + esc(x.name) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
-    '<span class="xp-sub">sur ' + money2(part) + ' prévus · ' + (rest >= 0 ? 'reste ' + money2(rest) : '<span class="xp-over">dépassé de ' + money2(-rest) + '</span>') + '</span></div></div>' + bars + '</div></div>';
+  let h = '<div class="xp"><div class="card xp-head vg"><div class="xp-ht"><div><span class="hm-lbl2">Dépensé · ' + esc(x.name) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
+    '<span class="xp-sub">sur ' + money2(part) + ' prévus · ' + (rest >= 0 ? 'reste ' + money2(rest) : '<span class="xp-over">dépassé de ' + money2(-rest) + '</span>') + '</span></div></div></div></div>';
   h += '<div class="vg tx-tip">' + ICON("bulb") + '<span>Ajoute tes dépenses depuis <b>Finances › Dépenses</b>, dans la catégorie « ' + esc(x.name) + ' » de ' + esc(monthName(t.month)) + '. Elles s\'affichent ici automatiquement.</span></div>';
   if (!list.length) return h + '<p class="v-hint" style="margin-top:4px">Aucune dépense pour l\'instant.</p>';
   const days = []; list.forEach(e => { const l = days[days.length - 1]; if (l && l.d === e.date) l.items.push(e); else days.push({ d: e.date, items: [e] }); });
@@ -3207,7 +3213,7 @@ function tripBudgetView() {
     '<div class="rp-seg tb-seg" role="tablist">' + [["budget", "Budget"], ["depenses", "Dépenses"]].map(([k, l]) => '<button type="button" role="tab" aria-selected="' + (tab === k) + '" data-voy="ttab" data-v="' + k + '"' + (tab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
   if (tab === "depenses") return head + tripExpensesHtml(r) + '</div>';
   return head +
-    '<div class="card strip tb-fin"><div class="strip-row"><div class="cell"><label class="eyebrow" for="tbBudget">Budget du voyage</label><div class="income-field"><input id="tbBudget" class="tb-income" data-tb="budget" inputmode="decimal" autocomplete="off" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><span>€</span></div></div>' +
+    '<div class="card strip tb-fin vg"><div class="strip-row"><div class="cell"><label class="eyebrow" for="tbBudget">Budget du voyage</label><div class="income-field"><input id="tbBudget" class="tb-income" data-tb="budget" inputmode="decimal" autocomplete="off" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><span>€</span></div></div>' +
       '<div class="cell"><span class="eyebrow">Réparti</span><span class="val num" id="tbTot">' + money(n.tot) + '</span></div>' +
       '<div class="cell remain" id="tbRestC" data-state="' + (n.rest < 0 ? 'bad' : n.rest > 0 ? 'warn' : 'ok') + '"><span class="eyebrow" id="tbRestL">' + (n.rest < 0 ? 'Au-delà du budget' : 'Reste à répartir') + '</span><span class="val num" id="tbRest">' + money(Math.abs(n.rest)) + '</span></div></div>' +
       '<div class="bar" id="tbBar">' + n.bar + '</div></div>' +
@@ -3357,7 +3363,7 @@ mainEl.addEventListener("input", e => {
   if (t.dataset.vn) { vfit(t); voy[t.dataset.vn] = Math.round(parse(t.value)); const er = $("#vnErr"); if (er) er.hidden = true; return; }
   if (t.id === "voyFrom") { voy.fq = t.value; const r = $("#voyFromRes"); if (r) r.innerHTML = vfromResults(); return; }
   if (t.dataset.te) { const r = tripOf(); if (!r) return; const e = tripEnvs0(r).find(x => x.id === t.dataset.eid); if (!e) return; if (t.dataset.te === "name") e.name = t.value.slice(0, 40); else e.amount = Math.max(0, parse(t.value)); tripStripUpdate(r); tripSave(r); return; }
-  if (t.dataset.tb) { const r = tripOf(); if (!r) return; tbFit(t); r.trip.budget = Math.max(0, parse(t.value)); tripRetarget(r); tripStripUpdate(r); tripSave(r); return; }
+  if (t.dataset.tb) { const r = tripOf(); if (!r) return; const raw = t.value.replace(/[^\d]/g, "").slice(0, 7); t.value = raw ? vnum(+raw) : ""; tbFit(t); r.trip.budget = Math.max(0, parse(t.value)); tripRetarget(r); tripStripUpdate(r); tripSave(r); return; }
   if (t.dataset.vp) { voy[t.dataset.vp] = parse(t.value); const c = $("#vcalc"); if (c) c.innerHTML = vcalcHtml(); const go = mainEl.querySelector('[data-voy="save"]'); if (go) { go.disabled = !(voy.budget > 0); go.textContent = vplan().ok ? "Ajouter à mes budgets" : "Enregistrer le voyage"; } const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !(vdest() && voy.month && voy.budget > 0 && (voy.people < 2 || !!voy.share)); return; }
   if (t.id === "voyCQ") { voy.q = t.value; const r = $("#voyCRes"); if (r) r.innerHTML = vcRes(); return; }
   if (t.id === "voyName") { voy.cname = t.value; const cs = mainEl.querySelector('[data-voy="csave"]'); if (cs) cs.disabled = !(voy.cname.trim() && voy.month && voy.budget > 0); return; }
