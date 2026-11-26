@@ -3,7 +3,7 @@
 <head>
 <script>try { var t = localStorage.getItem("tamia-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Loucio</title>
 <meta name="description" content="Loucio, ton petit agent de poche pour planifier ton budget du mois par enveloppes.">
 <meta name="theme-color" content="#121212">
@@ -1199,6 +1199,7 @@ body[data-page="rapports"] #monthBar { justify-content: flex-start; margin-left:
 .theme-seg button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; border: none; background: none; border-radius: 10px; padding: 10px 4px; font: inherit; font-weight: 700; font-size: .84rem; color: var(--muted); cursor: pointer; }
 .theme-seg button i { width: 36px; height: 24px; border-radius: 7px; border: 1.5px solid var(--line); }
 .theme-seg button[aria-checked="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(0,0,0,.25); }
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 </style>
 </head>
 <body>
@@ -1302,6 +1303,7 @@ body[data-page="rapports"] #monthBar { justify-content: flex-start; margin-left:
   </div>
 </div>
 
+<script>["gesturestart","gesturechange","gestureend"].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));document.addEventListener("touchmove", e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
