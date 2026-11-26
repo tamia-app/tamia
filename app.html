@@ -3168,7 +3168,7 @@ function tripSaveCard(r) {
   const t = r.trip, part = tripPart(t), got = Math.min(vsavedFor(r), part), left = Math.max(0, part - got);
   return '<div class="card strip tb-fin vg"><div class="strip-row"><div class="cell remain" data-state="' + (left > 0 ? 'warn' : 'ok') + '"><span class="eyebrow">Reste à épargner pour le voyage</span><span class="val num">' + money(left) + '</span></div>' +
     (left > 0 && !r.ready ? '<div class="cell"><span class="eyebrow">Chaque mois</span><span class="val num">' + money(r.amount) + '</span></div>' : '') + '</div>' +
-    '<div class="bar"><span style="width:' + (part ? got / part * 100 : 0) + '%;background:' + (left > 0 ? '#f0a432' : '#5fcf98') + '"></span></div>' +
+    '<div class="bar"><span style="width:' + (part ? got / part * 100 : 0) + '%;background:' + (left > 0 ? '#f0a432' : 'rgba(242,242,239,.55)') + '"></span></div>' +
     '<span class="tb-fin-sub">' + money(got) + ' de côté sur ' + money(part) + (tripShare(t) < 1 ? ' (ta part)' : '') + (left > 0 ? (r.ready ? '' : ' · jusqu\'en ' + esc(monthName(t.month))) : ' · tout est prêt') + '</span></div>';
 }
 function tripStripUpdate(r) {
