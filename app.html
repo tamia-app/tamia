@@ -954,6 +954,10 @@ body[data-page="voyages"] .subnav .tabs a[aria-current="page"] { background: rgb
 .ti-hero { flex-direction: column; } .ti-flag { position: absolute; top: 16px; right: 16px; width: 48px; height: 48px; border-radius: 14px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); } .ti-flag img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ti-when { margin-top: -10px; color: #f0a432; font-weight: 700; font-size: .9rem; }
 .ti-facts { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .88rem; color: var(--muted); } .ti-facts b { color: #f2f2ef; font-family: var(--font-display); }
+.voy .strip { position: static; }
+.tb-income { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; letter-spacing: -0.01em; line-height: 1.2; border: none; background: none; color: var(--ink); min-width: 1ch; padding: 0; outline: none; }
+.tb-fin-sub { font-size: .82rem; color: var(--muted); }
+.voy .xp { --xp-bar: rgba(255,255,255,.14); }
 .ti-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .ti-two .tb-strip { gap: 4px; } .ti-two .tb-cell b { font-size: 1.35rem; }
 .ti-sub { font-size: .82rem; color: var(--muted); }
 .v-shares { display: flex; flex-direction: column; gap: 8px; } .v-share { grid-template-columns: minmax(0, 1fr); }
@@ -3141,16 +3145,22 @@ function tripRetarget(r) {
 let tripSaveT = null;
 function tripSave(r) { clearTimeout(tripSaveT); tripSaveT = setTimeout(() => { saveRecurring(recurring.map(x => x.id === r.id ? r : x)).then(() => setSync("Enregistré")); }, 500); }
 function tripStripNums(r) {
-  const env = tripEnvs0(r), tot = env.reduce((a, e) => a + (e.amount || 0), 0), b = r.trip.budget || 0, rest = b - tot;
-  return { tot, b, rest, bar: TCATS.map(c => { const v = env.filter(e => e.cat === c.id).reduce((a, e) => a + (e.amount || 0), 0); return v > 0 ? '<i style="flex:' + v + ';background:' + c.color + '"></i>' : ''; }).join("") + (rest > 0 ? '<i style="flex:' + rest + ';background:rgba(255,255,255,.12)"></i>' : '') };
+  const env = tripEnvs0(r), tot = env.reduce((a, e) => a + (e.amount || 0), 0), b = r.trip.budget || 0, rest = b - tot, base = Math.max(b, tot) || 1;
+  return { tot, b, rest, bar: TCATS.map(c => { const v = env.filter(e => e.cat === c.id).reduce((a, e) => a + (e.amount || 0), 0); return v > 0 ? '<span style="width:' + (v / base * 100) + '%;background:' + c.color + '" title="' + esc(c.label) + '"></span>' : ''; }).join("") };
+}
+function tripSaveCard(r) {
+  const t = r.trip, part = tripPart(t), got = Math.min(vsavedFor(r), part), left = Math.max(0, part - got);
+  return '<div class="card strip tb-fin"><div class="strip-row"><div class="cell remain" data-state="' + (left > 0 ? 'warn' : 'ok') + '"><span class="eyebrow">Reste à épargner pour le voyage</span><span class="val num">' + money(left) + '</span></div>' +
+    (left > 0 && !r.ready ? '<div class="cell"><span class="eyebrow">Chaque mois</span><span class="val num">' + money(r.amount) + '</span></div>' : '') + '</div>' +
+    '<div class="bar"><span style="width:' + (part ? got / part * 100 : 0) + '%;background:' + (left > 0 ? '#f0a432' : '#5fcf98') + '"></span></div>' +
+    '<span class="tb-fin-sub">' + money(got) + ' de côté sur ' + money(part) + (tripShare(t) < 1 ? ' (ta part)' : '') + (left > 0 ? (r.ready ? '' : ' · jusqu\'en ' + esc(monthName(t.month))) : ' · tout est prêt') + '</span></div>';
 }
 function tripStripUpdate(r) {
   const n = tripStripNums(r), q = s => mainEl.querySelector(s);
-  if (q("#tbTot")) q("#tbTot").textContent = vnum(n.tot) + " €";
   if (q("#tbBar")) q("#tbBar").innerHTML = n.bar;
-  if (q("#tbRest")) { q("#tbRest").className = ""; q("#tbRestL").textContent = n.rest < 0 ? "Au-delà du budget" : "Reste à répartir"; q("#tbRest").textContent = vnum(Math.abs(n.rest)) + " €"; q("#tbRest").className = n.rest < 0 ? "tb-neg" : "tb-am"; }
-  if (q(".tb-save")) q(".tb-save").innerHTML = tripSaveLine(r);
-  const ok = q(".tb-ok"), st = q(".tb-strip"); if (st && r.ready && !ok) st.insertAdjacentHTML("afterbegin", '<span class="tb-ok" title="Budget prêt">' + ICON("checkmark") + "</span>"); if (ok && !r.ready) ok.remove();
+  if (q("#tbRest")) { q("#tbRestL").textContent = n.rest < 0 ? "Au-delà du budget" : "Reste à répartir"; q("#tbRest").textContent = money(Math.abs(n.rest)); q("#tbRestC").dataset.state = n.rest < 0 ? "bad" : n.rest > 0 ? "warn" : "ok"; }
+  if (q("#tbTot")) q("#tbTot").textContent = money(n.tot);
+  const sc = q("#tbSave"); if (sc) sc.innerHTML = tripSaveCard(r);
   TCATS.forEach(c => { const el = q('[data-tbc="' + c.id + '"]'); if (el) el.textContent = vnum(tripEnvs0(r).filter(e => e.cat === c.id).reduce((a, e) => a + (e.amount || 0), 0)) + " €"; });
 }
 const tripSaveLine = r => (tripShare(r.trip) < 1 ? 'Ta part : ' + vnum(tripPart(r.trip)) + ' € · ' : '') + (r.ready ? '<span class="v-ok">Budget prêt ✓</span>' : vnum(r.amount) + ' € par mois jusqu\'en ' + esc(monthName(r.trip.month)) + ' · ' + vnum(vsavedFor(r)) + ' € de côté');
@@ -3176,9 +3186,12 @@ function tripInfosHtml(r) {
 function tripExpensesHtml(r) {
   const t = r.trip, x = tripInfo(t), env = "trip:" + r.id, list = expOf(t.month).filter(e => e.env === env).sort((a, b) => (b.date + (b.at || "")).localeCompare(a.date + (a.at || "")));
   const total = list.reduce((a, e) => a + (e.amount || 0), 0), part = tripPart(t), rest = part - total;
-  let h = '<div class="vg tb-strip"><div class="tb-cells"><div class="tb-cell"><small>Dépensé</small><b>' + money2(total) + '</b></div><div class="tb-cell"><small>' + (tripShare(t) < 1 ? 'Ta part' : 'Budget') + '</small><b>' + vnum(part) + ' €</b></div></div>' +
-    '<div class="tb-cell"><small>' + (rest < 0 ? 'Au-delà du budget' : 'Reste') + '</small><b class="' + (rest < 0 ? 'tb-neg' : 'tb-am') + '">' + money2(Math.abs(rest)) + '</b></div>' +
-    '<div class="tb-bar"><i style="flex:' + Math.max(0, Math.min(total, part)) + ';background:' + (rest < 0 ? '#e56b5d' : '#f0a432') + '"></i><i style="flex:' + Math.max(0, rest) + ';background:transparent"></i></div></div>';
+  const [Y, M] = t.month.split("-").map(Number), nd = new Date(Y, M, 0).getDate(), per = Array(nd).fill(0);
+  list.forEach(e => { const dd = +e.date.slice(8, 10); if (dd >= 1 && dd <= nd) per[dd - 1] += e.amount || 0; });
+  const mx = Math.max(1, ...per), bw = 100 / nd;
+  const bars = '<svg class="xp-bars" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">' + per.map((v, i) => '<rect x="' + (i * bw + bw * .18).toFixed(2) + '" y="' + (30 - Math.max(1.2, v / mx * 28)).toFixed(2) + '" width="' + (bw * .64).toFixed(2) + '" height="' + Math.max(1.2, v / mx * 28).toFixed(2) + '" rx=".6" fill="' + (v > 0 ? '#f0a432' : 'var(--xp-bar)') + '"/>').join("") + '</svg>';
+  let h = '<div class="xp"><div class="card xp-head"><div class="xp-ht"><div><span class="hm-lbl2">Dépensé · ' + esc(x.name) + '</span><b class="xp-tot">' + money2(total) + '</b>' +
+    '<span class="xp-sub">sur ' + money2(part) + ' prévus · ' + (rest >= 0 ? 'reste ' + money2(rest) : '<span class="xp-over">dépassé de ' + money2(-rest) + '</span>') + '</span></div></div>' + bars + '</div></div>';
   h += '<div class="vg tx-tip">' + ICON("bulb") + '<span>Ajoute tes dépenses depuis <b>Finances › Dépenses</b>, dans la catégorie « ' + esc(x.name) + ' » de ' + esc(monthName(t.month)) + '. Elles s\'affichent ici automatiquement.</span></div>';
   if (!list.length) return h + '<p class="v-hint" style="margin-top:4px">Aucune dépense pour l\'instant.</p>';
   const days = []; list.forEach(e => { const l = days[days.length - 1]; if (l && l.d === e.date) l.items.push(e); else days.push({ d: e.date, items: [e] }); });
@@ -3194,12 +3207,11 @@ function tripBudgetView() {
     '<div class="rp-seg tb-seg" role="tablist">' + [["budget", "Budget"], ["depenses", "Dépenses"]].map(([k, l]) => '<button type="button" role="tab" aria-selected="' + (tab === k) + '" data-voy="ttab" data-v="' + k + '"' + (tab === k ? ' class="on"' : '') + '>' + l + '</button>').join("") + '</div>';
   if (tab === "depenses") return head + tripExpensesHtml(r) + '</div>';
   return head +
-    '<div class="vg tb-strip">' + (r.ready ? '<span class="tb-ok" title="Budget prêt">' + ICON("checkmark") + '</span>' : '') +
-      '<div class="tb-cells"><label class="tb-cell"><small>Budget du voyage</small><span class="tb-in"><input data-tb="budget" inputmode="decimal" autocomplete="off" style="width:' + tbW(n.b ? vnum(n.b) : '') + '" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><em>€</em></span></label>' +
-      '<div class="tb-cell"><small>Réparti</small><b id="tbTot">' + vnum(n.tot) + ' €</b></div></div>' +
-      '<div class="tb-cell"><small id="tbRestL">' + (n.rest < 0 ? 'Au-delà du budget' : 'Reste à répartir') + '</small><b id="tbRest" class="' + (n.rest < 0 ? 'tb-neg' : 'tb-am') + '">' + vnum(Math.abs(n.rest)) + ' €</b></div>' +
-      '<div class="tb-bar" id="tbBar">' + n.bar + '</div>' +
-      '<div class="tb-save">' + save + '</div></div>' +
+    '<div class="card strip tb-fin"><div class="strip-row"><div class="cell"><label class="eyebrow" for="tbBudget">Budget du voyage</label><div class="income-field"><input id="tbBudget" class="tb-income" data-tb="budget" inputmode="decimal" autocomplete="off" value="' + (n.b ? vnum(n.b) : '') + '" placeholder="0"><span>€</span></div></div>' +
+      '<div class="cell"><span class="eyebrow">Réparti</span><span class="val num" id="tbTot">' + money(n.tot) + '</span></div>' +
+      '<div class="cell remain" id="tbRestC" data-state="' + (n.rest < 0 ? 'bad' : n.rest > 0 ? 'warn' : 'ok') + '"><span class="eyebrow" id="tbRestL">' + (n.rest < 0 ? 'Au-delà du budget' : 'Reste à répartir') + '</span><span class="val num" id="tbRest">' + money(Math.abs(n.rest)) + '</span></div></div>' +
+      '<div class="bar" id="tbBar">' + n.bar + '</div></div>' +
+    '<div id="tbSave">' + tripSaveCard(r) + '</div>' +
     TCATS.map(c => { const L = env.filter(e => e.cat === c.id);
       return '<div class="vg tb-grp"><div class="tb-gh"><i class="sw" style="background:' + c.color + '"></i><b>' + esc(c.label) + '</b><span data-tbc="' + c.id + '">' + vnum(L.reduce((a, e) => a + (e.amount || 0), 0)) + ' €</span></div>' +
         L.map(e => '<button type="button" class="tb-row" data-voy="topen" data-eid="' + esc(e.id) + '"><span class="xp-ic" style="--c:' + c.color + '">' + ICON(tripEnvIc(e)) + '</span><span class="tb-nm"><b>' + esc(e.name || c.label) + '</b><small>' + esc(c.label) + '</small></span><span class="tb-va' + (e.amount ? '' : ' z') + '">' + vnum(e.amount || 0) + ' €</span></button>').join("") +
